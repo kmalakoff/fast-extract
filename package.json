@@ -47,6 +47,7 @@
     "once": "^1.4.0",
     "osenv": "^0.1.5",
     "path-complete-extname": "^1.0.0",
+    "signal-exit": "^3.0.3",
     "tar": "^6.0.2",
     "unbzip2-stream": "^1.4.2",
     "xz": "^2.0.2"
