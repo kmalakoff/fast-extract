@@ -53,6 +53,7 @@
     "next-tick": "^1.1.0",
     "once": "^1.4.0",
     "osenv": "^0.1.5",
+    "progress-stream": "^2.0.0",
     "queue-cb": "^1.1.2",
     "readable-stream": "^2.3.7",
     "require_optional": "^1.0.1",
@@ -73,7 +74,6 @@
     "mocha-compat": "^3.5.5",
     "nvs": "^0.4.4",
     "prettier": "^2.0.5",
-    "progress-stream": "^2.0.0",
     "semver": "^5.7.1"
   },
   "engines": {
