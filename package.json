@@ -47,10 +47,11 @@
     "imurmurhash": "^0.1.4",
     "lzma-native": "^6.0.1",
     "mkdirp-classic": "^0.5.3",
+    "next-tick": "^1.1.0",
     "once": "^1.4.0",
     "osenv": "^0.1.5",
     "queue-cb": "^1.1.2",
-    "setimmediate": "^1.0.5",
+    "readable-stream": "^2.3.7",
     "signal-exit": "^3.0.3",
     "tar-stream": "^1.6.2",
     "unbzip2-stream": "^1.4.2",
@@ -71,6 +72,6 @@
     "semver": "^5.7.1"
   },
   "engines": {
-    "node": "0.8"
+    "node": ">0.8"
   }
 }
