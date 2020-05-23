@@ -43,12 +43,12 @@
     "decompress-zip": "^0.2.2",
     "fs-write-stream-atomic": "^1.0.10",
     "imurmurhash": "^0.1.4",
+    "lzma-native": "^6.0.1",
     "mkdirp-classic": "^0.5.3",
     "once": "^1.4.0",
     "osenv": "^0.1.5",
-    "path-complete-extname": "^1.0.0",
     "signal-exit": "^3.0.3",
-    "tar": "^6.0.2",
+    "tar": "^5.0.5",
     "unbzip2-stream": "^1.4.2",
     "xz": "^2.0.2"
   },
@@ -63,9 +63,10 @@
     "eslint-plugin-standard": "^4.0.1",
     "mocha-compat": "^3.5.5",
     "nvs": "^0.4.4",
-    "prettier": "^2.0.5"
+    "prettier": "^2.0.5",
+    "semver": "^5.7.1"
   },
   "engines": {
-    "node": ">=0.8"
+    "node": ">=6"
   }
 }

@@ -3,12 +3,14 @@ var fs = require('fs');
 var path = require('path');
 var rimraf = require('rimraf');
 var mkdirp = require('mkdirp-classic');
+var semver = require('semver');
 
 var extract = require('../..');
 
-var EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tar.xz', 'tgz', 'zip'];
 var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
 var DATA_DIR = path.resolve(path.join(__dirname, '..', 'data'));
+var EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'zip'];
+if (semver.gte(process.versions.node, 'v0.10.0')) EXTRACT_TYPES.push('tar.xz');
 
 function addTests(extractType) {
   it('extract file (' + extractType + ')', function (done) {
