@@ -67,6 +67,19 @@ function addTests(extractType) {
       });
     });
   });
+
+  it('extract file by stream - filename (' + extractType + ')', function (done) {
+    extract(fs.createReadStream(path.join(DATA_DIR, 'fixture-' + extractType)), TMP_DIR, { strip: 1, filename: 'fixture.' + extractType }, function (err) {
+      assert.ok(!err);
+
+      fs.readdir(TMP_DIR, function (err, files) {
+        assert.ok(!err);
+        assert.deepEqual(files.sort(), ['file.txt', 'link']);
+        assert.equal(fs.realpathSync(path.join(TMP_DIR, 'link')), path.join(TMP_DIR, 'file.txt'));
+        done();
+      });
+    });
+  });
 }
 
 describe('extract', function () {
