@@ -9,8 +9,7 @@ var extract = require('../..');
 
 var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
 var DATA_DIR = path.resolve(path.join(__dirname, '..', 'data'));
-// var EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'zip'];
-var EXTRACT_TYPES = ['zip'];
+var EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'zip'];
 // if (semver.gte(process.versions.node, 'v0.10.0')) EXTRACT_TYPES.push('tar.xz');
 
 function addTests(extractType) {
