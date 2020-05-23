@@ -1,0 +1,7 @@
+.vscode/
+.tmp/
+test/
+.eslintignore
+.eslintrc.js
+.prettierignore
+.prettierrc
