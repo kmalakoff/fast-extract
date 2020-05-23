@@ -50,9 +50,11 @@
     "once": "^1.4.0",
     "osenv": "^0.1.5",
     "queue-cb": "^1.1.2",
+    "setimmediate": "^1.0.5",
     "signal-exit": "^3.0.3",
     "tar-stream": "^1.6.2",
-    "unbzip2-stream": "^1.4.2"
+    "unbzip2-stream": "^1.4.2",
+    "yauzl": "^2.10.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
