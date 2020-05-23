@@ -18,7 +18,6 @@ describe('api', function () {
 
   it('extract file with progress', function (done) {
     var progressUpdates = [];
-
     function progress(update) {
       progressUpdates.push(update);
     }
