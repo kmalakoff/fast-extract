@@ -42,18 +42,17 @@
   "dependencies": {
     "decompress-zip": "^0.2.2",
     "fs-write-stream-atomic": "^1.0.10",
+    "imurmurhash": "^0.1.4",
     "mkdirp-classic": "^0.5.3",
     "once": "^1.4.0",
     "osenv": "^0.1.5",
     "path-complete-extname": "^1.0.0",
     "tar": "^6.0.2",
     "unbzip2-stream": "^1.4.2",
-    "unzip-stream": "^0.3.0",
     "xz": "^2.0.2"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
-    "content-disposition": "^0.5.3",
     "eslint": "^7.0.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-config-standard": "^14.1.1",
@@ -61,11 +60,9 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "lodash.flattendeep": "^4.4.0",
     "mocha-compat": "^3.5.5",
     "nvs": "^0.4.4",
-    "prettier": "^2.0.5",
-    "random-buffer": "^0.1.0"
+    "prettier": "^2.0.5"
   },
   "engines": {
     "node": ">=0.8"

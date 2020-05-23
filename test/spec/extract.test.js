@@ -3,7 +3,6 @@ var fs = require('fs');
 var path = require('path');
 var rimraf = require('rimraf');
 var mkdirp = require('mkdirp-classic');
-var semver = require('semver');
 
 var extract = require('../..');
 
@@ -25,8 +24,34 @@ function addTests(extractType) {
     });
   });
 
-  it('extract file without extension (' + extractType + ')', function (done) {
+  it('extract file without extension - filename (' + extractType + ')', function (done) {
+    extract(path.join(DATA_DIR, 'fixture-' + extractType), TMP_DIR, { strip: 1, filename: 'fixture.' + extractType }, function (err) {
+      assert.ok(!err);
+
+      fs.readdir(TMP_DIR, function (err, files) {
+        assert.ok(!err);
+        assert.deepEqual(files.sort(), ['file.txt', 'link']);
+        assert.equal(fs.realpathSync(path.join(TMP_DIR, 'link')), path.join(TMP_DIR, 'file.txt'));
+        done();
+      });
+    });
+  });
+
+  it('extract file without extension - dot (' + extractType + ')', function (done) {
     extract(path.join(DATA_DIR, 'fixture-' + extractType), TMP_DIR, { strip: 1, extension: '.' + extractType }, function (err) {
+      assert.ok(!err);
+
+      fs.readdir(TMP_DIR, function (err, files) {
+        assert.ok(!err);
+        assert.deepEqual(files.sort(), ['file.txt', 'link']);
+        assert.equal(fs.realpathSync(path.join(TMP_DIR, 'link')), path.join(TMP_DIR, 'file.txt'));
+        done();
+      });
+    });
+  });
+
+  it('extract file without extension - no dot (' + extractType + ')', function (done) {
+    extract(path.join(DATA_DIR, 'fixture-' + extractType), TMP_DIR, { strip: 1, extension: extractType }, function (err) {
       assert.ok(!err);
 
       fs.readdir(TMP_DIR, function (err, files) {
