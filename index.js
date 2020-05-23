@@ -1,3 +1,4 @@
+require('./lib/patch');
 var extract = require('./lib/extract');
 
 function fastExtract(src, dest, options, callback) {
