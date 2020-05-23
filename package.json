@@ -40,6 +40,7 @@
     "test": "mocha-compat test/spec/**/*.test.js --no-timeouts"
   },
   "dependencies": {
+    "call-once-next-tick": "^1.0.4",
     "decompress-zip": "^0.2.2",
     "fs-write-stream-atomic": "^1.0.10",
     "gunzip-maybe": "^1.4.2",
@@ -48,6 +49,7 @@
     "mkdirp-classic": "^0.5.3",
     "once": "^1.4.0",
     "osenv": "^0.1.5",
+    "queue-cb": "^1.1.2",
     "signal-exit": "^3.0.3",
     "tar-stream": "^1.6.2",
     "unbzip2-stream": "^1.4.2"
