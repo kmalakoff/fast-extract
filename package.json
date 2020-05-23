@@ -73,6 +73,7 @@
     "mocha-compat": "^3.5.5",
     "nvs": "^0.4.4",
     "prettier": "^2.0.5",
+    "progress-stream": "^2.0.0",
     "semver": "^5.7.1"
   },
   "engines": {

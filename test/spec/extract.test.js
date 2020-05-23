@@ -8,12 +8,22 @@ var extract = require('../..');
 
 var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
 var DATA_DIR = path.resolve(path.join(__dirname, '..', 'data'));
-var EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'zip'];
+var EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'zip', 'js'];
 
 try {
   var lzmaNative = require('require_optional')('lzma-native');
   if (lzmaNative) EXTRACT_TYPES.push('tar.xz');
 } catch (err) {}
+
+function validateFiles(files, extractType) {
+  if (extractType === 'js') {
+    assert.equal(files.length, 1);
+    assert.ok(~['fixture.js', 'fixture-js'].indexOf(files[0]));
+  } else {
+    assert.deepEqual(files.sort(), ['file.txt', 'link']);
+    assert.equal(fs.realpathSync(path.join(TMP_DIR, 'link')), path.join(TMP_DIR, 'file.txt'));
+  }
+}
 
 function addTests(extractType) {
   it('extract file (' + extractType + ')', function (done) {
@@ -22,8 +32,7 @@ function addTests(extractType) {
 
       fs.readdir(TMP_DIR, function (err, files) {
         assert.ok(!err);
-        assert.deepEqual(files.sort(), ['file.txt', 'link']);
-        assert.equal(fs.realpathSync(path.join(TMP_DIR, 'link')), path.join(TMP_DIR, 'file.txt'));
+        validateFiles(files, extractType);
         done();
       });
     });
@@ -35,8 +44,7 @@ function addTests(extractType) {
 
       fs.readdir(TMP_DIR, function (err, files) {
         assert.ok(!err);
-        assert.deepEqual(files.sort(), ['file.txt', 'link']);
-        assert.equal(fs.realpathSync(path.join(TMP_DIR, 'link')), path.join(TMP_DIR, 'file.txt'));
+        validateFiles(files, extractType);
         done();
       });
     });
@@ -48,8 +56,7 @@ function addTests(extractType) {
 
       fs.readdir(TMP_DIR, function (err, files) {
         assert.ok(!err);
-        assert.deepEqual(files.sort(), ['file.txt', 'link']);
-        assert.equal(fs.realpathSync(path.join(TMP_DIR, 'link')), path.join(TMP_DIR, 'file.txt'));
+        validateFiles(files, extractType);
         done();
       });
     });
@@ -61,8 +68,7 @@ function addTests(extractType) {
 
       fs.readdir(TMP_DIR, function (err, files) {
         assert.ok(!err);
-        assert.deepEqual(files.sort(), ['file.txt', 'link']);
-        assert.equal(fs.realpathSync(path.join(TMP_DIR, 'link')), path.join(TMP_DIR, 'file.txt'));
+        validateFiles(files, extractType);
         done();
       });
     });
@@ -74,8 +80,7 @@ function addTests(extractType) {
 
       fs.readdir(TMP_DIR, function (err, files) {
         assert.ok(!err);
-        assert.deepEqual(files.sort(), ['file.txt', 'link']);
-        assert.equal(fs.realpathSync(path.join(TMP_DIR, 'link')), path.join(TMP_DIR, 'file.txt'));
+        validateFiles(files, extractType);
         done();
       });
     });
