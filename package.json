@@ -5,6 +5,12 @@
   "keywords": [
     "fast",
     "extract",
+    "extract-tar",
+    "extract-bz2",
+    "extract-gz",
+    "extract-xz",
+    "extract-tgz",
+    "extract-zip",
     "decompress",
     "decompress-tar",
     "decompress-bz2",
