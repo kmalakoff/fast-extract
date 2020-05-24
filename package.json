@@ -1,6 +1,6 @@
 {
   "name": "fast-extract",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Extract contents from various archive types (tar, tar.bz2, tar.gz, tar.xz, tgz, zip)",
   "keywords": [
     "fast",
@@ -40,7 +40,6 @@
   "author": "Kevin Malakoff <kmalakoff@gmail.com> (https://github.com/kmalakoff)",
   "main": "index.js",
   "scripts": {
-    "compat": "nvs --engines -- mocha-compat test/spec/**/*.test.js --no-timeouts",
     "format": "eslint . --fix",
     "lint": "eslint .",
     "test": "mocha-compat test/spec/**/*.test.js --no-timeouts"
@@ -52,7 +51,7 @@
     "imurmurhash": "^0.1.4",
     "lodash.throttle": "^4.1.1",
     "mkdirp-classic": "^0.5.3",
-    "mock-require": "kmalakoff/mock-require#master",
+    "mock-require-lazy": "^1.0.0",
     "next-tick": "^1.1.0",
     "once": "^1.4.0",
     "osenv": "^0.1.5",
@@ -75,7 +74,6 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "mocha-compat": "^3.5.5",
-    "nvs": "^0.4.4",
     "prettier": "^2.0.5",
     "semver": "^5.7.1"
   },
