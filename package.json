@@ -1,6 +1,6 @@
 {
   "name": "fast-extract",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Extract contents from various archive types (tar, tar.bz2, tar.gz, tar.xz, tgz, zip)",
   "keywords": [
     "fast",
@@ -46,13 +46,14 @@
   },
   "dependencies": {
     "bl": "^3.0.0",
+    "call-once-next-tick": "^1.0.4",
     "fs-write-stream-atomic": "^1.0.10",
+    "graceful-fs": "^4.2.4",
     "gunzip-maybe": "^1.4.2",
     "imurmurhash": "^0.1.4",
     "lodash.throttle": "^4.1.1",
     "mkdirp-classic": "^0.5.3",
     "mock-require-lazy": "^1.0.0",
-    "next-tick": "^1.1.0",
     "once": "^1.4.0",
     "osenv": "^0.1.5",
     "progress-stream": "^2.0.0",
@@ -78,7 +79,7 @@
     "semver": "^5.7.1"
   },
   "engines": {
-    "node": ">0.8"
+    "node": ">=0.8"
   },
   "peerOptionalDependencies": {
     "lzma-native": "^6.0.1"

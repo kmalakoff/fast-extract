@@ -3,12 +3,15 @@ var fs = require('fs');
 var path = require('path');
 var rimraf = require('rimraf');
 var mkdirp = require('mkdirp-classic');
+var semver = require('semver');
 
 var extract = require('../..');
 
 var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
 var DATA_DIR = path.resolve(path.join(__dirname, '..', 'data'));
-var EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'zip', 'js'];
+var EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'js'];
+
+if (semver.gte(process.versions.node, '0.9.0')) EXTRACT_TYPES.push('zip');
 
 try {
   var lzmaNative = require('require_optional')('lzma-native');
@@ -26,62 +29,64 @@ function validateFiles(files, extractType) {
 }
 
 function addTests(extractType) {
-  it('extract file (' + extractType + ')', function (done) {
-    extract(path.join(DATA_DIR, 'fixture.' + extractType), TMP_DIR, { strip: 1 }, function (err) {
-      assert.ok(!err);
-
-      fs.readdir(TMP_DIR, function (err, files) {
+  describe(extractType, function () {
+    it('extract file', function (done) {
+      extract(path.join(DATA_DIR, 'fixture.' + extractType), TMP_DIR, { strip: 1 }, function (err) {
         assert.ok(!err);
-        validateFiles(files, extractType);
-        done();
+
+        fs.readdir(TMP_DIR, function (err, files) {
+          assert.ok(!err);
+          validateFiles(files, extractType);
+          done();
+        });
       });
     });
-  });
 
-  it('extract file without extension - filename (' + extractType + ')', function (done) {
-    extract(path.join(DATA_DIR, 'fixture-' + extractType), TMP_DIR, { strip: 1, filename: 'fixture.' + extractType }, function (err) {
-      assert.ok(!err);
-
-      fs.readdir(TMP_DIR, function (err, files) {
+    it('extract file without extension - filename', function (done) {
+      extract(path.join(DATA_DIR, 'fixture-' + extractType), TMP_DIR, { strip: 1, filename: 'fixture.' + extractType }, function (err) {
         assert.ok(!err);
-        validateFiles(files, extractType);
-        done();
+
+        fs.readdir(TMP_DIR, function (err, files) {
+          assert.ok(!err);
+          validateFiles(files, extractType);
+          done();
+        });
       });
     });
-  });
 
-  it('extract file without extension - dot (' + extractType + ')', function (done) {
-    extract(path.join(DATA_DIR, 'fixture-' + extractType), TMP_DIR, { strip: 1, extension: '.' + extractType }, function (err) {
-      assert.ok(!err);
-
-      fs.readdir(TMP_DIR, function (err, files) {
+    it('extract file without extension - dot', function (done) {
+      extract(path.join(DATA_DIR, 'fixture-' + extractType), TMP_DIR, { strip: 1, extension: '.' + extractType }, function (err) {
         assert.ok(!err);
-        validateFiles(files, extractType);
-        done();
+
+        fs.readdir(TMP_DIR, function (err, files) {
+          assert.ok(!err);
+          validateFiles(files, extractType);
+          done();
+        });
       });
     });
-  });
 
-  it('extract file without extension - no dot (' + extractType + ')', function (done) {
-    extract(path.join(DATA_DIR, 'fixture-' + extractType), TMP_DIR, { strip: 1, extension: extractType }, function (err) {
-      assert.ok(!err);
-
-      fs.readdir(TMP_DIR, function (err, files) {
+    it('extract file without extension - no dot', function (done) {
+      extract(path.join(DATA_DIR, 'fixture-' + extractType), TMP_DIR, { strip: 1, extension: extractType }, function (err) {
         assert.ok(!err);
-        validateFiles(files, extractType);
-        done();
+
+        fs.readdir(TMP_DIR, function (err, files) {
+          assert.ok(!err);
+          validateFiles(files, extractType);
+          done();
+        });
       });
     });
-  });
 
-  it('extract file by stream - filename (' + extractType + ')', function (done) {
-    extract(fs.createReadStream(path.join(DATA_DIR, 'fixture-' + extractType)), TMP_DIR, { strip: 1, filename: 'fixture.' + extractType }, function (err) {
-      assert.ok(!err);
-
-      fs.readdir(TMP_DIR, function (err, files) {
+    it('extract file by stream - filename', function (done) {
+      extract(fs.createReadStream(path.join(DATA_DIR, 'fixture-' + extractType)), TMP_DIR, { strip: 1, filename: 'fixture.' + extractType }, function (err) {
         assert.ok(!err);
-        validateFiles(files, extractType);
-        done();
+
+        fs.readdir(TMP_DIR, function (err, files) {
+          assert.ok(!err);
+          validateFiles(files, extractType);
+          done();
+        });
       });
     });
   });
