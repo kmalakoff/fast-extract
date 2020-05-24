@@ -52,7 +52,7 @@
     "gunzip-maybe": "^1.4.2",
     "imurmurhash": "^0.1.4",
     "lodash.throttle": "^4.1.1",
-    "mkdirp-classic": "^0.5.3",
+    "mkpath": "^1.0.0",
     "mock-require-lazy": "^1.0.0",
     "once": "^1.4.0",
     "osenv": "^0.1.5",
