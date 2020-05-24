@@ -2,7 +2,7 @@ var assert = require('assert');
 var fs = require('fs');
 var path = require('path');
 var rimraf = require('rimraf');
-var mkdirp = require('mkdirp-classic');
+var mkpath = require('mkpath');
 
 var extract = require('../..');
 
@@ -12,7 +12,7 @@ var DATA_DIR = path.resolve(path.join(__dirname, '..', 'data'));
 describe('api', function () {
   beforeEach(function (done) {
     rimraf(TMP_DIR, function () {
-      mkdirp(TMP_DIR, done);
+      mkpath(TMP_DIR, done);
     });
   });
 
