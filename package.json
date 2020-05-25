@@ -1,6 +1,6 @@
 {
   "name": "fast-extract",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Extract contents from various archive types (tar, tar.bz2, tar.gz, tar.xz, tgz, zip)",
   "keywords": [
     "fast",
@@ -60,6 +60,7 @@
     "queue-cb": "^1.1.2",
     "readable-stream": "^2.3.7",
     "require_optional": "^1.0.1",
+    "semver": "^5.7.1",
     "signal-exit": "^3.0.3",
     "tar-stream": "^1.6.2",
     "unbzip2-stream": "^1.4.2",
@@ -75,8 +76,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "mocha-compat": "^3.5.5",
-    "prettier": "^2.0.5",
-    "semver": "^5.7.1"
+    "prettier": "^2.0.5"
   },
   "engines": {
     "node": ">=0.8"
