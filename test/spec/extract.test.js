@@ -13,10 +13,13 @@ var EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'js'];
 
 if (semver.gte(process.versions.node, '0.9.0')) EXTRACT_TYPES.push('zip');
 
-try {
-  var lzmaNative = require('require_optional')('lzma-native');
-  if (lzmaNative) EXTRACT_TYPES.push('tar.xz');
-} catch (err) {}
+// lzma-native module compatiblity starts at Node 6
+if (semver.gte(process.versions.node, '6.0.0')) {
+  try {
+    var lzmaNative = require('require_optional')('lzma-native');
+    if (lzmaNative) EXTRACT_TYPES.push('tar.xz');
+  } catch (err) {}
+}
 
 function validateFiles(files, extractType) {
   if (extractType === 'js') {
