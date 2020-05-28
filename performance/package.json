@@ -1,0 +1,21 @@
+{
+  "name": "async-compat-benchmark",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Tests",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:kmalakoff/async-compat.git"
+  },
+  "license": "MIT",
+  "scripts": {
+    "flame": "npx 0x operations/index.js",
+    "mem": "node memory/index.js",
+    "ops": "node operations/index.js",
+    "test": "npm run ops && npm run mem"
+  },
+  "dependencies": {
+    "queue-cb-1.1.2": "npm:queue-cb@^1.1.2",
+    "benchmark-suite": "^0.1.6"
+  }
+}
