@@ -15,7 +15,7 @@
     "test": "npm run ops && npm run mem"
   },
   "dependencies": {
-    "queue-cb-1.1.2": "npm:queue-cb@^1.1.2",
+    "fast-extract-0.1.11": "npm:fast-extract@0.1.11",
     "benchmark-suite": "^0.1.6"
   }
 }
