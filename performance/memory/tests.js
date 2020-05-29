@@ -1,33 +1,36 @@
+var path = require('path');
+var fs = require('fs');
+var rimraf = require('rimraf');
 var BenchmarkSuite = require('benchmark-suite');
 
-var MAX_STACK = 1000;
+var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
+var DATA_DIR = path.resolve(path.join(__dirname, '..', '..', 'test', 'data'));
 
-module.exports = async function run({ Queue, version }) {
-  var suite = new BenchmarkSuite('queue-cb ' + version, 'Memory');
+module.exports = async function run({ extract, version }) {
+  var suite = new BenchmarkSuite('extract ' + version, 'Memory');
 
-  function testFn(parallelism) {
+  function testFn(extension, highWaterMark, fn) {
     return new Promise(function (resolve, reject) {
-      var queue = new Queue(parallelism);
-
-      for (var index = 0; index < MAX_STACK; index++) {
-        queue.defer(function (callback) {
-          callback();
-        });
-      }
-      queue.await(function (err) {
+      var filename = 'fixture' + highWaterMark + extension;
+      extract(path.join(DATA_DIR, 'fixture' + extension), TMP_DIR, { filename: filename, highWaterMark: highWaterMark, progress: fn, time: 1000 }, function (
+        err
+      ) {
         err ? reject(err) : resolve();
       });
     });
   }
 
-  suite.add(`parallelism 1`, function (fn) {
-    return testFn(1);
+  suite.add(`.tar.gz highWaterMark undefined`, function (fn) {
+    return testFn('.tar.gz', undefined, fn);
   });
-  suite.add(`parallelism 100`, function (fn) {
-    return testFn(100);
+  suite.add(`.tar.gz highWaterMark 1024`, function (fn) {
+    return testFn('.tar.gz', 1024, fn);
   });
-  suite.add(`parallelism Infinity`, function (fn) {
-    return testFn(100);
+  suite.add(`.zip highWaterMark undefined`, function (fn) {
+    return testFn('.zip', undefined, fn);
+  });
+  suite.add(`.zip highWaterMark 1024`, function (fn) {
+    return testFn('.zip', 1024, fn);
   });
 
   suite.on('cycle', (results) => {
@@ -39,6 +42,10 @@ module.exports = async function run({ Queue, version }) {
   });
 
   console.log('----------' + suite.name + '----------');
-  await suite.run({ time: 1000 }); //, heapdumpTrigger: 1024 * 100 });
+  try {
+    rimraf.sync(TMP_DIR);
+    fs.mkdirSync(TMP_DIR);
+  } catch (err) {}
+  await suite.run({ time: 1000 });
   console.log('');
 };
