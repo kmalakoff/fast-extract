@@ -46,7 +46,6 @@
   },
   "dependencies": {
     "bl": "^3.0.0",
-    "call-once-next-tick": "^1.0.4",
     "fs-write-stream-atomic": "^1.0.10",
     "graceful-fs": "^4.2.4",
     "gunzip-maybe": "^1.4.2",
