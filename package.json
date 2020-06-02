@@ -55,7 +55,6 @@
     "mkpath": "^1.0.0",
     "mock-require-lazy": "^1.0.0",
     "next-tick": "^1.1.0",
-    "object-assign": "^4.1.1",
     "once": "^1.4.0",
     "osenv": "^0.1.5",
     "progress-stream": "^2.0.0",
