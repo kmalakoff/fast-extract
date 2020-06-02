@@ -43,7 +43,7 @@
     "format": "prettier --write .",
     "lint": "eslint .",
     "test": "mocha-compat test/spec/**/*.test.js --no-timeouts",
-    "prepublish": "dtd \"npm run lint\" \"depcheck --ignores='depcheck'\""
+    "prepublishOnly": "dtd \"npm run lint\" \"depcheck --ignores='depcheck'\""
   },
   "dependencies": {
     "bl": "^3.0.0",
