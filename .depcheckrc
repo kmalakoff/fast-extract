@@ -1,1 +1,1 @@
-ignore: ["lzma-native"]
+ignores: ["depcheck", "lzma-native"]
