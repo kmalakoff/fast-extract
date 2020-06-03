@@ -42,8 +42,8 @@
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint .",
-    "test": "mocha-compat test/spec/**/*.test.js --no-timeouts",
-    "prepublishOnly": "dtd \"npm run lint\" \"depcheck\""
+    "prepublishOnly": "dtd \"npm run lint\" \"depcheck\"",
+    "test": "mocha-compat test/spec/**/*.test.js --no-timeouts"
   },
   "dependencies": {
     "bl": "^3.0.0",
