@@ -70,10 +70,24 @@ function addTests(extractType) {
       });
     });
 
-    it('extract file by stream - extension', function (done) {
+    it('extract file by stream - filename', function (done) {
       var stream = fs.createReadStream(path.join(DATA_DIR, 'fixture-' + extractType));
       stream.filename = 'fixture.' + extractType;
-      extract(stream, TMP_DIR, { strip: 1, extension: extractType }, function (err) {
+      extract(stream, TMP_DIR, { strip: 1 }, function (err) {
+        assert.ok(!err);
+
+        fs.readdir(TMP_DIR, function (err, files) {
+          assert.ok(!err);
+          validateFiles(files, extractType);
+          done();
+        });
+      });
+    });
+
+    it('extract file by stream - basename', function (done) {
+      var stream = fs.createReadStream(path.join(DATA_DIR, 'fixture-' + extractType));
+      stream.basename = 'fixture.' + extractType;
+      extract(stream, TMP_DIR, { strip: 1 }, function (err) {
         assert.ok(!err);
 
         fs.readdir(TMP_DIR, function (err, files) {
