@@ -47,8 +47,6 @@
   },
   "dependencies": {
     "bl": "^3.0.0",
-    "fs-write-stream-atomic": "^1.0.10",
-    "graceful-fs": "^4.2.4",
     "gunzip-maybe": "^1.4.2",
     "imurmurhash": "^0.1.4",
     "lodash.throttle": "^4.1.1",
