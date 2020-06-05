@@ -12,7 +12,6 @@ function fastExtract(src, dest, options, callback) {
     callback = options;
     options = null;
   }
-
   if (typeof callback === 'function') return extract(src, dest, options || {}, callback);
   return new Promise(function (resolve, reject) {
     fastExtract(src, dest, options, function (err, res) {
