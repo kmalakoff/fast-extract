@@ -1,6 +1,6 @@
 {
   "name": "fast-extract",
-  "version": "0.1.22",
+  "version": "0.1.23",
   "description": "Extract contents from various archive types (tar, tar.bz2, tar.gz, tar.xz, tgz, zip)",
   "keywords": [
     "fast",
@@ -47,8 +47,6 @@
   },
   "dependencies": {
     "bl": "^3.0.0",
-    "fs-write-stream-atomic": "^1.0.10",
-    "graceful-fs": "^4.2.4",
     "gunzip-maybe": "^1.4.2",
     "imurmurhash": "^0.1.4",
     "lodash.throttle": "^4.1.1",
