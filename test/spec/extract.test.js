@@ -20,24 +20,6 @@ if (semver.gte(process.versions.node, '6.0.0')) {
     if (lzmaNative) EXTRACT_TYPES.push('tar.xz');
   } catch (err) {}
 }
-EXTRACT_TYPES = [
-  'tar.gz',
-  'tar.gz',
-  'tar.gz',
-  'tar.gz',
-  'tar.gz',
-  'tar.gz',
-  'tar.gz',
-  'tar.gz',
-  'tar.gz',
-  'tar.gz',
-  'tar.gz',
-  'tar.gz',
-  'tar.gz',
-  'tar.gz',
-  'tar.gz',
-  'tar.gz',
-];
 
 function validateFiles(files, extractType) {
   if (extractType === 'js') {
@@ -87,11 +69,10 @@ function addTests(extractType) {
       });
     });
 
-    it.only('extract file by stream - filename', function (done) {
+    it('extract file by stream - filename', function (done) {
       var stream = fs.createReadStream(path.join(DATA_DIR, 'fixture-' + extractType));
       stream.filename = 'fixture.' + extractType;
       extract(stream, TMP_DIR, { strip: 1 }, function (err) {
-        console.log(err);
         assert.ok(!err);
 
         fs.readdir(TMP_DIR, function (err, files) {
