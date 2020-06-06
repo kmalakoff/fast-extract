@@ -119,14 +119,14 @@ describe('api', function () {
   describe('unhappy path', function () {
     it('should fail with too large strip (tar)', function (done) {
       extract(path.join(DATA_DIR, 'fixture.tar'), TMP_DIR, { strip: 2 }, function (err) {
-        assert.ok(err);
+        assert.ok(!!err);
         done();
       });
     });
 
     it('should fail with too large strip (zip)', function (done) {
       extract(path.join(DATA_DIR, 'fixture.zip'), TMP_DIR, { strip: 2 }, function (err) {
-        assert.ok(err);
+        assert.ok(!!err);
         done();
       });
     });
