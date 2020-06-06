@@ -9,12 +9,10 @@ var DATA_DIR = path.resolve(path.join(__dirname, '..', '..', 'test', 'data'));
 module.exports = async function run({ extract, version }) {
   var suite = new BenchmarkSuite('extract ' + version, 'Operations');
 
-  function testFn(extension, highWaterMark, fn) {
+  function testFn(type, highWaterMark, fn) {
     return new Promise(function (resolve, reject) {
-      var filename = 'fixture' + highWaterMark + extension;
-      extract(path.join(DATA_DIR, 'fixture' + extension), TMP_DIR, { filename: filename, highWaterMark: highWaterMark, progress: fn, time: 1000 }, function (
-        err
-      ) {
+      var filename = 'fixture' + highWaterMark + type;
+      extract(path.join(DATA_DIR, 'fixture' + type), TMP_DIR, { filename: filename, highWaterMark: highWaterMark, progress: fn, time: 1000 }, function (err) {
         err ? reject(err) : resolve();
       });
     });

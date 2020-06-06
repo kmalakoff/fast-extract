@@ -46,8 +46,8 @@ function addTests(extractType) {
       });
     });
 
-    it('extract file without extension - dot', function (done) {
-      extract(path.join(DATA_DIR, 'fixture-' + extractType), TMP_DIR, { strip: 1, extension: '.' + extractType }, function (err) {
+    it('extract file without type - dot', function (done) {
+      extract(path.join(DATA_DIR, 'fixture-' + extractType), TMP_DIR, { strip: 1, type: '.' + extractType }, function (err) {
         assert.ok(!err);
 
         fs.readdir(TMP_DIR, function (err, files) {
@@ -58,8 +58,8 @@ function addTests(extractType) {
       });
     });
 
-    it('extract file without extension - no dot', function (done) {
-      extract(path.join(DATA_DIR, 'fixture-' + extractType), TMP_DIR, { strip: 1, extension: extractType }, function (err) {
+    it('extract file without type - no dot', function (done) {
+      extract(path.join(DATA_DIR, 'fixture-' + extractType), TMP_DIR, { strip: 1, type: extractType }, function (err) {
         assert.ok(!err);
 
         fs.readdir(TMP_DIR, function (err, files) {
