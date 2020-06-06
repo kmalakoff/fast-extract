@@ -11,8 +11,7 @@ var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
 var DATA_DIR = path.resolve(path.join(__dirname, '..', 'data'));
 var EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'js'];
 
-// yauzl does not read the master record properly on Node 0.8
-if (semver.gte(process.versions.node, '0.9.0')) EXTRACT_TYPES.push('zip');
+if (semver.gte(process.versions.node, '0.9.0')) EXTRACT_TYPES.push('zip'); // yauzl does not read the master record properly on Node 0.8
 
 // lzma-native module compatiblity starts at Node 6
 if (semver.gte(process.versions.node, '6.0.0')) {
@@ -21,6 +20,24 @@ if (semver.gte(process.versions.node, '6.0.0')) {
     if (lzmaNative) EXTRACT_TYPES.push('tar.xz');
   } catch (err) {}
 }
+EXTRACT_TYPES = [
+  'tar.gz',
+  'tar.gz',
+  'tar.gz',
+  'tar.gz',
+  'tar.gz',
+  'tar.gz',
+  'tar.gz',
+  'tar.gz',
+  'tar.gz',
+  'tar.gz',
+  'tar.gz',
+  'tar.gz',
+  'tar.gz',
+  'tar.gz',
+  'tar.gz',
+  'tar.gz',
+];
 
 function validateFiles(files, extractType) {
   if (extractType === 'js') {
@@ -70,10 +87,11 @@ function addTests(extractType) {
       });
     });
 
-    it('extract file by stream - filename', function (done) {
+    it.only('extract file by stream - filename', function (done) {
       var stream = fs.createReadStream(path.join(DATA_DIR, 'fixture-' + extractType));
       stream.filename = 'fixture.' + extractType;
       extract(stream, TMP_DIR, { strip: 1 }, function (err) {
+        console.log(err);
         assert.ok(!err);
 
         fs.readdir(TMP_DIR, function (err, files) {
