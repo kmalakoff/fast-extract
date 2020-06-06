@@ -3,6 +3,7 @@ var fs = require('fs');
 var path = require('path');
 var rimraf = require('rimraf');
 var mkpath = require('mkpath');
+var semver = require('semver');
 
 var extract = require('../..');
 
@@ -56,7 +57,48 @@ describe('api', function () {
       });
     });
 
-    it('extract multiple times', function (done) {
+    it('extract tar multiple times', function (done) {
+      extract(path.join(DATA_DIR, 'fixture.tar'), TMP_DIR, { strip: 1 }, function (err) {
+        assert.ok(!err);
+
+        extract(path.join(DATA_DIR, 'fixture.tar'), TMP_DIR, { strip: 1 }, function (err) {
+          assert.ok(!err);
+
+          fs.readdir(TMP_DIR, function (err, files) {
+            assert.ok(!err);
+            assert.deepEqual(files.sort(), ['file.txt', 'link']);
+            assert.equal(fs.realpathSync(path.join(TMP_DIR, 'link')), path.join(TMP_DIR, 'file.txt'));
+            done();
+          });
+        });
+      });
+    });
+
+    it('extract zip with progress', function (done) {
+      if (semver.lt(process.versions.node, '0.9.0')) return done();
+
+      var progressUpdates = [];
+
+      function progress(update) {
+        progressUpdates.push(update);
+      }
+
+      extract(path.join(DATA_DIR, 'fixture.tar'), TMP_DIR, { strip: 1, progress: progress }, function (err) {
+        assert.ok(!err);
+
+        fs.readdir(TMP_DIR, function (err, files) {
+          assert.ok(!err);
+          assert.deepEqual(files.sort(), ['file.txt', 'link']);
+          assert.equal(fs.realpathSync(path.join(TMP_DIR, 'link')), path.join(TMP_DIR, 'file.txt'));
+          assert.ok(progressUpdates.length === 3);
+          done();
+        });
+      });
+    });
+
+    it('extract zip multiple times', function (done) {
+      if (semver.lt(process.versions.node, '0.9.0')) return done();
+
       extract(path.join(DATA_DIR, 'fixture.tar'), TMP_DIR, { strip: 1 }, function (err) {
         assert.ok(!err);
 
