@@ -6,9 +6,9 @@ Extract contents from various archive types (tar, tar.bz2, tar.gz, tar.xz, tgz, 
 var assert = require('assert')
 var extract = require('fast-extract'))
 
-// provide the extension
-extract('/path/file', fullPath, { strip: 1, extension: 'tar.gz' }, function(err) {})
+// provide the type
+extract('/path/file', fullPath, { strip: 1, type: 'tar.gz' }, function(err) {})
 
-// use the extension
+// use the type
 await extract('/path/file.tar.gz', fullPath, { strip: 1 })
 ```
