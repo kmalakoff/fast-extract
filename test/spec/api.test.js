@@ -51,7 +51,7 @@ describe('api', function () {
           assert.ok(!err);
           assert.deepEqual(files.sort(), ['file.txt', 'link']);
           assert.equal(fs.realpathSync(path.join(TMP_DIR, 'link')), path.join(TMP_DIR, 'file.txt'));
-          assert.ok(progressUpdates.length === 3);
+          assert.equal(progressUpdates.length, 3);
           done();
         });
       });
@@ -75,7 +75,7 @@ describe('api', function () {
     });
 
     it('extract zip with progress', function (done) {
-      if (semver.lt(process.versions.node, '0.9.0')) return done();
+      if (semver.lt(process.versions.node, '0.9.0')) return done(); // yauzl does not read the master record properly on Node 0.8
 
       var progressUpdates = [];
 
@@ -90,14 +90,14 @@ describe('api', function () {
           assert.ok(!err);
           assert.deepEqual(files.sort(), ['file.txt', 'link']);
           assert.equal(fs.realpathSync(path.join(TMP_DIR, 'link')), path.join(TMP_DIR, 'file.txt'));
-          assert.ok(progressUpdates.length === 3);
+          assert.equal(progressUpdates.length, 3);
           done();
         });
       });
     });
 
     it('extract zip multiple times', function (done) {
-      if (semver.lt(process.versions.node, '0.9.0')) return done();
+      if (semver.lt(process.versions.node, '0.9.0')) return done(); // yauzl does not read the master record properly on Node 0.8
 
       extract(path.join(DATA_DIR, 'fixture.tar'), TMP_DIR, { strip: 1 }, function (err) {
         assert.ok(!err);
@@ -125,6 +125,8 @@ describe('api', function () {
     });
 
     it('should fail with too large strip (zip)', function (done) {
+      if (semver.lt(process.versions.node, '0.9.0')) return done(); // yauzl does not read the master record properly on Node 0.8
+
       extract(path.join(DATA_DIR, 'fixture.zip'), TMP_DIR, { strip: 2 }, function (err) {
         assert.ok(!!err);
         done();
