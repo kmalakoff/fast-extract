@@ -119,17 +119,33 @@ describe('extract-callback', function () {
   });
 
   describe('unhappy path', function () {
-    it('should fail with too large strip (tar)', function (done) {
+    it('should fail with too large strip (tar) - path', function (done) {
       extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, { strip: 2 }, function (err) {
         assert.ok(!!err);
         done();
       });
     });
 
-    it('should fail with too large strip (zip)', function (done) {
+    it.only('should fail with too large strip (tar) - stream', function (done) {
+      extract(fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')), TARGET, { strip: 2 }, function (err) {
+        assert.ok(!!err);
+        done();
+      });
+    });
+
+    it('should fail with too large strip (zip) - path', function (done) {
       if (semver.lt(process.versions.node, '0.9.0')) return done(); // yauzl does not read the master record properly on Node 0.8
 
       extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, { strip: 2 }, function (err) {
+        assert.ok(!!err);
+        done();
+      });
+    });
+
+    it('should fail with too large strip (zip) - stream', function (done) {
+      if (semver.lt(process.versions.node, '0.9.0')) return done(); // yauzl does not read the master record properly on Node 0.8
+
+      extract(fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')), TARGET, { strip: 2 }, function (err) {
         assert.ok(!!err);
         done();
       });
