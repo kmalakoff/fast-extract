@@ -8,6 +8,7 @@ var semver = require('semver');
 var extract = require('../..');
 
 var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
+var TARGET = path.resolve(path.join(TMP_DIR, 'target'));
 var DATA_DIR = path.resolve(path.join(__dirname, '..', 'data'));
 var EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'js'];
 
@@ -27,17 +28,17 @@ function validateFiles(files, extractType) {
     assert.ok(~['fixture.js', 'fixture-js'].indexOf(files[0]));
   } else {
     assert.deepEqual(files.sort(), ['file.txt', 'link']);
-    assert.equal(fs.realpathSync(path.join(TMP_DIR, 'link')), path.join(TMP_DIR, 'file.txt'));
+    assert.equal(fs.realpathSync(path.join(TARGET, 'link')), path.join(TARGET, 'file.txt'));
   }
 }
 
 function addTests(extractType) {
   describe(extractType, function () {
     it('extract file', function (done) {
-      extract(path.join(DATA_DIR, 'fixture.' + extractType), TMP_DIR, { strip: 1 }, function (err) {
+      extract(path.join(DATA_DIR, 'fixture.' + extractType), TARGET, { strip: 1 }, function (err) {
         assert.ok(!err);
 
-        fs.readdir(TMP_DIR, function (err, files) {
+        fs.readdir(TARGET, function (err, files) {
           assert.ok(!err);
           validateFiles(files, extractType);
           done();
@@ -46,10 +47,10 @@ function addTests(extractType) {
     });
 
     it('extract file without type - dot', function (done) {
-      extract(path.join(DATA_DIR, 'fixture-' + extractType), TMP_DIR, { strip: 1, type: '.' + extractType }, function (err) {
+      extract(path.join(DATA_DIR, 'fixture-' + extractType), TARGET, { strip: 1, type: '.' + extractType }, function (err) {
         assert.ok(!err);
 
-        fs.readdir(TMP_DIR, function (err, files) {
+        fs.readdir(TARGET, function (err, files) {
           assert.ok(!err);
           validateFiles(files, extractType);
           done();
@@ -58,10 +59,10 @@ function addTests(extractType) {
     });
 
     it('extract file without type - no dot', function (done) {
-      extract(path.join(DATA_DIR, 'fixture-' + extractType), TMP_DIR, { strip: 1, type: extractType }, function (err) {
+      extract(path.join(DATA_DIR, 'fixture-' + extractType), TARGET, { strip: 1, type: extractType }, function (err) {
         assert.ok(!err);
 
-        fs.readdir(TMP_DIR, function (err, files) {
+        fs.readdir(TARGET, function (err, files) {
           assert.ok(!err);
           validateFiles(files, extractType);
           done();
@@ -72,10 +73,10 @@ function addTests(extractType) {
     it('extract file by stream - filename', function (done) {
       var stream = fs.createReadStream(path.join(DATA_DIR, 'fixture-' + extractType));
       stream.filename = 'fixture.' + extractType;
-      extract(stream, TMP_DIR, { strip: 1 }, function (err) {
+      extract(stream, TARGET, { strip: 1 }, function (err) {
         assert.ok(!err);
 
-        fs.readdir(TMP_DIR, function (err, files) {
+        fs.readdir(TARGET, function (err, files) {
           assert.ok(!err);
           validateFiles(files, extractType);
           done();
@@ -86,10 +87,10 @@ function addTests(extractType) {
     it('extract file by stream - basename', function (done) {
       var stream = fs.createReadStream(path.join(DATA_DIR, 'fixture-' + extractType));
       stream.basename = 'fixture.' + extractType;
-      extract(stream, TMP_DIR, { strip: 1 }, function (err) {
+      extract(stream, TARGET, { strip: 1 }, function (err) {
         assert.ok(!err);
 
-        fs.readdir(TMP_DIR, function (err, files) {
+        fs.readdir(TARGET, function (err, files) {
           assert.ok(!err);
           validateFiles(files, extractType);
           done();
@@ -99,10 +100,11 @@ function addTests(extractType) {
   });
 }
 
-describe('extract', function () {
-  beforeEach(function (done) {
-    rimraf(TMP_DIR, function () {
-      mkpath(TMP_DIR, done);
+describe('extensions', function () {
+  beforeEach(function (callback) {
+    rimraf(TMP_DIR, function (err) {
+      if (err && err.code !== 'EEXIST') return callback(err);
+      mkpath(TMP_DIR, callback);
     });
   });
 
