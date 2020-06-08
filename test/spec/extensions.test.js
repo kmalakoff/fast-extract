@@ -21,7 +21,6 @@ if (semver.gte(process.versions.node, '6.0.0')) {
     if (lzmaNative) EXTRACT_TYPES.push('tar.xz');
   } catch (err) {}
 }
-EXTRACT_TYPES = ['tar'];
 
 function validateFiles(files, extractType) {
   if (extractType === 'js') {
