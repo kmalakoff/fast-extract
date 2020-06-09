@@ -11,7 +11,7 @@ var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
 var TARGET = path.resolve(path.join(TMP_DIR, 'target'));
 var DATA_DIR = path.resolve(path.join(__dirname, '..', 'data'));
 
-describe('extract-callback', function () {
+describe('extract', function () {
   beforeEach(function (callback) {
     rimraf(TMP_DIR, function (err) {
       if (err && err.code !== 'EEXIST') return callback(err);
@@ -37,6 +37,26 @@ describe('extract-callback', function () {
           done();
         });
       });
+    });
+
+    it('extract file with progress - promise', function (done) {
+      if (typeof Promise === 'undefined') return done();
+      var progressUpdates = [];
+      function progress(update) {
+        progressUpdates.push(update);
+      }
+
+      extract(path.join(DATA_DIR, 'fixture.js'), TARGET, { progress: progress })
+        .then(function () {
+          fs.readdir(TARGET, function (err, files) {
+            assert.ok(!err);
+            assert.equal(files.length, 1);
+            assert.equal(files[0], 'fixture.js');
+            assert.ok(progressUpdates.length > 0);
+            done();
+          });
+        })
+        .catch(done);
     });
 
     it('extract tar with progress', function (done) {
@@ -124,6 +144,18 @@ describe('extract-callback', function () {
         assert.ok(!!err);
         done();
       });
+    });
+
+    it('should fail with too large strip (tar) - path - promise', function (done) {
+      if (typeof Promise === 'undefined') return done();
+      extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, { strip: 2 })
+        .then(function () {
+          assert.ok(false);
+        })
+        .catch(function (err) {
+          assert.ok(!!err);
+          done();
+        });
     });
 
     it('should fail with too large strip (tar) - stream', function (done) {
