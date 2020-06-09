@@ -126,7 +126,7 @@ describe('extract-callback', function () {
       });
     });
 
-    it.only('should fail with too large strip (tar) - stream', function (done) {
+    it('should fail with too large strip (tar) - stream', function (done) {
       extract(fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')), TARGET, { strip: 2 }, function (err) {
         assert.ok(!!err);
         done();
