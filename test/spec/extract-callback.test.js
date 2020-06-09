@@ -127,7 +127,7 @@ describe('extract-callback', function () {
     });
 
     it('should fail with too large strip (tar) - stream', function (done) {
-      extract(fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')), TARGET, { strip: 2 }, function (err) {
+      extract(fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')), TARGET, { type: 'tar', strip: 2 }, function (err) {
         assert.ok(!!err);
         done();
       });
@@ -145,7 +145,7 @@ describe('extract-callback', function () {
     it('should fail with too large strip (zip) - stream', function (done) {
       if (semver.lt(process.versions.node, '0.9.0')) return done(); // yauzl does not read the master record properly on Node 0.8
 
-      extract(fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')), TARGET, { strip: 2 }, function (err) {
+      extract(fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')), TARGET, { type: 'zip', strip: 2 }, function (err) {
         assert.ok(!!err);
         done();
       });
