@@ -70,8 +70,8 @@ describe('extract', function () {
 
         fs.readdir(TARGET, function (err, files) {
           assert.ok(!err);
-          assert.deepEqual(files.sort(), ['file.txt', 'link']);
-          assert.equal(fs.realpathSync(path.join(TARGET, 'link')), path.join(TARGET, 'file.txt'));
+          assert.deepEqual(files.sort(), ['fixture.js', 'link']);
+          assert.equal(fs.realpathSync(path.join(TARGET, 'link')), path.join(TARGET, 'fixture.js'));
           assert.equal(progressUpdates.length, 3);
           done();
         });
@@ -87,8 +87,8 @@ describe('extract', function () {
 
           fs.readdir(TARGET, function (err, files) {
             assert.ok(!err);
-            assert.deepEqual(files.sort(), ['file.txt', 'link']);
-            assert.equal(fs.realpathSync(path.join(TARGET, 'link')), path.join(TARGET, 'file.txt'));
+            assert.deepEqual(files.sort(), ['fixture.js', 'link']);
+            assert.equal(fs.realpathSync(path.join(TARGET, 'link')), path.join(TARGET, 'fixture.js'));
             done();
           });
         });
@@ -108,8 +108,8 @@ describe('extract', function () {
 
         fs.readdir(TARGET, function (err, files) {
           assert.ok(!err);
-          assert.deepEqual(files.sort(), ['file.txt', 'link']);
-          assert.equal(fs.realpathSync(path.join(TARGET, 'link')), path.join(TARGET, 'file.txt'));
+          assert.deepEqual(files.sort(), ['fixture.js', 'link']);
+          assert.equal(fs.realpathSync(path.join(TARGET, 'link')), path.join(TARGET, 'fixture.js'));
           assert.equal(progressUpdates.length, 3);
           done();
         });
@@ -127,8 +127,8 @@ describe('extract', function () {
 
           fs.readdir(TARGET, function (err, files) {
             assert.ok(!err);
-            assert.deepEqual(files.sort(), ['file.txt', 'link']);
-            assert.equal(fs.realpathSync(path.join(TARGET, 'link')), path.join(TARGET, 'file.txt'));
+            assert.deepEqual(files.sort(), ['fixture.js', 'link']);
+            assert.equal(fs.realpathSync(path.join(TARGET, 'link')), path.join(TARGET, 'fixture.js'));
             done();
           });
         });
