@@ -10,7 +10,7 @@ var extract = require('../..');
 var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
 var TARGET = path.resolve(path.join(TMP_DIR, 'target'));
 var DATA_DIR = path.resolve(path.join(__dirname, '..', 'data'));
-var EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'js'];
+var EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'js.gz', 'js'];
 
 if (semver.gte(process.versions.node, '0.9.0')) EXTRACT_TYPES.push('zip'); // yauzl does not read the master record properly on Node 0.8
 
@@ -26,6 +26,11 @@ function validateFiles(files, extractType) {
   if (extractType === 'js') {
     assert.equal(files.length, 1);
     assert.ok(~['fixture.js', 'fixture-js'].indexOf(files[0]));
+    assert.equal(fs.readFileSync(path.join(TARGET, files[0]), { encoding: 'utf8' }), fs.readFileSync(path.join(DATA_DIR, 'fixture.js'), { encoding: 'utf8' }));
+  } else if (extractType === 'js.gz') {
+    assert.equal(files.length, 1);
+    assert.ok(~['fixture.js.gz', 'fixture-js.gz'].indexOf(files[0]));
+    assert.equal(fs.readFileSync(path.join(TARGET, files[0]), { encoding: 'utf8' }), fs.readFileSync(path.join(DATA_DIR, 'fixture.js'), { encoding: 'utf8' }));
   } else {
     assert.deepEqual(files.sort(), ['file.txt', 'link']);
     assert.equal(fs.realpathSync(path.join(TARGET, 'link')), path.join(TARGET, 'file.txt'));

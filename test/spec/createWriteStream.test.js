@@ -5,7 +5,6 @@ var rimraf = require('rimraf');
 var mkpath = require('mkpath');
 var semver = require('semver');
 
-var extract = require('../..');
 var createWriteStream = require('../..').createWriteStream;
 
 var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
