@@ -1,5 +1,6 @@
 require('./lib/patch');
 var extract = require('./lib/extract');
+var createWriteStream = require('./lib/createWriteStream');
 
 function fastExtract(src, dest, options, callback) {
   if (arguments.length === 2 && typeof dest !== 'string') {
@@ -21,3 +22,4 @@ function fastExtract(src, dest, options, callback) {
 }
 
 module.exports = fastExtract;
+module.exports.createWriteStream = createWriteStream;
