@@ -6,6 +6,7 @@ var mkpath = require('mkpath');
 var semver = require('semver');
 
 var extract = require('../..');
+var validateFiles = require('../lib/validateFiles');
 
 var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
 var TARGET = path.resolve(path.join(TMP_DIR, 'target'));
@@ -31,8 +32,7 @@ describe('extract', function () {
 
         fs.readdir(TARGET, function (err, files) {
           assert.ok(!err);
-          assert.equal(files.length, 1);
-          assert.equal(files[0], 'fixture.js');
+          validateFiles(files, 'js');
           assert.ok(progressUpdates.length > 0);
           done();
         });
@@ -50,8 +50,7 @@ describe('extract', function () {
         .then(function () {
           fs.readdir(TARGET, function (err, files) {
             assert.ok(!err);
-            assert.equal(files.length, 1);
-            assert.equal(files[0], 'fixture.js');
+            validateFiles(files, 'js');
             assert.ok(progressUpdates.length > 0);
             done();
           });
@@ -70,8 +69,7 @@ describe('extract', function () {
 
         fs.readdir(TARGET, function (err, files) {
           assert.ok(!err);
-          assert.deepEqual(files.sort(), ['fixture.js', 'link']);
-          assert.equal(fs.realpathSync(path.join(TARGET, 'link')), path.join(TARGET, 'fixture.js'));
+          validateFiles(files, 'tar');
           assert.equal(progressUpdates.length, 3);
           done();
         });
@@ -82,14 +80,18 @@ describe('extract', function () {
       extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, { strip: 1 }, function (err) {
         assert.ok(!err);
 
-        extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, { strip: 1 }, function (err) {
+        fs.readdir(TARGET, function (err, files) {
           assert.ok(!err);
+          validateFiles(files, 'tar');
 
-          fs.readdir(TARGET, function (err, files) {
+          extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, { strip: 1 }, function (err) {
             assert.ok(!err);
-            assert.deepEqual(files.sort(), ['fixture.js', 'link']);
-            assert.equal(fs.realpathSync(path.join(TARGET, 'link')), path.join(TARGET, 'fixture.js'));
-            done();
+
+            fs.readdir(TARGET, function (err, files) {
+              assert.ok(!err);
+              validateFiles(files, 'tar');
+              done();
+            });
           });
         });
       });
@@ -108,8 +110,7 @@ describe('extract', function () {
 
         fs.readdir(TARGET, function (err, files) {
           assert.ok(!err);
-          assert.deepEqual(files.sort(), ['fixture.js', 'link']);
-          assert.equal(fs.realpathSync(path.join(TARGET, 'link')), path.join(TARGET, 'fixture.js'));
+          validateFiles(files, 'zip');
           assert.equal(progressUpdates.length, 3);
           done();
         });
@@ -122,14 +123,18 @@ describe('extract', function () {
       extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, { strip: 1 }, function (err) {
         assert.ok(!err);
 
-        extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, { strip: 1 }, function (err) {
+        fs.readdir(TARGET, function (err, files) {
           assert.ok(!err);
+          validateFiles(files, 'zip');
 
-          fs.readdir(TARGET, function (err, files) {
+          extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, { strip: 1 }, function (err) {
             assert.ok(!err);
-            assert.deepEqual(files.sort(), ['fixture.js', 'link']);
-            assert.equal(fs.realpathSync(path.join(TARGET, 'link')), path.join(TARGET, 'fixture.js'));
-            done();
+
+            fs.readdir(TARGET, function (err, files) {
+              assert.ok(!err);
+              validateFiles(files, 'zip');
+              done();
+            });
           });
         });
       });

@@ -6,6 +6,7 @@ var mkpath = require('mkpath');
 var semver = require('semver');
 
 var createWriteStream = require('../..').createWriteStream;
+var validateFiles = require('../lib/validateFiles');
 
 var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
 var TARGET = path.resolve(path.join(TMP_DIR, 'target'));
@@ -33,8 +34,7 @@ describe('createWriteStream', function () {
       res.on('finish', function () {
         fs.readdir(TARGET, function (err, files) {
           assert.ok(!err);
-          assert.equal(files.length, 1);
-          assert.equal(files[0], 'fixture.js');
+          validateFiles(files, 'js');
           assert.ok(progressUpdates.length > 0);
           done();
         });
@@ -54,8 +54,7 @@ describe('createWriteStream', function () {
       res.on('finish', function () {
         fs.readdir(TMP_DIR, function (err, files) {
           assert.ok(!err);
-          assert.equal(files.length, 1);
-          assert.equal(files[0], 'target');
+          validateFiles(files);
           assert.ok(progressUpdates.length > 0);
           done();
         });
@@ -75,8 +74,7 @@ describe('createWriteStream', function () {
       res.on('finish', function () {
         fs.readdir(TARGET, function (err, files) {
           assert.ok(!err);
-          assert.deepEqual(files.sort(), ['fixture.js', 'link']);
-          assert.equal(fs.realpathSync(path.join(TARGET, 'link')), path.join(TARGET, 'fixture.js'));
+          validateFiles(files, 'tar');
           assert.equal(progressUpdates.length, 3);
           done();
         });
@@ -89,16 +87,20 @@ describe('createWriteStream', function () {
         assert.ok(!err);
       });
       res.on('finish', function () {
-        var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, { type: 'tar', strip: 1 }));
-        res.on('error', function (err) {
+        fs.readdir(TARGET, function (err, files) {
           assert.ok(!err);
-        });
-        res.on('finish', function () {
-          fs.readdir(TARGET, function (err, files) {
+          validateFiles(files, 'tar');
+
+          var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, { type: 'tar', strip: 1 }));
+          res.on('error', function (err) {
             assert.ok(!err);
-            assert.deepEqual(files.sort(), ['fixture.js', 'link']);
-            assert.equal(fs.realpathSync(path.join(TARGET, 'link')), path.join(TARGET, 'fixture.js'));
-            done();
+          });
+          res.on('finish', function () {
+            fs.readdir(TARGET, function (err, files) {
+              assert.ok(!err);
+              validateFiles(files, 'tar');
+              done();
+            });
           });
         });
       });
@@ -119,8 +121,7 @@ describe('createWriteStream', function () {
       res.on('finish', function () {
         fs.readdir(TARGET, function (err, files) {
           assert.ok(!err);
-          assert.deepEqual(files.sort(), ['fixture.js', 'link']);
-          assert.equal(fs.realpathSync(path.join(TARGET, 'link')), path.join(TARGET, 'fixture.js'));
+          validateFiles(files, 'zip');
           assert.equal(progressUpdates.length, 3);
           done();
         });
@@ -135,16 +136,20 @@ describe('createWriteStream', function () {
         assert.ok(!err);
       });
       res.on('finish', function () {
-        var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, { type: 'zip', strip: 1 }));
-        res.on('error', function (err) {
+        fs.readdir(TARGET, function (err, files) {
           assert.ok(!err);
-        });
-        res.on('finish', function () {
-          fs.readdir(TARGET, function (err, files) {
+          validateFiles(files, 'zip');
+
+          var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, { type: 'zip', strip: 1 }));
+          res.on('error', function (err) {
             assert.ok(!err);
-            assert.deepEqual(files.sort(), ['fixture.js', 'link']);
-            assert.equal(fs.realpathSync(path.join(TARGET, 'link')), path.join(TARGET, 'fixture.js'));
-            done();
+          });
+          res.on('finish', function () {
+            fs.readdir(TARGET, function (err, files) {
+              assert.ok(!err);
+              validateFiles(files, 'zip');
+              done();
+            });
           });
         });
       });
