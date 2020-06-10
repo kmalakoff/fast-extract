@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "bl": "^3.0.0",
+    "content-disposition": "^0.5.3",
     "end-of-stream": "^1.4.4",
     "fifo": "^2.3.0",
     "flush-write-stream": "^2.0.0",
