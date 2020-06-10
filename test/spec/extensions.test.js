@@ -6,6 +6,7 @@ var mkpath = require('mkpath');
 var semver = require('semver');
 
 var extract = require('../..');
+var validateFiles = require('../lib/validateFiles');
 
 var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
 var TARGET = path.resolve(path.join(TMP_DIR, 'target'));
@@ -19,22 +20,7 @@ if (semver.gte(process.versions.node, '6.0.0')) {
   try {
     var lzmaNative = require('require_optional')('lzma-native');
     if (lzmaNative) EXTRACT_TYPES.push('tar.xz');
-  } catch (err) { }
-}
-
-function validateFiles(files, extractType) {
-  if (extractType === 'js') {
-    assert.equal(files.length, 1);
-    assert.ok(~['fixture.js', 'fixture-js'].indexOf(files[0]));
-    assert.equal(fs.readFileSync(path.join(TARGET, files[0]), { encoding: 'utf8' }), fs.readFileSync(path.join(DATA_DIR, 'fixture.js'), { encoding: 'utf8' }));
-  } else if (extractType === 'js.gz') {
-    assert.equal(files.length, 1);
-    assert.ok(~['fixture.js.gz', 'fixture-js.gz'].indexOf(files[0]));
-    assert.equal(fs.readFileSync(path.join(TARGET, files[0]), { encoding: 'utf8' }), fs.readFileSync(path.join(DATA_DIR, 'fixture.js'), { encoding: 'utf8' }));
-  } else {
-    assert.deepEqual(files.sort(), ['fixture.js', 'link']);
-    assert.equal(fs.realpathSync(path.join(TARGET, 'link')), path.join(TARGET, 'fixture.js'));
-  }
+  } catch (err) {}
 }
 
 function addTests(extractType) {
