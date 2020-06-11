@@ -62,7 +62,6 @@
     "next-tick": "^1.1.0",
     "object-assign": "^4.1.1",
     "once": "^1.4.0",
-    "osenv": "^0.1.5",
     "progress-stream": "^2.0.0",
     "pumpify": "^2.0.1",
     "queue-cb": "^1.1.4",
