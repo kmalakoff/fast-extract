@@ -27,12 +27,12 @@ describe('extract', function () {
         progressUpdates.push(update);
       }
 
-      extract(path.join(DATA_DIR, 'fixture.js'), TARGET, { progress: progress }, function (err) {
+      var options = { progress: progress };
+      extract(path.join(DATA_DIR, 'fixture.js'), TARGET, options, function (err) {
         assert.ok(!err);
 
-        fs.readdir(TARGET, function (err, files) {
+        validateFiles(options, 'js', function (err) {
           assert.ok(!err);
-          validateFiles(files, 'js');
           assert.ok(progressUpdates.length > 0);
           done();
         });
@@ -46,11 +46,11 @@ describe('extract', function () {
         progressUpdates.push(update);
       }
 
-      extract(path.join(DATA_DIR, 'fixture.js'), TARGET, { progress: progress })
+      var options = { progress: progress };
+      extract(path.join(DATA_DIR, 'fixture.js'), TARGET, options)
         .then(function () {
-          fs.readdir(TARGET, function (err, files) {
+          validateFiles(options, 'js', function (err) {
             assert.ok(!err);
-            validateFiles(files, 'js');
             assert.ok(progressUpdates.length > 0);
             done();
           });
@@ -64,12 +64,12 @@ describe('extract', function () {
         progressUpdates.push(update);
       }
 
-      extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, { strip: 1, progress: progress }, function (err) {
+      var options = { strip: 1, progress: progress };
+      extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, options, function (err) {
         assert.ok(!err);
 
-        fs.readdir(TARGET, function (err, files) {
+        validateFiles(options, 'tar', function (err) {
           assert.ok(!err);
-          validateFiles(files, 'tar');
           assert.equal(progressUpdates.length, 3);
           done();
         });
@@ -77,19 +77,18 @@ describe('extract', function () {
     });
 
     it('extract tar multiple times', function (done) {
-      extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, { strip: 1 }, function (err) {
+      var options = { strip: 1 };
+      extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, options, function (err) {
         assert.ok(!err);
 
-        fs.readdir(TARGET, function (err, files) {
+        validateFiles(options, 'tar', function (err) {
           assert.ok(!err);
-          validateFiles(files, 'tar');
 
-          extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, { strip: 1 }, function (err) {
+          extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, options, function (err) {
             assert.ok(!err);
 
-            fs.readdir(TARGET, function (err, files) {
+            validateFiles(options, 'tar', function (err) {
               assert.ok(!err);
-              validateFiles(files, 'tar');
               done();
             });
           });
@@ -105,12 +104,12 @@ describe('extract', function () {
         progressUpdates.push(update);
       }
 
-      extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, { strip: 1, progress: progress }, function (err) {
+      var options = { strip: 1, progress: progress };
+      extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, options, function (err) {
         assert.ok(!err);
 
-        fs.readdir(TARGET, function (err, files) {
+        validateFiles(options, 'zip', function (err) {
           assert.ok(!err);
-          validateFiles(files, 'zip');
           assert.equal(progressUpdates.length, 3);
           done();
         });
@@ -120,19 +119,18 @@ describe('extract', function () {
     it('extract zip multiple times', function (done) {
       if (semver.lt(process.versions.node, '0.9.0')) return done(); // yauzl does not read the master record properly on Node 0.8
 
-      extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, { strip: 1 }, function (err) {
+      var options = { strip: 1 };
+      extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, options, function (err) {
         assert.ok(!err);
 
-        fs.readdir(TARGET, function (err, files) {
+        validateFiles(options, 'zip', function (err) {
           assert.ok(!err);
-          validateFiles(files, 'zip');
 
-          extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, { strip: 1 }, function (err) {
+          extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, options, function (err) {
             assert.ok(!err);
 
-            fs.readdir(TARGET, function (err, files) {
+            validateFiles(options, 'zip', function (err) {
               assert.ok(!err);
-              validateFiles(files, 'zip');
               done();
             });
           });
