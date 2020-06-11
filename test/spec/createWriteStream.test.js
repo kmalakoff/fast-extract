@@ -27,14 +27,14 @@ describe('createWriteStream', function () {
         progressUpdates.push(update);
       }
 
-      var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, { basename: 'fixture.js', progress: progress }));
+      var options = { basename: 'fixture.js', progress: progress };
+      var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, options));
       res.on('error', function (err) {
         assert.ok(!err);
       });
       res.on('finish', function () {
-        fs.readdir(TARGET, function (err, files) {
+        validateFiles(options, 'js', function (err) {
           assert.ok(!err);
-          validateFiles(files, 'js');
           assert.ok(progressUpdates.length > 0);
           done();
         });
@@ -47,14 +47,14 @@ describe('createWriteStream', function () {
         progressUpdates.push(update);
       }
 
-      var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, { progress: progress }));
+      var options = { progress: progress };
+      var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, options));
       res.on('error', function (err) {
         assert.ok(!err);
       });
       res.on('finish', function () {
-        fs.readdir(TMP_DIR, function (err, files) {
+        validateFiles(options, function (err) {
           assert.ok(!err);
-          validateFiles(files);
           assert.ok(progressUpdates.length > 0);
           done();
         });
@@ -67,14 +67,14 @@ describe('createWriteStream', function () {
         progressUpdates.push(update);
       }
 
-      var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, { type: 'tar', strip: 1, progress: progress }));
+      var options = { type: 'tar', strip: 1, progress: progress };
+      var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, options));
       res.on('error', function (err) {
         assert.ok(!err);
       });
       res.on('finish', function () {
-        fs.readdir(TARGET, function (err, files) {
+        validateFiles(options, 'tar', function (err) {
           assert.ok(!err);
-          validateFiles(files, 'tar');
           assert.equal(progressUpdates.length, 3);
           done();
         });
@@ -82,23 +82,22 @@ describe('createWriteStream', function () {
     });
 
     it('extract tar multiple times', function (done) {
-      var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, { type: 'tar', strip: 1 }));
+      var options = { type: 'tar', strip: 1 };
+      var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, options));
       res.on('error', function (err) {
         assert.ok(!err);
       });
       res.on('finish', function () {
-        fs.readdir(TARGET, function (err, files) {
+        validateFiles(options, 'tar', function (err) {
           assert.ok(!err);
-          validateFiles(files, 'tar');
 
-          var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, { type: 'tar', strip: 1 }));
+          var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, options));
           res.on('error', function (err) {
             assert.ok(!err);
           });
           res.on('finish', function () {
-            fs.readdir(TARGET, function (err, files) {
+            validateFiles(options, 'tar', function (err) {
               assert.ok(!err);
-              validateFiles(files, 'tar');
               done();
             });
           });
@@ -114,14 +113,14 @@ describe('createWriteStream', function () {
         progressUpdates.push(update);
       }
 
-      var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, { type: 'zip', strip: 1, progress: progress }));
+      var options = { type: 'zip', strip: 1, progress: progress };
+      var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, options));
       res.on('error', function (err) {
         assert.ok(!err);
       });
       res.on('finish', function () {
-        fs.readdir(TARGET, function (err, files) {
+        validateFiles(options, 'zip', function (err) {
           assert.ok(!err);
-          validateFiles(files, 'zip');
           assert.equal(progressUpdates.length, 3);
           done();
         });
@@ -131,23 +130,22 @@ describe('createWriteStream', function () {
     it('extract zip multiple times', function (done) {
       if (semver.lt(process.versions.node, '0.9.0')) return done(); // yauzl does not read the master record properly on Node 0.8
 
-      var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, { type: 'zip', strip: 1 }));
+      var options = { type: 'zip', strip: 1 };
+      var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, options));
       res.on('error', function (err) {
         assert.ok(!err);
       });
       res.on('finish', function () {
-        fs.readdir(TARGET, function (err, files) {
+        validateFiles(options, 'zip', function (err) {
           assert.ok(!err);
-          validateFiles(files, 'zip');
 
-          var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, { type: 'zip', strip: 1 }));
+          var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, options));
           res.on('error', function (err) {
             assert.ok(!err);
           });
           res.on('finish', function () {
-            fs.readdir(TARGET, function (err, files) {
+            validateFiles(options, 'zip', function (err) {
               assert.ok(!err);
-              validateFiles(files, 'zip');
               done();
             });
           });
