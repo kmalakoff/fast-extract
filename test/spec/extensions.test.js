@@ -23,67 +23,79 @@ if (semver.gte(process.versions.node, '6.0.0')) {
   } catch (err) {}
 }
 
-function addTests(extractType) {
-  describe(extractType, function () {
+function addTests(type) {
+  describe(type, function () {
     it('extract file', function (done) {
-      extract(path.join(DATA_DIR, 'fixture.' + extractType), TARGET, { strip: 1 }, function (err) {
+      var options = { strip: 1 };
+      extract(path.join(DATA_DIR, 'fixture.' + type), TARGET, options, function (err) {
         assert.ok(!err);
 
-        fs.readdir(TARGET, function (err, files) {
+        validateFiles(options, type, function (err) {
           assert.ok(!err);
-          validateFiles(files, extractType);
           done();
         });
       });
     });
 
     it('extract file without type - dot', function (done) {
-      extract(path.join(DATA_DIR, 'fixture-' + extractType), TARGET, { strip: 1, type: '.' + extractType }, function (err) {
+      var options = { strip: 1, type: '.' + type };
+      extract(path.join(DATA_DIR, 'fixture-' + type), TARGET, options, function (err) {
         assert.ok(!err);
 
-        fs.readdir(TARGET, function (err, files) {
+        validateFiles(options, type, function (err) {
           assert.ok(!err);
-          validateFiles(files, extractType);
           done();
         });
       });
     });
 
     it('extract file without type - no dot', function (done) {
-      extract(path.join(DATA_DIR, 'fixture-' + extractType), TARGET, { strip: 1, type: extractType }, function (err) {
+      var options = { strip: 1, type: type };
+      extract(path.join(DATA_DIR, 'fixture-' + type), TARGET, options, function (err) {
         assert.ok(!err);
 
-        fs.readdir(TARGET, function (err, files) {
+        validateFiles(options, type, function (err) {
           assert.ok(!err);
-          validateFiles(files, extractType);
+          done();
+        });
+      });
+    });
+
+    it('extract file without type - options as type, no strip', function (done) {
+      var options = type;
+      extract(path.join(DATA_DIR, 'fixture-' + type), TARGET, options, function (err) {
+        assert.ok(!err);
+
+        validateFiles(options, type, function (err) {
+          assert.ok(!err);
           done();
         });
       });
     });
 
     it('extract file by stream - filename', function (done) {
-      var stream = fs.createReadStream(path.join(DATA_DIR, 'fixture-' + extractType));
-      stream.filename = 'fixture.' + extractType;
-      extract(stream, TARGET, { strip: 1 }, function (err) {
+      var options = { strip: 1 };
+      var stream = fs.createReadStream(path.join(DATA_DIR, 'fixture-' + type));
+      stream.filename = 'fixture.' + type;
+      extract(stream, TARGET, options, function (err) {
         assert.ok(!err);
 
-        fs.readdir(TARGET, function (err, files) {
+        validateFiles(options, type, function (err) {
           assert.ok(!err);
-          validateFiles(files, extractType);
           done();
         });
       });
     });
 
     it('extract file by stream - basename', function (done) {
-      var stream = fs.createReadStream(path.join(DATA_DIR, 'fixture-' + extractType));
-      stream.basename = 'fixture.' + extractType;
-      extract(stream, TARGET, { strip: 1 }, function (err) {
+      var options = { strip: 1 };
+      var stream = fs.createReadStream(path.join(DATA_DIR, 'fixture-' + type));
+      stream.basename = 'fixture.' + type;
+      extract(stream, TARGET, options, function (err) {
         assert.ok(!err);
 
-        fs.readdir(TARGET, function (err, files) {
+        validateFiles(options, type, function (err) {
           assert.ok(!err);
-          validateFiles(files, extractType);
           done();
         });
       });
