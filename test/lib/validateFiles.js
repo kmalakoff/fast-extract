@@ -1,5 +1,5 @@
 var assert = require('assert');
-var fs = require('fs');
+var fs = require('graceful-fs');
 var path = require('path');
 var cr = require('cr');
 
