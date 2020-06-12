@@ -1,5 +1,5 @@
 var path = require('path');
-var fs = require('fs');
+var fs = require('graceful-fs');
 var rimraf = require('rimraf');
 var BenchmarkSuite = require('benchmark-suite');
 
@@ -43,7 +43,7 @@ module.exports = async function run({ extract, version }) {
   try {
     rimraf.sync(TMP_DIR);
     fs.mkdirSync(TMP_DIR);
-  } catch (err) {}
+  } catch (err) { }
   await suite.run({ time: 1000 });
   console.log('');
 };
