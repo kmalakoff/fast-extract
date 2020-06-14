@@ -41,6 +41,7 @@ describe('extract', function () {
 
     it('extract file with progress - promise', function (done) {
       if (typeof Promise === 'undefined') return done();
+
       var progressUpdates = [];
       function progress(update) {
         progressUpdates.push(update);
@@ -149,6 +150,7 @@ describe('extract', function () {
 
     it('should fail with too large strip (tar) - path - promise', function (done) {
       if (typeof Promise === 'undefined') return done();
+
       extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, { strip: 2 })
         .then(function () {
           assert.ok(false);
