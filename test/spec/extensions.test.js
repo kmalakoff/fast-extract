@@ -8,9 +8,10 @@ var semver = require('semver');
 var extract = require('../..');
 var validateFiles = require('../lib/validateFiles');
 
-var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
-var TARGET = path.resolve(path.join(TMP_DIR, 'target'));
-var DATA_DIR = path.resolve(path.join(__dirname, '..', 'data'));
+var constants = require('../lib/constants');
+var TMP_DIR = constants.TMP_DIR;
+var TARGET = constants.TARGET;
+var DATA_DIR = constants.DATA_DIR;
 var EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'js.gz', 'js'];
 
 if (semver.gte(process.versions.node, '0.9.0')) EXTRACT_TYPES.push('zip'); // yauzl does not read the master record properly on Node 0.8
@@ -20,8 +21,10 @@ if (semver.gte(process.versions.node, '6.0.0')) {
   try {
     var lzmaNative = require('require_optional')('lzma-native');
     if (lzmaNative) EXTRACT_TYPES.push('tar.xz');
-  } catch (err) { }
+  } catch (err) {}
 }
+
+EXTRACT_TYPES = ['tar'];
 
 function addTests(type) {
   describe(type, function () {
