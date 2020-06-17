@@ -1,6 +1,6 @@
 {
   "name": "fast-extract",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Extract contents from various archive types (tar, tar.bz2, tar.gz, tar.xz, tgz, zip)",
   "keywords": [
     "fast",
@@ -56,7 +56,7 @@
     "inherits": "^2.0.4",
     "lodash.compact": "^3.0.1",
     "lodash.throttle": "^4.1.1",
-    "maximize-iterator": "^2.6.2",
+    "maximize-iterator": "^2.6.4",
     "mkpath": "^1.0.0",
     "mock-require-lazy": "^1.0.0",
     "next-tick": "^1.1.0",
@@ -69,10 +69,12 @@
     "require_optional": "^1.0.1",
     "rimraf": "^2.7.1",
     "signal-exit": "^3.0.3",
+    "tar-iterator": "^0.1.4",
     "tar-stream": "^1.6.2",
     "temp-suffix": "^0.1.0",
     "unbzip2-stream": "^1.4.3",
-    "yauzl": "^2.10.0"
+    "yauzl": "^2.10.0",
+    "zip-iterator": "^0.1.4"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
@@ -86,6 +88,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
+    "fs-iterator": "^3.0.3",
     "mocha-compat": "^3.5.5",
     "prettier": "^2.0.5",
     "semver": "^5.7.1"

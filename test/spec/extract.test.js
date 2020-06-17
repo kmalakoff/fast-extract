@@ -8,9 +8,10 @@ var semver = require('semver');
 var extract = require('../..');
 var validateFiles = require('../lib/validateFiles');
 
-var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
-var TARGET = path.resolve(path.join(TMP_DIR, 'target'));
-var DATA_DIR = path.resolve(path.join(__dirname, '..', 'data'));
+var constants = require('../lib/constants');
+var TMP_DIR = constants.TMP_DIR;
+var TARGET = constants.TARGET;
+var DATA_DIR = constants.DATA_DIR;
 
 describe('extract', function () {
   beforeEach(function (callback) {
@@ -71,7 +72,7 @@ describe('extract', function () {
 
         validateFiles(options, 'tar', function (err) {
           assert.ok(!err);
-          assert.equal(progressUpdates.length, 3);
+          assert.equal(progressUpdates.length, 16);
           done();
         });
       });
@@ -111,7 +112,7 @@ describe('extract', function () {
 
         validateFiles(options, 'zip', function (err) {
           assert.ok(!err);
-          assert.equal(progressUpdates.length, 3);
+          assert.equal(progressUpdates.length, 16);
           done();
         });
       });
