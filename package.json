@@ -64,10 +64,10 @@
     "require_optional": "^1.0.1",
     "rimraf": "^2.7.1",
     "signal-exit": "^3.0.3",
-    "tar-iterator": "^0.1.4",
+    "tar-iterator": "^0.1.5",
     "temp-suffix": "^0.1.0",
     "unbzip2-stream": "^1.4.3",
-    "zip-iterator": "^0.1.4"
+    "zip-iterator": "^0.1.5"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
