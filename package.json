@@ -59,15 +59,15 @@
     "once": "^1.4.0",
     "progress-stream": "^2.0.0",
     "pumpify": "^2.0.1",
-    "queue-cb": "^1.1.4",
+    "queue-cb": "^1.1.5",
     "readable-stream": "^2.3.7",
     "require_optional": "^1.0.1",
     "rimraf": "^2.7.1",
     "signal-exit": "^3.0.3",
-    "tar-iterator": "^0.1.5",
+    "tar-iterator": "^0.1.6",
     "temp-suffix": "^0.1.0",
     "unbzip2-stream": "^1.4.3",
-    "zip-iterator": "^0.1.5"
+    "zip-iterator": "^0.1.6"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
@@ -81,7 +81,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "fs-iterator": "^3.0.3",
+    "fs-iterator": "^4.0.0",
     "fs-stats-spys": "^1.0.1",
     "mocha-compat": "^3.5.5",
     "prettier": "^2.0.5",
