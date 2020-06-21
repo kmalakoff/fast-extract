@@ -64,7 +64,7 @@
     "require_optional": "^1.0.1",
     "rimraf": "^2.7.1",
     "signal-exit": "^3.0.3",
-    "tar-iterator": "^0.1.6",
+    "tar-iterator": "^0.1.8",
     "temp-suffix": "^0.1.0",
     "unbzip2-stream": "^1.4.3",
     "zip-iterator": "^0.1.6"
@@ -81,7 +81,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "fs-iterator": "^4.0.0",
+    "fs-iterator": "^4.0.1",
     "fs-stats-spys": "^1.0.1",
     "mocha-compat": "^3.5.5",
     "prettier": "^2.0.5",
