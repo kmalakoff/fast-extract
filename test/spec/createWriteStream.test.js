@@ -4,6 +4,7 @@ var path = require('path');
 var rimraf = require('rimraf');
 var mkpath = require('mkpath');
 var semver = require('semver');
+var assign = require('object-assign');
 
 var createWriteStream = require('../..').createWriteStream;
 var validateFiles = require('../lib/validateFiles');
@@ -38,6 +39,36 @@ describe('createWriteStream', function () {
           assert.ok(!err);
           assert.ok(progressUpdates.length > 0);
           done();
+        });
+      });
+    });
+
+    it('extract file multiple times', function (done) {
+      var options = { basename: 'fixture.js' };
+      var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, options));
+      res.on('error', function (err) {
+        assert.ok(!err);
+      });
+      res.on('finish', function () {
+        validateFiles(options, 'js', function (err) {
+          assert.ok(!err);
+
+          var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, options));
+          res.on('error', function (err) {
+            assert.ok(err);
+
+            var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, assign({ force: true }, options)));
+            res.on('error', function (err) {
+              assert.ok(!err);
+            });
+            res.on('finish', function () {
+              validateFiles(options, 'js', function (err) {
+                assert.ok(!err);
+                done();
+              });
+            });
+          });
+          res.on('finish', function () {});
         });
       });
     });
@@ -94,13 +125,21 @@ describe('createWriteStream', function () {
 
           var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, options));
           res.on('error', function (err) {
-            assert.ok(!err);
+            assert.ok(err);
+
+            var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, assign({ force: true }, options)));
+            res.on('error', function (err) {
+              assert.ok(!err);
+            });
+            res.on('finish', function () {
+              validateFiles(options, 'tar', function (err) {
+                assert.ok(!err);
+                done();
+              });
+            });
           });
           res.on('finish', function () {
-            validateFiles(options, 'tar', function (err) {
-              assert.ok(!err);
-              done();
-            });
+            assert.ok(false);
           });
         });
       });
@@ -142,13 +181,21 @@ describe('createWriteStream', function () {
 
           var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, options));
           res.on('error', function (err) {
-            assert.ok(!err);
+            assert.ok(err);
+
+            var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, assign({ force: true }, options)));
+            res.on('error', function (err) {
+              assert.ok(!err);
+            });
+            res.on('finish', function () {
+              validateFiles(options, 'zip', function (err) {
+                assert.ok(!err);
+                done();
+              });
+            });
           });
           res.on('finish', function () {
-            validateFiles(options, 'zip', function (err) {
-              assert.ok(!err);
-              done();
-            });
+            assert.ok(false);
           });
         });
       });
