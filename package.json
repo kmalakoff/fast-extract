@@ -50,6 +50,7 @@
     "content-disposition": "^0.5.3",
     "end-of-stream": "^1.4.4",
     "flush-write-stream": "^2.0.0",
+    "fs-access-compat": "^1.0.2",
     "graceful-fs": "^4.2.4",
     "lodash.throttle": "^4.1.1",
     "mkpath": "^1.0.0",

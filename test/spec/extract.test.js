@@ -4,6 +4,7 @@ var path = require('path');
 var rimraf = require('rimraf');
 var mkpath = require('mkpath');
 var semver = require('semver');
+var assign = require('object-assign');
 
 var extract = require('../..');
 var validateFiles = require('../lib/validateFiles');
@@ -36,6 +37,30 @@ describe('extract', function () {
           assert.ok(!err);
           assert.ok(progressUpdates.length > 0);
           done();
+        });
+      });
+    });
+
+    it('extract file multiple times', function (done) {
+      var options = {};
+      extract(path.join(DATA_DIR, 'fixture.js'), TARGET, options, function (err) {
+        assert.ok(!err);
+
+        validateFiles(options, 'js', function (err) {
+          assert.ok(!err);
+
+          extract(path.join(DATA_DIR, 'fixture.js'), TARGET, options, function (err) {
+            assert.ok(err);
+
+            extract(path.join(DATA_DIR, 'fixture.js'), TARGET, assign({ force: true }, options), function (err) {
+              assert.ok(!err);
+
+              validateFiles(options, 'js', function (err) {
+                assert.ok(!err);
+                done();
+              });
+            });
+          });
         });
       });
     });
@@ -87,11 +112,15 @@ describe('extract', function () {
           assert.ok(!err);
 
           extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, options, function (err) {
-            assert.ok(!err);
+            assert.ok(err);
 
-            validateFiles(options, 'tar', function (err) {
+            extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, assign({ force: true }, options), function (err) {
               assert.ok(!err);
-              done();
+
+              validateFiles(options, 'tar', function (err) {
+                assert.ok(!err);
+                done();
+              });
             });
           });
         });
@@ -129,11 +158,15 @@ describe('extract', function () {
           assert.ok(!err);
 
           extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, options, function (err) {
-            assert.ok(!err);
+            assert.ok(err);
 
-            validateFiles(options, 'zip', function (err) {
+            extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, assign({ force: true }, options), function (err) {
               assert.ok(!err);
-              done();
+
+              validateFiles(options, 'zip', function (err) {
+                assert.ok(!err);
+                done();
+              });
             });
           });
         });
