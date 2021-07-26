@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "benchmark-suite": "^0.1.6",
-    "fast-extract-0.1.11": "npm:fast-extract@0.1.11",
+    "fast-extract-0.1.11": "npm:fast-extract@0.3.0",
     "rimraf": "^2.7.1"
   }
 }
