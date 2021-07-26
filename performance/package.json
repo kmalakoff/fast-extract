@@ -1,5 +1,5 @@
 {
-  "name": "async-compat-benchmark",
+  "name": "fast-extract-performance",
   "version": "0.0.0",
   "private": true,
   "description": "Tests",
@@ -18,5 +18,8 @@
     "benchmark-suite": "^0.1.6",
     "fast-extract-0.1.11": "npm:fast-extract@0.3.0",
     "rimraf": "^2.7.1"
+  },
+  "engines": {
+    "node": "lts"
   }
 }
