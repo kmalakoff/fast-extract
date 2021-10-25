@@ -1,5 +1,5 @@
 var assert = require('assert');
-var fs = require('graceful-fs');
+var fs = require('fs');
 var path = require('path');
 var rimraf = require('rimraf');
 var mkpath = require('mkpath');
@@ -21,7 +21,7 @@ if (semver.gte(process.versions.node, '6.0.0')) {
   try {
     var lzmaNative = require('require_optional')('lzma-native');
     if (lzmaNative) EXTRACT_TYPES.push('tar.xz');
-  } catch (err) {}
+  } catch (err) { }
 }
 
 EXTRACT_TYPES = ['tar'];

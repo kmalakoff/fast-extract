@@ -1,6 +1,6 @@
 {
   "name": "fast-extract",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Extract contents from various archive types (tar, tar.bz2, tar.gz, tar.xz, tgz, zip)",
   "keywords": [
     "fast",
@@ -50,7 +50,6 @@
     "content-disposition": "^0.5.3",
     "end-of-stream": "^1.4.4",
     "flush-write-stream": "^2.0.0",
-    "graceful-fs": "^4.2.6",
     "lodash.throttle": "^4.1.1",
     "mkpath": "^1.0.0",
     "mock-require-lazy": "^1.0.0",
@@ -63,11 +62,11 @@
     "readable-stream": "^2.3.7",
     "require_optional": "^1.0.1",
     "rimraf": "^2.7.1",
-    "signal-exit": "^3.0.3",
-    "tar-iterator": "^0.2.0",
+    "signal-exit": "^3.0.5",
+    "tar-iterator": "^0.2.3",
     "temp-suffix": "^0.1.0",
     "unbzip2-stream": "^1.4.3",
-    "zip-iterator": "^0.1.10"
+    "zip-iterator": "^0.1.11"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
@@ -84,11 +83,11 @@
     "fs-iterator": "^4.1.0",
     "fs-stats-spys": "^1.0.1",
     "mocha-compat": "^3.5.5",
-    "prettier": "^2.3.2",
+    "prettier": "^2.4.1",
     "semver": "^5.7.1"
   },
   "engines": {
-    "node": ">=0.12"
+    "node": ">=0.8"
   },
   "peerOptionalDependencies": {
     "lzma-native": "^6.0.1"
