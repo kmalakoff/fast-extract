@@ -1,5 +1,5 @@
 var assert = require('assert');
-var fs = require('graceful-fs');
+var fs = require('fs');
 var path = require('path');
 var rimraf = require('rimraf');
 var mkpath = require('mkpath');
@@ -68,7 +68,7 @@ describe('createWriteStream', function () {
               });
             });
           });
-          res.on('finish', function () {});
+          res.on('finish', function () { });
         });
       });
     });
