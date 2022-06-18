@@ -68,7 +68,7 @@ describe('createWriteStream', function () {
               });
             });
           });
-          res.on('finish', function () { });
+          res.on('finish', function () {});
         });
       });
     });
