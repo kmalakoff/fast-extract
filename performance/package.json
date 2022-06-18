@@ -15,8 +15,8 @@
     "test": "npm run ops && npm run mem"
   },
   "dependencies": {
-    "benchmark-suite": "^0.1.6",
-    "fast-extract-0.1.11": "npm:fast-extract@0.3.0",
+    "benchmark-suite": "^0.1.7",
+    "fast-extract-0.1.11": "npm:fast-extract@0.3.1",
     "rimraf": "^2.7.1"
   },
   "engines": {
