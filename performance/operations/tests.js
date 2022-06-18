@@ -43,7 +43,7 @@ module.exports = async function run({ extract, version }) {
   try {
     rimraf.sync(TMP_DIR);
     fs.mkdirSync(TMP_DIR);
-  } catch (err) { }
+  } catch (err) {}
   await suite.run({ time: 1000 });
   console.log('');
 };
