@@ -66,10 +66,10 @@
     "require_optional": "^1.0.1",
     "rimraf": "^2.7.1",
     "signal-exit": "^3.0.7",
-    "tar-iterator": "^0.2.3",
+    "tar-iterator": "^0.2.4",
     "temp-suffix": "^0.1.0",
     "unbzip2-stream": "^1.4.3",
-    "zip-iterator": "^0.1.11"
+    "zip-iterator": "^0.1.12"
   },
   "devDependencies": {
     "@typescript-eslint/parser": "^5.30.0",
