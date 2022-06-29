@@ -4,7 +4,7 @@ var path = require('path');
 var rimraf = require('rimraf');
 var mkpath = require('mkpath');
 var semver = require('semver');
-var assign = require('object-assign');
+var assign = require('just-extend');
 
 var extract = require('../..');
 var validateFiles = require('../lib/validateFiles');
