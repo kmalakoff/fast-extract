@@ -65,7 +65,7 @@
     "queue-cb": "^1.1.7",
     "readable-stream": "^2.3.7",
     "require_optional": "^1.0.1",
-    "rimraf": "^2.7.1",
+    "rimraf": "^3.0.2",
     "signal-exit": "^3.0.7",
     "tar-iterator": "^0.2.4",
     "temp-suffix": "^0.1.1",
