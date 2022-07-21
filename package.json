@@ -45,8 +45,9 @@
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint .",
-    "prepublishOnly": "dtd \"npm run lint\" \"depcheck\"",
-    "test": "mocha-compat test/spec/**/*.test.js --no-timeouts"
+    "prepublishOnly": "npm run lint && depcheck",
+    "test": "mocha-compat test/spec/**/*.test.js --no-timeouts",
+    "test:engines": "nvu engines npm test"
   },
   "dependencies": {
     "bl": "^3.0.0",
@@ -61,32 +62,30 @@
     "once": "^1.4.0",
     "progress-stream": "^2.0.0",
     "pumpify": "^2.0.1",
-    "queue-cb": "^1.1.6",
+    "queue-cb": "^1.1.7",
     "readable-stream": "^2.3.7",
     "require_optional": "^1.0.1",
     "rimraf": "^2.7.1",
     "signal-exit": "^3.0.7",
     "tar-iterator": "^0.2.4",
-    "temp-suffix": "^0.1.0",
+    "temp-suffix": "^0.1.1",
     "unbzip2-stream": "^1.4.3",
     "zip-iterator": "^0.1.12"
   },
   "devDependencies": {
-    "@typescript-eslint/parser": "^5.30.0",
+    "@typescript-eslint/parser": "^5.30.7",
     "cr": "^0.1.0",
     "depcheck": "^1.4.3",
-    "dis-dat": "^0.1.7",
-    "eslint": "^8.18.0",
+    "eslint": "^8.20.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-n": "^15.2.3",
+    "eslint-plugin-n": "^15.2.4",
     "eslint-plugin-promise": "^6.0.0",
     "fs-iterator": "^4.1.1",
-    "fs-stats-spys": "^1.0.1",
+    "fs-stats-spys": "^1.0.2",
     "mocha-compat": "^3.5.5",
-    "prettier": "^2.7.1",
-    "semver": "^5.7.1"
+    "prettier": "^2.7.1"
   },
   "engines": {
     "node": ">=0.8"

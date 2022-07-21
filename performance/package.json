@@ -16,10 +16,10 @@
   },
   "dependencies": {
     "benchmark-suite": "^0.1.7",
-    "fast-extract-0.1.11": "npm:fast-extract@0.3.1",
+    "fast-extract-0.1.11": "npm:fast-extract@0.3.3",
     "rimraf": "^2.7.1"
   },
   "engines": {
-    "node": "lts"
+    "node": ">=8"
   }
 }
