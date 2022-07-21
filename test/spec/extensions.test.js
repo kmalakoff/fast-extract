@@ -3,7 +3,6 @@ var fs = require('fs');
 var path = require('path');
 var rimraf = require('rimraf');
 var mkpath = require('mkpath');
-var semver = require('semver');
 
 var extract = require('../..');
 var validateFiles = require('../lib/validateFiles');
@@ -12,12 +11,14 @@ var constants = require('../lib/constants');
 var TMP_DIR = constants.TMP_DIR;
 var TARGET = constants.TARGET;
 var DATA_DIR = constants.DATA_DIR;
-var EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'js.gz', 'js'];
 
-if (semver.gte(process.versions.node, '0.9.0')) EXTRACT_TYPES.push('zip'); // yauzl does not read the master record properly on Node 0.8
+var major = +process.versions.node.split('.')[0];
+var minor = +process.versions.node.split('.')[1];
+var EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'js.gz', 'js', 'zip'];
+if (major === 0 && minor <= 8) EXTRACT_TYPES.pop(); //  TODO: fix zip on node 0.8
 
 // lzma-native module compatiblity starts at Node 6
-if (semver.gte(process.versions.node, '6.0.0')) {
+if (major >= 6) {
   try {
     var lzmaNative = require('require_optional')('lzma-native');
     if (lzmaNative) EXTRACT_TYPES.push('tar.xz');

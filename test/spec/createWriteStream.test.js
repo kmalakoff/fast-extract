@@ -3,7 +3,6 @@ var fs = require('fs');
 var path = require('path');
 var rimraf = require('rimraf');
 var mkpath = require('mkpath');
-var semver = require('semver');
 var assign = require('just-extend');
 
 var createWriteStream = require('../..').createWriteStream;
@@ -13,6 +12,9 @@ var constants = require('../lib/constants');
 var TMP_DIR = constants.TMP_DIR;
 var TARGET = constants.TARGET;
 var DATA_DIR = constants.DATA_DIR;
+
+var major = +process.versions.node.split('.')[0];
+var minor = +process.versions.node.split('.')[1];
 
 describe('createWriteStream', function () {
   beforeEach(function (callback) {
@@ -146,7 +148,7 @@ describe('createWriteStream', function () {
     });
 
     it('extract zip with progress', function (done) {
-      if (semver.lt(process.versions.node, '0.9.0')) return done(); // yauzl does not read the master record properly on Node 0.8
+      if (major === 0 && minor <= 8) return done(); // TODO: yauzl does not read the master record properly on Node 0.8
 
       var progressUpdates = [];
       function progress(update) {
@@ -168,7 +170,7 @@ describe('createWriteStream', function () {
     });
 
     it('extract zip multiple times', function (done) {
-      if (semver.lt(process.versions.node, '0.9.0')) return done(); // yauzl does not read the master record properly on Node 0.8
+      if (major === 0 && minor <= 8) return done(); // TODO: yauzl does not read the master record properly on Node 0.8
 
       var options = { type: 'zip', strip: 1 };
       var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, options));
@@ -215,7 +217,7 @@ describe('createWriteStream', function () {
     });
 
     it('should fail with too large strip (zip)', function (done) {
-      if (semver.lt(process.versions.node, '0.9.0')) return done(); // yauzl does not read the master record properly on Node 0.8
+      if (major === 0 && minor <= 8) return done(); // TODO: yauzl does not read the master record properly on Node 0.8
 
       var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, { type: 'zip', strip: 2 }));
       res.on('error', function (err) {
