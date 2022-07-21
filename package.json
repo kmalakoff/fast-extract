@@ -57,7 +57,7 @@
     "just-extend": "^6.0.1",
     "lodash.throttle": "^4.1.1",
     "mkpath": "^1.0.0",
-    "mock-require-lazy": "^1.0.0",
+    "mock-require-lazy": "^1.0.1",
     "next-tick": "^1.1.0",
     "once": "^1.4.0",
     "progress-stream": "^2.0.0",
