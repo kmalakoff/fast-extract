@@ -50,7 +50,7 @@
     "test:engines": "nvu engines npm test"
   },
   "dependencies": {
-    "bl": "^3.0.0",
+    "bl": "^5.0.0",
     "content-disposition": "^0.5.4",
     "end-of-stream": "^1.4.4",
     "flush-write-stream": "^2.0.0",
