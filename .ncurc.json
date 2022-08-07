@@ -1,0 +1,4 @@
+{
+  "upgrade": true,
+  "reject": ["bl", "readable-stream", "rimraf"]
+}
