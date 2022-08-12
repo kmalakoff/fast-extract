@@ -12,13 +12,11 @@ var TMP_DIR = constants.TMP_DIR;
 var TARGET = constants.TARGET;
 var DATA_DIR = constants.DATA_DIR;
 
-var major = +process.versions.node.split('.')[0];
-var minor = +process.versions.node.split('.')[1];
 var EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'js.gz', 'js', 'zip'];
-if (major === 0 && minor <= 8) EXTRACT_TYPES.pop(); //  TODO: fix zip on node 0.8
 
 // lzma-native module compatiblity starts at Node 6
-if (major >= 6) {
+var major = +process.versions.node.split('.')[0];
+if (major >= 10) {
   try {
     var lzmaNative = require('require_optional')('lzma-native');
     if (lzmaNative) EXTRACT_TYPES.push('tar.xz');
@@ -109,8 +107,7 @@ function addTests(type) {
 
 describe('extensions', function () {
   beforeEach(function (callback) {
-    rimraf(TMP_DIR, function (err) {
-      if (err && err.code !== 'EEXIST') return callback(err);
+    rimraf(TMP_DIR, function () {
       mkpath(TMP_DIR, callback);
     });
   });

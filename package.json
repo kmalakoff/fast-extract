@@ -1,6 +1,6 @@
 {
   "name": "fast-extract",
-  "version": "0.3.4",
+  "version": "0.4.0",
   "description": "Extract contents from various archive types (tar, tar.bz2, tar.gz, tar.xz, tgz, zip)",
   "keywords": [
     "fast",
@@ -43,6 +43,7 @@
     "lib"
   ],
   "scripts": {
+    "build": "",
     "format": "prettier --write .",
     "lint": "eslint .",
     "prepublishOnly": "npm run lint && depcheck",
@@ -51,13 +52,14 @@
   },
   "dependencies": {
     "bl": "^3.0.0",
+    "buffer-v6-polyfill": "^1.0.5",
     "content-disposition": "^0.5.4",
+    "core-js": "^3.24.1",
     "end-of-stream": "^1.4.4",
     "flush-write-stream": "^2.0.0",
-    "just-extend": "^6.0.1",
     "lodash.throttle": "^4.1.1",
     "mkpath": "^1.0.0",
-    "mock-require-lazy": "^1.0.0",
+    "mock-require-lazy": "^1.0.1",
     "next-tick": "^1.1.0",
     "once": "^1.4.0",
     "progress-stream": "^2.0.0",
@@ -70,13 +72,13 @@
     "tar-iterator": "^0.2.4",
     "temp-suffix": "^0.1.1",
     "unbzip2-stream": "^1.4.3",
-    "zip-iterator": "^0.1.12"
+    "zip-iterator": "^0.2.1"
   },
   "devDependencies": {
-    "@typescript-eslint/parser": "^5.30.7",
+    "@typescript-eslint/parser": "^5.33.0",
     "cr": "^0.1.0",
     "depcheck": "^1.4.3",
-    "eslint": "^8.20.0",
+    "eslint": "^8.21.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
@@ -84,6 +86,7 @@
     "eslint-plugin-promise": "^6.0.0",
     "fs-iterator": "^4.1.1",
     "fs-stats-spys": "^1.0.2",
+    "lzma-native": "^8.0.6",
     "mocha-compat": "^3.5.5",
     "prettier": "^2.7.1"
   },
