@@ -3,7 +3,6 @@ var fs = require('fs');
 var path = require('path');
 var rimraf = require('rimraf');
 var mkpath = require('mkpath');
-var assign = require('just-extend');
 
 var extract = require('../..');
 var validateFiles = require('../lib/validateFiles');
@@ -13,13 +12,9 @@ var TMP_DIR = constants.TMP_DIR;
 var TARGET = constants.TARGET;
 var DATA_DIR = constants.DATA_DIR;
 
-var major = +process.versions.node.split('.')[0];
-var minor = +process.versions.node.split('.')[1];
-
 describe('extract', function () {
   beforeEach(function (callback) {
-    rimraf(TMP_DIR, function (err) {
-      if (err && err.code !== 'EEXIST') return callback(err);
+    rimraf(TMP_DIR, function () {
       mkpath(TMP_DIR, callback);
     });
   });
@@ -54,7 +49,7 @@ describe('extract', function () {
           extract(path.join(DATA_DIR, 'fixture.js'), TARGET, options, function (err) {
             assert.ok(err);
 
-            extract(path.join(DATA_DIR, 'fixture.js'), TARGET, assign({ force: true }, options), function (err) {
+            extract(path.join(DATA_DIR, 'fixture.js'), TARGET, Object.assign({ force: true }, options), function (err) {
               assert.ok(!err);
 
               validateFiles(options, 'js', function (err) {
@@ -116,7 +111,7 @@ describe('extract', function () {
           extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, options, function (err) {
             assert.ok(err);
 
-            extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, assign({ force: true }, options), function (err) {
+            extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, Object.assign({ force: true }, options), function (err) {
               assert.ok(!err);
 
               validateFiles(options, 'tar', function (err) {
@@ -130,8 +125,6 @@ describe('extract', function () {
     });
 
     it('extract zip with progress', function (done) {
-      if (major === 0 && minor <= 8) return done(); // TODO: yauzl does not read the master record properly on Node 0.8
-
       var progressUpdates = [];
       function progress(update) {
         progressUpdates.push(update);
@@ -150,8 +143,6 @@ describe('extract', function () {
     });
 
     it('extract zip multiple times', function (done) {
-      if (major === 0 && minor <= 8) return done(); // TODO: yauzl does not read the master record properly on Node 0.8
-
       var options = { strip: 1 };
       extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, options, function (err) {
         assert.ok(!err);
@@ -162,7 +153,7 @@ describe('extract', function () {
           extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, options, function (err) {
             assert.ok(err);
 
-            extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, assign({ force: true }, options), function (err) {
+            extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, Object.assign({ force: true }, options), function (err) {
               assert.ok(!err);
 
               validateFiles(options, 'zip', function (err) {
@@ -205,8 +196,6 @@ describe('extract', function () {
     });
 
     it('should fail with too large strip (zip) - path', function (done) {
-      if (major === 0 && minor <= 8) return done(); // TODO: yauzl does not read the master record properly on Node 0.8
-
       extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, { strip: 2 }, function (err) {
         assert.ok(!!err);
         done();
@@ -214,8 +203,6 @@ describe('extract', function () {
     });
 
     it('should fail with too large strip (zip) - stream', function (done) {
-      if (major === 0 && minor <= 8) return done(); // TODO: yauzl does not read the master record properly on Node 0.8
-
       extract(fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')), TARGET, { type: 'zip', strip: 2 }, function (err) {
         assert.ok(!!err);
         done();
