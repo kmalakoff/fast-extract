@@ -72,7 +72,7 @@
     "tar-iterator": "^0.2.4",
     "temp-suffix": "^0.1.1",
     "unbzip2-stream": "^1.4.3",
-    "zip-iterator": "^0.2.3"
+    "zip-iterator": "^0.2.4"
   },
   "devDependencies": {
     "@typescript-eslint/parser": "^5.33.0",
