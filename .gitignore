@@ -1,4 +1,11 @@
 .DS_Store
 node_modules/
 .tmp/
-
+.vscode/
+.depcheckrc
+.eslintignore
+.eslintrc.js
+.prettierignore
+.prettierrc
+.npmrc
+.travis.yml
