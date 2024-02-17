@@ -1,4 +1,4 @@
 {
   "upgrade": true,
-  "reject": ["bl", "readable-stream", "rimraf"]
+  "reject": ["bl", "readable-stream", "rimraf", "signal-exit"]
 }
