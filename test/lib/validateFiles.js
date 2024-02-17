@@ -1,14 +1,14 @@
-var assert = require('assert');
-var fs = require('fs');
-var path = require('path');
-var cr = require('cr');
-var Iterator = require('fs-iterator');
-var statsSpys = require('fs-stats-spys');
+const assert = require('assert');
+const fs = require('fs');
+const path = require('path');
+const cr = require('cr');
+const Iterator = require('fs-iterator');
+const statsSpys = require('fs-stats-spys');
 
-var constants = require('./constants');
-var TMP_DIR = constants.TMP_DIR;
-var TARGET = constants.TARGET;
-var CONTENTS = constants.CONTENTS;
+const constants = require('./constants');
+const TMP_DIR = constants.TMP_DIR;
+const TARGET = constants.TARGET;
+const CONTENTS = constants.CONTENTS;
 
 module.exports = function validateFiles(options, _type, callback) {
   if (typeof _type === 'function') {
@@ -18,11 +18,11 @@ module.exports = function validateFiles(options, _type, callback) {
 
   if (typeof callback === 'function') {
     if (typeof options === 'string') options = { type: options };
-    var type = options.type || _type;
+    const type = options.type || _type;
 
     if (type === undefined) {
-      var dataPath = TMP_DIR;
-      fs.readdir(dataPath, function (err, files) {
+      const dataPath = TMP_DIR;
+      fs.readdir(dataPath, (err, files) => {
         assert.ok(!err);
         assert.equal(files.length, 1);
         assert.deepEqual(files.sort(), ['target']);
@@ -30,9 +30,8 @@ module.exports = function validateFiles(options, _type, callback) {
         callback();
       });
     } else if (type === 'js' || type === '.js') {
-      // eslint-disable-next-line no-redeclare
-      var dataPath = TARGET;
-      fs.readdir(dataPath, function (err, files) {
+      const dataPath = TARGET;
+      fs.readdir(dataPath, (err, files) => {
         assert.ok(!err);
         assert.equal(files.length, 1);
         assert.ok(~['fixture.js', 'fixture-js'].indexOf(files[0]));
@@ -40,9 +39,8 @@ module.exports = function validateFiles(options, _type, callback) {
         callback();
       });
     } else if (type === 'js.gz' || type === '.js.gz') {
-      // eslint-disable-next-line no-redeclare
-      var dataPath = TARGET;
-      fs.readdir(dataPath, function (err, files) {
+      const dataPath = TARGET;
+      fs.readdir(dataPath, (err, files) => {
         assert.ok(!err);
         assert.equal(files.length, 1);
         assert.ok(~['fixture.js.gz', 'fixture-js.gz'].indexOf(files[0]));
@@ -50,11 +48,10 @@ module.exports = function validateFiles(options, _type, callback) {
         callback();
       });
     } else {
-      // eslint-disable-next-line no-redeclare
-      var dataPath = !options.strip ? path.join(TARGET, 'data') : TARGET;
-      var spys = statsSpys();
+      const dataPath = !options.strip ? path.join(TARGET, 'data') : TARGET;
+      const spys = statsSpys();
       new Iterator(dataPath, { lstat: true }).forEach(
-        function (entry) {
+        (entry) => {
           spys(entry.stats);
           if (entry.stats.isFile()) {
             assert.equal(cr(fs.readFileSync(entry.fullPath).toString()), CONTENTS);
@@ -62,7 +59,7 @@ module.exports = function validateFiles(options, _type, callback) {
             assert.equal(cr(fs.readFileSync(fs.realpathSync(entry.fullPath)).toString()), CONTENTS);
           }
         },
-        function (err) {
+        (err) => {
           assert.ok(!err);
           assert.equal(spys.dir.callCount, 3);
           assert.equal(spys.file.callCount, 7);

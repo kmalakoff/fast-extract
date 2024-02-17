@@ -1,1 +1,1 @@
-ignores: ["depcheck", "lzma-native"]
+ignores: ["fast-extract", "depcheck", "ts-dev-stack", "@types/*", "lzma-native", "signal-exit"]

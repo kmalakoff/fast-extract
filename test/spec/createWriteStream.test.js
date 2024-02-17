@@ -1,38 +1,38 @@
-var assert = require('assert');
-var fs = require('fs');
-var path = require('path');
-var rimraf = require('rimraf');
-var mkpath = require('mkpath');
+const assert = require('assert');
+const fs = require('fs');
+const path = require('path');
+const rimraf = require('rimraf');
+const mkpath = require('mkpath');
 
-var createWriteStream = require('../..').createWriteStream;
-var validateFiles = require('../lib/validateFiles');
+const { createWriteStream } = require('fast-extract');
+const validateFiles = require('../lib/validateFiles');
 
-var constants = require('../lib/constants');
-var TMP_DIR = constants.TMP_DIR;
-var TARGET = constants.TARGET;
-var DATA_DIR = constants.DATA_DIR;
+const constants = require('../lib/constants');
+const TMP_DIR = constants.TMP_DIR;
+const TARGET = constants.TARGET;
+const DATA_DIR = constants.DATA_DIR;
 
-describe('createWriteStream', function () {
-  beforeEach(function (callback) {
-    rimraf(TMP_DIR, function () {
+describe('createWriteStream', () => {
+  beforeEach((callback) => {
+    rimraf(TMP_DIR, () => {
       mkpath(TMP_DIR, callback);
     });
   });
 
-  describe('happy path', function () {
-    it('extract file with progress', function (done) {
-      var progressUpdates = [];
+  describe('happy path', () => {
+    it('extract file with progress', (done) => {
+      const progressUpdates = [];
       function progress(update) {
         progressUpdates.push(update);
       }
 
-      var options = { basename: 'fixture.js', progress: progress };
-      var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, options));
-      res.on('error', function (err) {
+      const options = { basename: 'fixture.js', progress: progress };
+      const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, options));
+      res.on('error', (err) => {
         assert.ok(!err);
       });
-      res.on('finish', function () {
-        validateFiles(options, 'js', function (err) {
+      res.on('finish', () => {
+        validateFiles(options, 'js', (err) => {
           assert.ok(!err);
           assert.ok(progressUpdates.length > 0);
           done();
@@ -40,49 +40,49 @@ describe('createWriteStream', function () {
       });
     });
 
-    it('extract file multiple times', function (done) {
-      var options = { basename: 'fixture.js' };
-      var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, options));
-      res.on('error', function (err) {
+    it('extract file multiple times', (done) => {
+      const options = { basename: 'fixture.js' };
+      const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, options));
+      res.on('error', (err) => {
         assert.ok(!err);
       });
-      res.on('finish', function () {
-        validateFiles(options, 'js', function (err) {
+      res.on('finish', () => {
+        validateFiles(options, 'js', (err) => {
           assert.ok(!err);
 
-          var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, options));
-          res.on('error', function (err) {
+          const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, options));
+          res.on('error', (err) => {
             assert.ok(err);
 
-            var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, Object.assign({ force: true }, options)));
-            res.on('error', function (err) {
+            const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, Object.assign({ force: true }, options)));
+            res.on('error', (err) => {
               assert.ok(!err);
             });
-            res.on('finish', function () {
-              validateFiles(options, 'js', function (err) {
+            res.on('finish', () => {
+              validateFiles(options, 'js', (err) => {
                 assert.ok(!err);
                 done();
               });
             });
           });
-          res.on('finish', function () {});
+          res.on('finish', () => {});
         });
       });
     });
 
-    it('extract file with progress - no basename', function (done) {
-      var progressUpdates = [];
+    it('extract file with progress - no basename', (done) => {
+      const progressUpdates = [];
       function progress(update) {
         progressUpdates.push(update);
       }
 
-      var options = { progress: progress };
-      var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, options));
-      res.on('error', function (err) {
+      const options = { progress: progress };
+      const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, options));
+      res.on('error', (err) => {
         assert.ok(!err);
       });
-      res.on('finish', function () {
-        validateFiles(options, function (err) {
+      res.on('finish', () => {
+        validateFiles(options, (err) => {
           assert.ok(!err);
           assert.ok(progressUpdates.length > 0);
           done();
@@ -90,19 +90,19 @@ describe('createWriteStream', function () {
       });
     });
 
-    it('extract tar with progress', function (done) {
-      var progressUpdates = [];
+    it('extract tar with progress', (done) => {
+      const progressUpdates = [];
       function progress(update) {
         progressUpdates.push(update);
       }
 
-      var options = { type: 'tar', strip: 1, progress: progress };
-      var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, options));
-      res.on('error', function (err) {
+      const options = { type: 'tar', strip: 1, progress: progress };
+      const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, options));
+      res.on('error', (err) => {
         assert.ok(!err);
       });
-      res.on('finish', function () {
-        validateFiles(options, 'tar', function (err) {
+      res.on('finish', () => {
+        validateFiles(options, 'tar', (err) => {
           assert.ok(!err);
           assert.equal(progressUpdates.length, 16);
           done();
@@ -110,51 +110,51 @@ describe('createWriteStream', function () {
       });
     });
 
-    it('extract tar multiple times', function (done) {
-      var options = { type: 'tar', strip: 1 };
-      var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, options));
-      res.on('error', function (err) {
+    it('extract tar multiple times', (done) => {
+      const options = { type: 'tar', strip: 1 };
+      const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, options));
+      res.on('error', (err) => {
         assert.ok(!err);
       });
-      res.on('finish', function () {
-        validateFiles(options, 'tar', function (err) {
+      res.on('finish', () => {
+        validateFiles(options, 'tar', (err) => {
           assert.ok(!err);
 
-          var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, options));
-          res.on('error', function (err) {
+          const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, options));
+          res.on('error', (err) => {
             assert.ok(err);
 
-            var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, Object.assign({ force: true }, options)));
-            res.on('error', function (err) {
+            const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, Object.assign({ force: true }, options)));
+            res.on('error', (err) => {
               assert.ok(!err);
             });
-            res.on('finish', function () {
-              validateFiles(options, 'tar', function (err) {
+            res.on('finish', () => {
+              validateFiles(options, 'tar', (err) => {
                 assert.ok(!err);
                 done();
               });
             });
           });
-          res.on('finish', function () {
+          res.on('finish', () => {
             assert.ok(false);
           });
         });
       });
     });
 
-    it('extract zip with progress', function (done) {
-      var progressUpdates = [];
+    it('extract zip with progress', (done) => {
+      const progressUpdates = [];
       function progress(update) {
         progressUpdates.push(update);
       }
 
-      var options = { type: 'zip', strip: 1, progress: progress };
-      var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, options));
-      res.on('error', function (err) {
+      const options = { type: 'zip', strip: 1, progress: progress };
+      const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, options));
+      res.on('error', (err) => {
         assert.ok(!err);
       });
-      res.on('finish', function () {
-        validateFiles(options, 'zip', function (err) {
+      res.on('finish', () => {
+        validateFiles(options, 'zip', (err) => {
           assert.ok(!err);
           assert.equal(progressUpdates.length, 16);
           done();
@@ -162,32 +162,32 @@ describe('createWriteStream', function () {
       });
     });
 
-    it('extract zip multiple times', function (done) {
-      var options = { type: 'zip', strip: 1 };
-      var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, options));
-      res.on('error', function (err) {
+    it('extract zip multiple times', (done) => {
+      const options = { type: 'zip', strip: 1 };
+      const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, options));
+      res.on('error', (err) => {
         assert.ok(!err);
       });
-      res.on('finish', function () {
-        validateFiles(options, 'zip', function (err) {
+      res.on('finish', () => {
+        validateFiles(options, 'zip', (err) => {
           assert.ok(!err);
 
-          var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, options));
-          res.on('error', function (err) {
+          const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, options));
+          res.on('error', (err) => {
             assert.ok(err);
 
-            var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, Object.assign({ force: true }, options)));
-            res.on('error', function (err) {
+            const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, Object.assign({ force: true }, options)));
+            res.on('error', (err) => {
               assert.ok(!err);
             });
-            res.on('finish', function () {
-              validateFiles(options, 'zip', function (err) {
+            res.on('finish', () => {
+              validateFiles(options, 'zip', (err) => {
                 assert.ok(!err);
                 done();
               });
             });
           });
-          res.on('finish', function () {
+          res.on('finish', () => {
             assert.ok(false);
           });
         });
@@ -195,25 +195,25 @@ describe('createWriteStream', function () {
     });
   });
 
-  describe('unhappy path', function () {
-    it('should fail with too large strip (tar)', function (done) {
-      var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, { type: 'tar', strip: 2 }));
-      res.on('error', function (err) {
+  describe('unhappy path', () => {
+    it('should fail with too large strip (tar)', (done) => {
+      const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, { type: 'tar', strip: 2 }));
+      res.on('error', (err) => {
         assert.ok(!!err);
         done();
       });
-      res.on('finish', function () {
+      res.on('finish', () => {
         assert.ok(false);
       });
     });
 
-    it('should fail with too large strip (zip)', function (done) {
-      var res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, { type: 'zip', strip: 2 }));
-      res.on('error', function (err) {
+    it('should fail with too large strip (zip)', (done) => {
+      const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, { type: 'zip', strip: 2 }));
+      res.on('error', (err) => {
         assert.ok(!!err);
         done();
       });
-      res.on('finish', function () {
+      res.on('finish', () => {
         assert.ok(false);
       });
     });
