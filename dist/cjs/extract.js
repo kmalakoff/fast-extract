@@ -1,29 +1,37 @@
 "use strict";
-require("./polyfills.js");
-var once = require("once");
-var eos = require("end-of-stream");
-var createWriteStream = require("./createWriteStream.js");
-module.exports = function extract(source, dest, options, callback) {
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "default", {
+    enumerable: true,
+    get: function() {
+        return extract;
+    }
+});
+var _endofstream = /*#__PURE__*/ _interop_require_default(require("end-of-stream"));
+var _once = /*#__PURE__*/ _interop_require_default(require("once"));
+var _createWriteStream = /*#__PURE__*/ _interop_require_default(require("./createWriteStream.js"));
+function _interop_require_default(obj) {
+    return obj && obj.__esModule ? obj : {
+        default: obj
+    };
+}
+function extract(source, dest, options, callback) {
     if (typeof options === "string") options = {
         type: options
     };
     options = Object.assign({
         source: source
     }, options);
-    var res = createWriteStream(dest, options);
+    var res = (0, _createWriteStream.default)(dest, options);
     // path
     if (typeof source === "string") {
-        callback = once(callback);
+        callback = (0, _once.default)(callback);
         res.on("error", callback);
         res.write(source, "utf8");
         return res.end(callback);
     }
     // stream
-    return eos(source.pipe(res), callback);
-};
-
-if ((typeof exports.default === 'function' || (typeof exports.default === 'object' && exports.default !== null)) && typeof exports.default.__esModule === 'undefined') {
-  Object.defineProperty(exports.default, '__esModule', { value: true });
-  for (var key in exports) exports.default[key] = exports[key];
-  module.exports = exports.default;
+    return (0, _endofstream.default)(source.pipe(res), callback);
 }
+/* CJS INTEROP */ if (exports.__esModule && exports.default) { module.exports = exports.default; for (var key in exports) module.exports[key] = exports[key]; }

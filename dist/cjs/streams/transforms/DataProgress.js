@@ -1,25 +1,34 @@
 "use strict";
-var progressStream = require("progress-stream");
-var statsSize = require("../../sourceStats/size");
-module.exports = function DataProgressTransform(options) {
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "default", {
+    enumerable: true,
+    get: function() {
+        return DataProgressTransform;
+    }
+});
+var _progressstream = /*#__PURE__*/ _interop_require_default(require("progress-stream"));
+var _size = /*#__PURE__*/ _interop_require_default(require("../../sourceStats/size"));
+function _interop_require_default(obj) {
+    return obj && obj.__esModule ? obj : {
+        default: obj
+    };
+}
+function DataProgressTransform(options) {
     var stats = {
         basename: options.basename
     };
-    var progress = progressStream({
+    var progress = (0, _progressstream.default)({
         time: options.time
     }, function(update) {
         options.progress(Object.assign({
             progress: "write"
         }, update, stats));
     });
-    statsSize(options.source, options, function(err, size) {
+    (0, _size.default)(options.source, options, function(err, size) {
         err || progress.setLength(size || 0);
     });
     return progress;
-};
-
-if ((typeof exports.default === 'function' || (typeof exports.default === 'object' && exports.default !== null)) && typeof exports.default.__esModule === 'undefined') {
-  Object.defineProperty(exports.default, '__esModule', { value: true });
-  for (var key in exports) exports.default[key] = exports[key];
-  module.exports = exports.default;
 }
+/* CJS INTEROP */ if (exports.__esModule && exports.default) { module.exports = exports.default; for (var key in exports) module.exports[key] = exports[key]; }

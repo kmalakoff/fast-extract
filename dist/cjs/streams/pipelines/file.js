@@ -1,25 +1,34 @@
 "use strict";
-var path = require("path");
-var createWriteStream = require("../write/file.js");
-var DataProgressTransform = require("../transforms/DataProgress.js");
-var PathToData = require("../transforms/PathToData.js");
-var statsBasename = require("../../sourceStats/basename");
-module.exports = function createFilePipeline(dest, streams, options) {
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "default", {
+    enumerable: true,
+    get: function() {
+        return createFilePipeline;
+    }
+});
+var _path = /*#__PURE__*/ _interop_require_default(require("path"));
+var _basename = /*#__PURE__*/ _interop_require_default(require("../../sourceStats/basename"));
+var _DataProgress = /*#__PURE__*/ _interop_require_default(require("../transforms/DataProgress.js"));
+var _PathToData = /*#__PURE__*/ _interop_require_default(require("../transforms/PathToData.js"));
+var _file = /*#__PURE__*/ _interop_require_default(require("../write/file.js"));
+function _interop_require_default(obj) {
+    return obj && obj.__esModule ? obj : {
+        default: obj
+    };
+}
+function createFilePipeline(dest, streams, options) {
     var isPath = typeof options.source === "string";
-    var basename = statsBasename(options.source, options);
-    var fullPath = basename === undefined ? dest : path.join(dest, basename);
+    var basename = (0, _basename.default)(options.source, options);
+    var fullPath = basename === undefined ? dest : _path.default.join(dest, basename);
     streams = streams.slice();
-    !isPath || streams.unshift(new PathToData());
-    !options.progress || streams.push(new DataProgressTransform(Object.assign({
+    !isPath || streams.unshift(new _PathToData.default());
+    !options.progress || streams.push(new _DataProgress.default(Object.assign({
         basename: basename,
         fullPath: fullPath
     }, options)));
-    streams.push(createWriteStream(fullPath, options));
+    streams.push((0, _file.default)(fullPath, options));
     return streams;
-};
-
-if ((typeof exports.default === 'function' || (typeof exports.default === 'object' && exports.default !== null)) && typeof exports.default.__esModule === 'undefined') {
-  Object.defineProperty(exports.default, '__esModule', { value: true });
-  for (var key in exports) exports.default[key] = exports[key];
-  module.exports = exports.default;
 }
+/* CJS INTEROP */ if (exports.__esModule && exports.default) { module.exports = exports.default; for (var key in exports) module.exports[key] = exports[key]; }

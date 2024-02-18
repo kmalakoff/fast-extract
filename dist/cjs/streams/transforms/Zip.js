@@ -1,4 +1,16 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "default", {
+    enumerable: true,
+    get: function() {
+        return _default;
+    }
+});
+var _stream = require("stream");
+var _util = /*#__PURE__*/ _interop_require_default(require("util"));
+var _zipiterator = /*#__PURE__*/ _interop_require_default(require("zip-iterator"));
 function _instanceof(left, right) {
     if (right != null && typeof Symbol !== "undefined" && right[Symbol.hasInstance]) {
         return !!right[Symbol.hasInstance](left);
@@ -6,21 +18,23 @@ function _instanceof(left, right) {
         return left instanceof right;
     }
 }
-var Transform = require("stream").Transform;
-var util = require("util");
-var ZipIterator = require("zip-iterator");
+function _interop_require_default(obj) {
+    return obj && obj.__esModule ? obj : {
+        default: obj
+    };
+}
 function ZipTransform(options) {
     if (!_instanceof(this, ZipTransform)) return new ZipTransform(options);
     options = Object.assign({
         objectMode: true
     }, options || {});
-    Transform.call(this, options);
+    _stream.Transform.call(this, options);
 }
-util.inherits(ZipTransform, Transform);
+_util.default.inherits(ZipTransform, _stream.Transform);
 ZipTransform.prototype._transform = function _transform(chunk, _encoding, callback) {
     var _this = this;
     var fullPath = typeof chunk === "string" ? chunk : chunk.toString();
-    this._iterator = new ZipIterator(fullPath);
+    this._iterator = new _zipiterator.default(fullPath);
     this._iterator.forEach(this.push.bind(this), {
         concurrency: 1
     }, function(err) {
@@ -46,10 +60,5 @@ ZipTransform.prototype.destroy = function destroy(err) {
         this.end(err);
     }
 };
-module.exports = ZipTransform;
-
-if ((typeof exports.default === 'function' || (typeof exports.default === 'object' && exports.default !== null)) && typeof exports.default.__esModule === 'undefined') {
-  Object.defineProperty(exports.default, '__esModule', { value: true });
-  for (var key in exports) exports.default[key] = exports[key];
-  module.exports = exports.default;
-}
+var _default = ZipTransform;
+/* CJS INTEROP */ if (exports.__esModule && exports.default) { module.exports = exports.default; for (var key in exports) module.exports[key] = exports[key]; }

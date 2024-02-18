@@ -1,15 +1,29 @@
 "use strict";
-var writer = require("flush-write-stream");
-var Queue = require("queue-cb");
-var fs = require("fs");
-var tempSuffix = require("temp-suffix");
-module.exports = function createWriteEntriesStream(dest, options) {
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "default", {
+    enumerable: true,
+    get: function() {
+        return createWriteEntriesStream;
+    }
+});
+var _fs = /*#__PURE__*/ _interop_require_default(require("fs"));
+var _flushwritestream = /*#__PURE__*/ _interop_require_default(require("flush-write-stream"));
+var _queuecb = /*#__PURE__*/ _interop_require_default(require("queue-cb"));
+var _tempsuffix = /*#__PURE__*/ _interop_require_default(require("temp-suffix"));
+function _interop_require_default(obj) {
+    return obj && obj.__esModule ? obj : {
+        default: obj
+    };
+}
+function createWriteEntriesStream(dest, options) {
     options = Object.assign({
         now: new Date()
     }, options);
-    var tempDest = tempSuffix(dest);
+    var tempDest = (0, _tempsuffix.default)(dest);
     var links = [];
-    return writer({
+    return (0, _flushwritestream.default)({
         objectMode: true
     }, function write(entry, _encoding, callback) {
         if (entry.type === "link") {
@@ -22,8 +36,8 @@ module.exports = function createWriteEntriesStream(dest, options) {
         }
         entry.create(tempDest, options, callback);
     }, function flush(callback) {
-        var queue = new Queue(1);
-        queue.defer(fs.rename.bind(fs, tempDest, dest));
+        var queue = new _queuecb.default(1);
+        queue.defer(_fs.default.rename.bind(_fs.default, tempDest, dest));
         var entry;
         for(var index = 0; index < links.length; index++){
             entry = links[index];
@@ -31,10 +45,5 @@ module.exports = function createWriteEntriesStream(dest, options) {
         }
         queue.await(callback);
     });
-};
-
-if ((typeof exports.default === 'function' || (typeof exports.default === 'object' && exports.default !== null)) && typeof exports.default.__esModule === 'undefined') {
-  Object.defineProperty(exports.default, '__esModule', { value: true });
-  for (var key in exports) exports.default[key] = exports[key];
-  module.exports = exports.default;
 }
+/* CJS INTEROP */ if (exports.__esModule && exports.default) { module.exports = exports.default; for (var key in exports) module.exports[key] = exports[key]; }

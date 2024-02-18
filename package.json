@@ -38,7 +38,17 @@
   },
   "license": "MIT",
   "author": "Kevin Malakoff <kmalakoff@gmail.com> (https://github.com/kmalakoff)",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.mjs",
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./*": "./*"
+  },
   "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.mjs",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist"
@@ -70,10 +80,10 @@
     "require_optional": "^1.0.1",
     "rimraf": "^2.7.1",
     "signal-exit": "3.0.7",
-    "tar-iterator": "0.3.1",
+    "tar-iterator": "1.0.0",
     "temp-suffix": "^0.1.1",
     "unbzip2-stream": "^1.4.3",
-    "zip-iterator": "^0.3.1"
+    "zip-iterator": "^1.0.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.5.3",
@@ -81,10 +91,10 @@
     "@types/node": "^20.11.19",
     "cr": "^0.1.0",
     "depcheck": "^1.4.7",
-    "fs-iterator": "^4.2.0",
+    "fs-iterator": "^5.0.0",
     "fs-stats-spys": "^1.0.2",
     "lzma-native": "^8.0.6",
-    "ts-dev-stack": "^0.13.0"
+    "ts-dev-stack": "^0.14.0"
   },
   "engines": {
     "node": ">=0.8"
@@ -95,7 +105,8 @@
   "tsds": {
     "source": "src/index.mjs",
     "targets": [
-      "cjs"
+      "cjs",
+      "esm"
     ]
   }
 }

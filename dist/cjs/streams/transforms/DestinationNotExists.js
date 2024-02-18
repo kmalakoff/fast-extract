@@ -1,4 +1,16 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "default", {
+    enumerable: true,
+    get: function() {
+        return _default;
+    }
+});
+var _fs = /*#__PURE__*/ _interop_require_default(require("fs"));
+var _stream = require("stream");
+var _util = /*#__PURE__*/ _interop_require_default(require("util"));
 function _instanceof(left, right) {
     if (right != null && typeof Symbol !== "undefined" && right[Symbol.hasInstance]) {
         return !!right[Symbol.hasInstance](left);
@@ -6,9 +18,11 @@ function _instanceof(left, right) {
         return left instanceof right;
     }
 }
-var Transform = require("stream").Transform;
-var fs = require("fs");
-var util = require("util");
+function _interop_require_default(obj) {
+    return obj && obj.__esModule ? obj : {
+        default: obj
+    };
+}
 function DestinationNotExists(dest, options) {
     if (!_instanceof(this, DestinationNotExists)) return new DestinationNotExists(options);
     options = options ? Object.assign({}, options, {
@@ -16,23 +30,18 @@ function DestinationNotExists(dest, options) {
     }) : {
         objectMode: true
     };
-    Transform.call(this, options);
+    _stream.Transform.call(this, options);
     this.dest = dest;
 }
-util.inherits(DestinationNotExists, Transform);
+_util.default.inherits(DestinationNotExists, _stream.Transform);
 DestinationNotExists.prototype._transform = function _transform(chunk, encoding, callback) {
     var _this = this;
     if (this.ready) return callback(null, chunk, encoding);
-    fs.readdir(this.dest, function(dirErr, names) {
+    _fs.default.readdir(this.dest, function(dirErr, names) {
         _this.ready = true;
         var err = !dirErr && names.length ? new Error("Cannot overwrite ".concat(_this.dest, " without force option")) : null;
         err ? callback(err) : callback(null, chunk, encoding);
     });
 };
-module.exports = DestinationNotExists;
-
-if ((typeof exports.default === 'function' || (typeof exports.default === 'object' && exports.default !== null)) && typeof exports.default.__esModule === 'undefined') {
-  Object.defineProperty(exports.default, '__esModule', { value: true });
-  for (var key in exports) exports.default[key] = exports[key];
-  module.exports = exports.default;
-}
+var _default = DestinationNotExists;
+/* CJS INTEROP */ if (exports.__esModule && exports.default) { module.exports = exports.default; for (var key in exports) module.exports[key] = exports[key]; }

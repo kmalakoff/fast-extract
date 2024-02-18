@@ -10,14 +10,15 @@ function _export(target, all) {
 }
 _export(exports, {
     createWriteStream: function() {
-        return _createWriteStreamcjs.default;
+        return _createWriteStream.default;
     },
     default: function() {
         return fastExtract;
     }
 });
-var _extractcjs = /*#__PURE__*/ _interop_require_default(require("./extract.js"));
-var _createWriteStreamcjs = /*#__PURE__*/ _interop_require_default(require("./createWriteStream.js"));
+require("./polyfills.js");
+var _extract = /*#__PURE__*/ _interop_require_default(require("./extract.js"));
+var _createWriteStream = /*#__PURE__*/ _interop_require_default(require("./createWriteStream.js"));
 function _interop_require_default(obj) {
     return obj && obj.__esModule ? obj : {
         default: obj
@@ -33,16 +34,11 @@ function fastExtract(src, dest, options, callback) {
         callback = options;
         options = null;
     }
-    if (typeof callback === "function") return (0, _extractcjs.default)(src, dest, options || {}, callback);
+    if (typeof callback === "function") return (0, _extract.default)(src, dest, options || {}, callback);
     return new Promise(function(resolve, reject) {
         fastExtract(src, dest, options, function(err, res) {
             err ? reject(err) : resolve(res);
         });
     });
 }
-
-if ((typeof exports.default === 'function' || (typeof exports.default === 'object' && exports.default !== null)) && typeof exports.default.__esModule === 'undefined') {
-  Object.defineProperty(exports.default, '__esModule', { value: true });
-  for (var key in exports) exports.default[key] = exports[key];
-  module.exports = exports.default;
-}
+/* CJS INTEROP */ if (exports.__esModule && exports.default) { module.exports = exports.default; for (var key in exports) module.exports[key] = exports[key]; }

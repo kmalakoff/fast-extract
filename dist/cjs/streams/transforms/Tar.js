@@ -1,4 +1,16 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "default", {
+    enumerable: true,
+    get: function() {
+        return _default;
+    }
+});
+var _stream = require("stream");
+var _util = /*#__PURE__*/ _interop_require_default(require("util"));
+var _tariterator = /*#__PURE__*/ _interop_require_default(require("tar-iterator"));
 function _instanceof(left, right) {
     if (right != null && typeof Symbol !== "undefined" && right[Symbol.hasInstance]) {
         return !!right[Symbol.hasInstance](left);
@@ -6,23 +18,24 @@ function _instanceof(left, right) {
         return left instanceof right;
     }
 }
-var Transform = require("stream").Transform;
-var PassThrough = require("stream").PassThrough;
-var util = require("util");
-var TarIterator = require("tar-iterator");
+function _interop_require_default(obj) {
+    return obj && obj.__esModule ? obj : {
+        default: obj
+    };
+}
 function TarTransform(options) {
     if (!_instanceof(this, TarTransform)) return new TarTransform(options);
     options = Object.assign({
         objectMode: true
     }, options || {});
-    Transform.call(this, options);
+    _stream.Transform.call(this, options);
 }
-util.inherits(TarTransform, Transform);
+_util.default.inherits(TarTransform, _stream.Transform);
 TarTransform.prototype._transform = function _transform(chunk, encoding, callback) {
     var _this = this;
     if (this._stream) return this._stream.write(chunk, encoding, callback);
-    this._stream = new PassThrough();
-    this._iterator = new TarIterator(this._stream);
+    this._stream = new _stream.PassThrough();
+    this._iterator = new _tariterator.default(this._stream);
     this._iterator.forEach(function(entry) {
         _this.push(entry);
     }, {
@@ -56,10 +69,5 @@ TarTransform.prototype.destroy = function destroy(err) {
         this.end(err);
     }
 };
-module.exports = TarTransform;
-
-if ((typeof exports.default === 'function' || (typeof exports.default === 'object' && exports.default !== null)) && typeof exports.default.__esModule === 'undefined') {
-  Object.defineProperty(exports.default, '__esModule', { value: true });
-  for (var key in exports) exports.default[key] = exports[key];
-  module.exports = exports.default;
-}
+var _default = TarTransform;
+/* CJS INTEROP */ if (exports.__esModule && exports.default) { module.exports = exports.default; for (var key in exports) module.exports[key] = exports[key]; }

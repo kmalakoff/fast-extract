@@ -1,38 +1,47 @@
 "use strict";
-var path = require("path");
-var fs = require("fs");
-var mkpath = require("mkpath");
-var writer = require("flush-write-stream");
-var Queue = require("queue-cb");
-var tempSuffix = require("temp-suffix");
-var writeTruncateFile = require("../../writeTruncateFile.js");
-module.exports = function createFilePipeline(dest, options) {
-    var tempDest = tempSuffix(dest);
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "default", {
+    enumerable: true,
+    get: function() {
+        return createFilePipeline;
+    }
+});
+var _fs = /*#__PURE__*/ _interop_require_default(require("fs"));
+var _path = /*#__PURE__*/ _interop_require_default(require("path"));
+var _flushwritestream = /*#__PURE__*/ _interop_require_default(require("flush-write-stream"));
+var _mkpath = /*#__PURE__*/ _interop_require_default(require("mkpath"));
+var _queuecb = /*#__PURE__*/ _interop_require_default(require("queue-cb"));
+var _tempsuffix = /*#__PURE__*/ _interop_require_default(require("temp-suffix"));
+var _writeTruncateFile = /*#__PURE__*/ _interop_require_default(require("../../writeTruncateFile.js"));
+function _interop_require_default(obj) {
+    return obj && obj.__esModule ? obj : {
+        default: obj
+    };
+}
+function createFilePipeline(dest, options) {
+    var tempDest = (0, _tempsuffix.default)(dest);
     options._tempPaths.push(tempDest);
     var wroteSomething = false;
-    return writer(function write(chunk, _encoding, callback) {
+    return (0, _flushwritestream.default)(function write(chunk, _encoding, callback) {
         var _this = this;
         wroteSomething = true;
-        var appendFile = fs.appendFile.bind(fs, tempDest, chunk, callback);
+        var appendFile = _fs.default.appendFile.bind(_fs.default, tempDest, chunk, callback);
         if (this.pathMade) return appendFile();
-        mkpath(path.dirname(tempDest), function() {
+        (0, _mkpath.default)(_path.default.dirname(tempDest), function() {
             _this.pathMade = true;
             appendFile();
         });
     }, function flush(callback) {
-        var queue = new Queue(1);
+        var queue = new _queuecb.default(1);
         queue.defer(function(callback) {
-            mkpath(path.dirname(dest), function(err) {
+            (0, _mkpath.default)(_path.default.dirname(dest), function(err) {
                 err && err.code !== "EEXIST" ? callback(err) : callback();
             });
         });
-        wroteSomething ? queue.defer(fs.rename.bind(fs, tempDest, dest)) : queue.defer(writeTruncateFile.bind(null, dest));
+        wroteSomething ? queue.defer(_fs.default.rename.bind(_fs.default, tempDest, dest)) : queue.defer(_writeTruncateFile.default.bind(null, dest));
         queue.await(callback);
     });
-};
-
-if ((typeof exports.default === 'function' || (typeof exports.default === 'object' && exports.default !== null)) && typeof exports.default.__esModule === 'undefined') {
-  Object.defineProperty(exports.default, '__esModule', { value: true });
-  for (var key in exports) exports.default[key] = exports[key];
-  module.exports = exports.default;
 }
+/* CJS INTEROP */ if (exports.__esModule && exports.default) { module.exports = exports.default; for (var key in exports) module.exports[key] = exports[key]; }

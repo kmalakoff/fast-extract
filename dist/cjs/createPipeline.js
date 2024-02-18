@@ -1,32 +1,47 @@
 "use strict";
-var bz2 = require("unbzip2-stream");
-var zlib = require("zlib");
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "default", {
+    enumerable: true,
+    get: function() {
+        return createPipeline;
+    }
+});
+var _zlib = /*#__PURE__*/ _interop_require_default(require("zlib"));
+var _unbzip2stream = /*#__PURE__*/ _interop_require_default(require("unbzip2-stream"));
+var _optionalRequirecjs = /*#__PURE__*/ _interop_require_default(require("./optionalRequire.js"));
+var _file = /*#__PURE__*/ _interop_require_default(require("./streams/pipelines/file.js"));
+var _tar = /*#__PURE__*/ _interop_require_default(require("./streams/pipelines/tar.js"));
+var _zip = /*#__PURE__*/ _interop_require_default(require("./streams/pipelines/zip.js"));
+var _DestinationNotExists = /*#__PURE__*/ _interop_require_default(require("./streams/transforms/DestinationNotExists.js"));
+var _DestinationRemove = /*#__PURE__*/ _interop_require_default(require("./streams/transforms/DestinationRemove.js"));
+var _extname = /*#__PURE__*/ _interop_require_default(require("./extname.js"));
+var _basename = /*#__PURE__*/ _interop_require_default(require("./sourceStats/basename"));
+function _interop_require_default(obj) {
+    return obj && obj.__esModule ? obj : {
+        default: obj
+    };
+}
 // lzma-native module compatiblity starts at Node 6
 var major = +process.versions.node.split(".")[0];
-var lzmaNative = major >= 10 ? require("./optionalRequire.js")("lzma-native") : null;
+var lzmaNative = major >= 10 ? (0, _optionalRequirecjs.default)("lzma-native") : null;
 var TRANSORMS = {
-    bz2: bz2,
-    tgz: zlib.createUnzip.bind(zlib),
-    gz: zlib.createUnzip.bind(zlib),
-    xz: lzmaNative ? lzmaNative.createDecompressor.bind(lzmaNative) : undefined
+    bz2: _unbzip2stream.default,
+    tgz: _zlib.default.createUnzip.bind(_zlib.default),
+    gz: _zlib.default.createUnzip.bind(_zlib.default),
+    xz: lzmaNative && lzmaNative.createDecompressor ? lzmaNative.createDecompressor.bind(lzmaNative) : undefined
 };
-var createFilePipeline = require("./streams/pipelines/file.js");
-var createTarPipeline = require("./streams/pipelines/tar.js");
-var createZipPipeline = require("./streams/pipelines/zip.js");
 var WRITERS = {
-    zip: createZipPipeline,
-    tar: createTarPipeline,
-    tgz: createTarPipeline
+    zip: _zip.default,
+    tar: _tar.default,
+    tgz: _tar.default
 };
-var DestinationNotExists = require("./streams/transforms/DestinationNotExists.js");
-var DestinationRemove = require("./streams/transforms/DestinationRemove.js");
-var extname = require("./extname.js");
-var statsBasename = require("./sourceStats/basename");
-module.exports = function createPipeline(dest, options) {
-    var type = options.type === undefined ? extname(statsBasename(options.source, options) || "") : options.type;
+function createPipeline(dest, options) {
+    var type = options.type === undefined ? (0, _extname.default)((0, _basename.default)(options.source, options) || "") : options.type;
     var parts = type.split(".");
     var streams = [
-        options.force ? new DestinationRemove(dest) : new DestinationNotExists(dest)
+        options.force ? new _DestinationRemove.default(dest) : new _DestinationNotExists.default(dest)
     ];
     for(var index = parts.length - 1; index >= 0; index--){
         // append transform
@@ -37,11 +52,6 @@ module.exports = function createPipeline(dest, options) {
         if (writer) return writer(dest, streams, options);
     }
     // default is to write the result to a file
-    return createFilePipeline(dest, streams, options);
-};
-
-if ((typeof exports.default === 'function' || (typeof exports.default === 'object' && exports.default !== null)) && typeof exports.default.__esModule === 'undefined') {
-  Object.defineProperty(exports.default, '__esModule', { value: true });
-  for (var key in exports) exports.default[key] = exports[key];
-  module.exports = exports.default;
+    return (0, _file.default)(dest, streams, options);
 }
+/* CJS INTEROP */ if (exports.__esModule && exports.default) { module.exports = exports.default; for (var key in exports) module.exports[key] = exports[key]; }

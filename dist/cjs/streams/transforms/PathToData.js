@@ -1,4 +1,17 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "default", {
+    enumerable: true,
+    get: function() {
+        return _default;
+    }
+});
+var _fs = /*#__PURE__*/ _interop_require_default(require("fs"));
+var _stream = require("stream");
+var _util = /*#__PURE__*/ _interop_require_default(require("util"));
+var _endofstream = /*#__PURE__*/ _interop_require_default(require("end-of-stream"));
 function _instanceof(left, right) {
     if (right != null && typeof Symbol !== "undefined" && right[Symbol.hasInstance]) {
         return !!right[Symbol.hasInstance](left);
@@ -6,31 +19,27 @@ function _instanceof(left, right) {
         return left instanceof right;
     }
 }
-var fs = require("fs");
-var Transform = require("stream").Transform;
-var util = require("util");
-var eos = require("end-of-stream");
+function _interop_require_default(obj) {
+    return obj && obj.__esModule ? obj : {
+        default: obj
+    };
+}
 function PathToData(options) {
     if (!_instanceof(this, PathToData)) return new PathToData(options);
-    Transform.call(this, options || {});
+    _stream.Transform.call(this, options || {});
 }
-util.inherits(PathToData, Transform);
+_util.default.inherits(PathToData, _stream.Transform);
 PathToData.prototype._transform = function _transform(chunk, _encoding, callback) {
     var self = this;
     var fullPath = typeof chunk === "string" ? chunk : chunk.toString();
-    var stream = fs.createReadStream(fullPath);
+    var stream = _fs.default.createReadStream(fullPath);
     stream.on("data", function data(chunk) {
         self.push(chunk, "buffer");
     });
-    eos(stream, function(err) {
+    (0, _endofstream.default)(stream, function(err) {
         !err || self.push(null);
         callback(err);
     });
 };
-module.exports = PathToData;
-
-if ((typeof exports.default === 'function' || (typeof exports.default === 'object' && exports.default !== null)) && typeof exports.default.__esModule === 'undefined') {
-  Object.defineProperty(exports.default, '__esModule', { value: true });
-  for (var key in exports) exports.default[key] = exports[key];
-  module.exports = exports.default;
-}
+var _default = PathToData;
+/* CJS INTEROP */ if (exports.__esModule && exports.default) { module.exports = exports.default; for (var key in exports) module.exports[key] = exports[key]; }
