@@ -1,7 +1,7 @@
-const path = require('path');
+import path from 'path';
 
-module.exports = function extname(fullPath) {
+export default function extname(fullPath) {
   const basename = path.basename(fullPath);
   const index = basename.indexOf('.');
   return ~index ? basename.slice(index) : '';
-};
+}
