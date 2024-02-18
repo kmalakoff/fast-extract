@@ -1,6 +1,6 @@
-const Transform = require('stream').Transform;
-const util = require('util');
-const rimraf = require('rimraf');
+import { Transform } from 'stream';
+import util from 'util';
+import rimraf from 'rimraf';
 
 function DestinationRemove(dest, options) {
   if (!(this instanceof DestinationRemove)) return new DestinationRemove(options);
@@ -20,4 +20,4 @@ DestinationRemove.prototype._transform = function _transform(chunk, encoding, ca
   });
 };
 
-module.exports = DestinationRemove;
+export default DestinationRemove;

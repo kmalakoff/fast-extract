@@ -1,10 +1,10 @@
-const path = require('path');
-const fs = require('fs');
-const Transform = require('stream').Transform;
-const util = require('util');
-const mkpath = require('mkpath');
+import fs from 'fs';
+import path from 'path';
+import { Transform } from 'stream';
+import util from 'util';
+import mkpath from 'mkpath';
 
-const tempSuffix = require('temp-suffix');
+import tempSuffix from 'temp-suffix';
 
 function WriteFileTransform(dest, options) {
   if (!(this instanceof WriteFileTransform)) return new WriteFileTransform(options);
@@ -48,4 +48,4 @@ WriteFileTransform.prototype.destroy = function destroy(err) {
   }
 };
 
-module.exports = WriteFileTransform;
+export default WriteFileTransform;

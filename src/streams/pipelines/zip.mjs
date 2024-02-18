@@ -1,10 +1,10 @@
-const EntryProgressTransform = require('../transforms/EntryProgress.cjs');
-const PathToData = require('../transforms/PathToData.cjs');
-const WriteFileTransform = require('../transforms/WriteFile.cjs');
-const ZipTransform = require('../transforms/Zip.cjs');
-const createWriteEntriesStream = require('../write/entries.cjs');
+import EntryProgressTransform from '../transforms/EntryProgress.mjs';
+import PathToData from '../transforms/PathToData.mjs';
+import WriteFileTransform from '../transforms/WriteFile.mjs';
+import ZipTransform from '../transforms/Zip.mjs';
+import createWriteEntriesStream from '../write/entries.mjs';
 
-module.exports = function createZipPipeline(dest, streams, options) {
+export default function createZipPipeline(dest, streams, options) {
   const isPath = typeof options.source === 'string';
   streams = streams.slice();
   if (isPath) {
@@ -19,4 +19,4 @@ module.exports = function createZipPipeline(dest, streams, options) {
   !options.progress || streams.push(new EntryProgressTransform(options));
   streams.push(createWriteEntriesStream(dest, options));
   return streams;
-};
+}

@@ -1,7 +1,7 @@
-const Transform = require('stream').Transform;
-const util = require('util');
+import { Transform } from 'stream';
+import util from 'util';
 
-const ZipIterator = require('zip-iterator');
+import ZipIterator from 'zip-iterator';
 
 function ZipTransform(options) {
   if (!(this instanceof ZipTransform)) return new ZipTransform(options);
@@ -40,4 +40,4 @@ ZipTransform.prototype.destroy = function destroy(err) {
   }
 };
 
-module.exports = ZipTransform;
+export default ZipTransform;

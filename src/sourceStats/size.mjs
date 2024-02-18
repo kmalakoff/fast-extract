@@ -1,6 +1,6 @@
-const fs = require('fs');
+import fs from 'fs';
 
-module.exports = function getSize(source, options, callback) {
+export default function getSize(source, options, callback) {
   // options
   if (options.size !== undefined) return callback(null, options.size);
 
@@ -16,4 +16,4 @@ module.exports = function getSize(source, options, callback) {
     if (source.size) return callback(null, source.size);
   }
   callback();
-};
+}
