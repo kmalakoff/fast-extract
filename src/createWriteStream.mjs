@@ -1,11 +1,11 @@
-const writer = require('flush-write-stream');
-const pumpify = require('pumpify');
+import writer from 'flush-write-stream';
+import pumpify from 'pumpify';
 
-const createPipeline = require('./createPipeline.cjs');
-const exitCleanup = require('./exitCleanup.cjs');
-const rimrafAll = require('./rimrafAll.cjs');
+import createPipeline from './createPipeline.mjs';
+import exitCleanup from './exitCleanup.mjs';
+import rimrafAll from './rimrafAll.mjs';
 
-module.exports = function createWriteStream(dest, options) {
+export default function createWriteStream(dest, options) {
   if (typeof options === 'string') options = { type: options };
   options = Object.assign({ _tempPaths: [] }, options);
   const streams = createPipeline(dest, options);
@@ -59,4 +59,4 @@ module.exports = function createWriteStream(dest, options) {
   });
 
   return write;
-};
+}

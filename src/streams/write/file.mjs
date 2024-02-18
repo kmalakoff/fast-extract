@@ -1,13 +1,13 @@
-const path = require('path');
-const fs = require('fs');
-const mkpath = require('mkpath');
-const writer = require('flush-write-stream');
-const Queue = require('queue-cb');
+import fs from 'fs';
+import path from 'path';
+import writer from 'flush-write-stream';
+import mkpath from 'mkpath';
+import Queue from 'queue-cb';
 
-const tempSuffix = require('temp-suffix');
-const writeTruncateFile = require('../../writeTruncateFile.cjs');
+import tempSuffix from 'temp-suffix';
+import writeTruncateFile from '../../writeTruncateFile.mjs';
 
-module.exports = function createFilePipeline(dest, options) {
+export default function createFilePipeline(dest, options) {
   const tempDest = tempSuffix(dest);
   options._tempPaths.push(tempDest);
 
@@ -33,4 +33,4 @@ module.exports = function createFilePipeline(dest, options) {
       queue.await(callback);
     }
   );
-};
+}
