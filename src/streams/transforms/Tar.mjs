@@ -1,8 +1,7 @@
-const Transform = require('stream').Transform;
-const PassThrough = require('stream').PassThrough;
-const util = require('util');
+import { PassThrough, Transform } from 'stream';
+import util from 'util';
 
-const TarIterator = require('tar-iterator');
+import TarIterator from 'tar-iterator';
 
 function TarTransform(options) {
   if (!(this instanceof TarTransform)) return new TarTransform(options);
@@ -54,4 +53,4 @@ TarTransform.prototype.destroy = function destroy(err) {
   }
 };
 
-module.exports = TarTransform;
+export default TarTransform;

@@ -1,10 +1,10 @@
-const writer = require('flush-write-stream');
-const Queue = require('queue-cb');
-const fs = require('fs');
+import fs from 'fs';
+import writer from 'flush-write-stream';
+import Queue from 'queue-cb';
 
-const tempSuffix = require('temp-suffix');
+import tempSuffix from 'temp-suffix';
 
-module.exports = function createWriteEntriesStream(dest, options) {
+export default function createWriteEntriesStream(dest, options) {
   options = Object.assign({ now: new Date() }, options);
 
   const tempDest = tempSuffix(dest);
@@ -33,4 +33,4 @@ module.exports = function createWriteEntriesStream(dest, options) {
       queue.await(callback);
     }
   );
-};
+}

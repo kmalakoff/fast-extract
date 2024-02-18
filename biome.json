@@ -3,6 +3,9 @@
   "files": {
     "ignore": ["assets/**", "dist/**", "node_modules/**", "test/data/**"]
   },
+  "organizeImports": {
+    "ignore": ["src/index.mjs"]
+  },
   "formatter": {
     "enabled": true,
     "lineWidth": 320,

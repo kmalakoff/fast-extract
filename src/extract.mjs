@@ -1,10 +1,9 @@
-require('./polyfills.js');
-const once = require('once');
-const eos = require('end-of-stream');
+import eos from 'end-of-stream';
+import once from 'once';
 
-const createWriteStream = require('./createWriteStream.cjs');
+import createWriteStream from './createWriteStream.mjs';
 
-module.exports = function extract(source, dest, options, callback) {
+export default function extract(source, dest, options, callback) {
   if (typeof options === 'string') options = { type: options };
   options = Object.assign({ source: source }, options);
   const res = createWriteStream(dest, options);
@@ -19,4 +18,4 @@ module.exports = function extract(source, dest, options, callback) {
   // stream
 
   return eos(source.pipe(res), callback);
-};
+}

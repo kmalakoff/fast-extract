@@ -1,7 +1,7 @@
-const fs = require('fs');
-const Transform = require('stream').Transform;
-const util = require('util');
-const eos = require('end-of-stream');
+import fs from 'fs';
+import { Transform } from 'stream';
+import util from 'util';
+import eos from 'end-of-stream';
 
 function PathToData(options) {
   if (!(this instanceof PathToData)) return new PathToData(options);
@@ -23,4 +23,4 @@ PathToData.prototype._transform = function _transform(chunk, _encoding, callback
   });
 };
 
-module.exports = PathToData;
+export default PathToData;
