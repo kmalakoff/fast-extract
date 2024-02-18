@@ -1,8 +1,8 @@
-const fs = require('fs');
+import fs from 'fs';
 
-module.exports = function writeTruncateFile(fullPath, callback) {
+export default function writeTruncateFile(fullPath, callback) {
   fs.open(fullPath, 'w', (err, fd) => {
     if (err) return callback(err);
     fs.close(fd, callback);
   });
-};
+}

@@ -1,7 +1,7 @@
-const progressStream = require('progress-stream');
-const statsSize = require('../../sourceStats/size');
+import progressStream from 'progress-stream';
+import statsSize from '../../sourceStats/size';
 
-module.exports = function DataProgressTransform(options) {
+export default function DataProgressTransform(options) {
   const stats = { basename: options.basename };
   const progress = progressStream(
     {
@@ -16,4 +16,4 @@ module.exports = function DataProgressTransform(options) {
     err || progress.setLength(size || 0);
   });
   return progress;
-};
+}

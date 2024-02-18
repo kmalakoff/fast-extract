@@ -1,11 +1,11 @@
-const path = require('path');
-const contentDisposition = require('content-disposition');
+import path from 'path';
+import contentDisposition from 'content-disposition';
 
 // biome-ignore lint/suspicious/noControlCharactersInRegex: <explanation>
 const POSIX = /[<>:"\\/\\|?*\x00-\x1F]/g;
 const WINDOWS = /^(con|prn|aux|nul|com[0-9]|lpt[0-9])$/i;
 
-module.exports = function getBasename(source, options, endpoint) {
+export default function getBasename(source, options, endpoint) {
   // options
   let basename = options.basename || options.filename;
   if (basename !== undefined) return basename;
@@ -29,4 +29,4 @@ module.exports = function getBasename(source, options, endpoint) {
     basename = basename.replace(WINDOWS, '!');
     return basename;
   }
-};
+}

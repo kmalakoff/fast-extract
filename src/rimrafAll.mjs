@@ -1,7 +1,7 @@
-const rimraf = require('rimraf');
-const Queue = require('queue-cb');
+import Queue from 'queue-cb';
+import rimraf from 'rimraf';
 
-module.exports = function rimrafAll(fullPaths, callback) {
+export default function rimrafAll(fullPaths, callback) {
   if (!fullPaths.length) return callback();
   const queue = new Queue(1);
   for (let index = 0; index < fullPaths.length; index++) {
@@ -15,4 +15,4 @@ module.exports = function rimrafAll(fullPaths, callback) {
   }
 
   queue.await(callback);
-};
+}

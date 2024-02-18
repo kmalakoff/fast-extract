@@ -1,6 +1,6 @@
-const Transform = require('stream').Transform;
-const fs = require('fs');
-const util = require('util');
+import fs from 'fs';
+import { Transform } from 'stream';
+import util from 'util';
 
 function DestinationNotExists(dest, options) {
   if (!(this instanceof DestinationNotExists)) return new DestinationNotExists(options);
@@ -21,4 +21,4 @@ DestinationNotExists.prototype._transform = function _transform(chunk, encoding,
   });
 };
 
-module.exports = DestinationNotExists;
+export default DestinationNotExists;

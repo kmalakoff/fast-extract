@@ -1,6 +1,7 @@
-import extract from './extract.cjs';
+import './polyfills.cjs';
+import extract from './extract.mjs';
 
-export { default as createWriteStream } from './createWriteStream.cjs';
+export { default as createWriteStream } from './createWriteStream.mjs';
 export default function fastExtract(src, dest, options, callback) {
   if (options === undefined && typeof dest !== 'string') {
     callback = options;

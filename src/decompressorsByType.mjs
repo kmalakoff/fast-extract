@@ -1,11 +1,11 @@
-const bz2 = require('unbzip2-stream');
-const zlib = require('zlib');
+import zlib from 'zlib';
+import bz2 from 'unbzip2-stream';
 
 // lzma-native module compatiblity starts at Node 6
 const major = +process.versions.node.split('.')[0];
-const lzmaNative = major >= 10 ? require('./optionalRequire.cjs')('lzma-native') : null;
+const lzmaNative = major >= 10 ? require('./optionalRequire.mjs')('lzma-native') : null;
 
-module.exports = function decompressorsByType(type) {
+export default function decompressorsByType(type) {
   const parts = type.split('.').reverse();
   const streams = [];
   for (let index = 0; index < parts.length; index++) {
@@ -15,4 +15,4 @@ module.exports = function decompressorsByType(type) {
     else if (part === 'tgz' || part === 'gz') streams.push(zlib.createUnzip());
   }
   return streams;
-};
+}

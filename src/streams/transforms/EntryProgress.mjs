@@ -1,6 +1,6 @@
-const Transform = require('stream').Transform;
-const util = require('util');
-const throttle = require('lodash.throttle');
+import { Transform } from 'stream';
+import util from 'util';
+import throttle from 'lodash.throttle';
 
 function EntryProgressTransform(options) {
   if (!(this instanceof EntryProgressTransform)) return new EntryProgressTransform();
@@ -28,4 +28,4 @@ EntryProgressTransform.prototype._flush = function _flush(callback) {
   callback();
 };
 
-module.exports = EntryProgressTransform;
+export default EntryProgressTransform;

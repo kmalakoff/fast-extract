@@ -5,7 +5,7 @@ const cr = require('cr');
 const Iterator = require('fs-iterator');
 const statsSpys = require('fs-stats-spys');
 
-const constants = require('./constants');
+const constants = require('./constants.cjs');
 const TMP_DIR = constants.TMP_DIR;
 const TARGET = constants.TARGET;
 const CONTENTS = constants.CONTENTS;

@@ -5,9 +5,9 @@ const rimraf = require('rimraf');
 const mkpath = require('mkpath');
 
 const { createWriteStream } = require('fast-extract');
-const validateFiles = require('../lib/validateFiles');
+const validateFiles = require('../lib/validateFiles.cjs');
 
-const constants = require('../lib/constants');
+const constants = require('../lib/constants.cjs');
 const TMP_DIR = constants.TMP_DIR;
 const TARGET = constants.TARGET;
 const DATA_DIR = constants.DATA_DIR;

@@ -1,5 +1,5 @@
-const rimraf = require('rimraf');
-const onExit = require('signal-exit');
+import rimraf from 'rimraf';
+import onExit from 'signal-exit';
 
 const fullPaths = [];
 
@@ -11,12 +11,16 @@ onExit(function exist(_code, _signal) {
   }
 });
 
-module.exports.add = function add(fullPath) {
+function add(fullPath) {
   fullPaths.push(fullPath);
 };
 
-module.exports.remove = function remove(fullPath) {
+function remove(fullPath) {
   const index = fullPaths.indexOf(fullPath);
   if (index < 0) console.log(`Path does not exist for remove: ${fullPath}`);
   fullPaths.splice(index, 1);
 };
+
+export default {
+  add, remove
+}
