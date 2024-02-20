@@ -1,6 +1,6 @@
 import zlib from 'zlib';
 import bz2 from 'unbzip2-stream';
-import optionalRequire  from './optionalRequire.cjs';
+import optionalRequire from './optionalRequire.cjs';
 
 // lzma-native module compatiblity starts at Node 6
 const major = +process.versions.node.split('.')[0];

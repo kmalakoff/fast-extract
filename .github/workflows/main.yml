@@ -22,6 +22,6 @@ jobs:
       - run: npm uninstall node-version-use -g
       - run: npm install node-version-use -g
       - run: npm ci
-      - run: npm run format
+      - run: npm run version
       - run: npm run build
       - run: npm run test:engines
