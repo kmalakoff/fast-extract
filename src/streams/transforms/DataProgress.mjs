@@ -1,5 +1,5 @@
 import progressStream from 'progress-stream';
-import statsSize from '../../sourceStats/size';
+import statsSize from '../../sourceStats/size.mjs';
 
 export default function DataProgressTransform(options) {
   const stats = { basename: options.basename };
