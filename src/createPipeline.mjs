@@ -27,7 +27,7 @@ import DestinationNotExists from './streams/transforms/DestinationNotExists.mjs'
 import DestinationRemove from './streams/transforms/DestinationRemove.mjs';
 
 import extname from './extname.mjs';
-import statsBasename from './sourceStats/basename';
+import statsBasename from './sourceStats/basename.mjs';
 
 export default function createPipeline(dest, options) {
   const type = options.type === undefined ? extname(statsBasename(options.source, options) || '') : options.type;
