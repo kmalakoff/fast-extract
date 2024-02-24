@@ -9,7 +9,7 @@ Object.defineProperty(exports, "default", {
     }
 });
 var _progressstream = /*#__PURE__*/ _interop_require_default(require("progress-stream"));
-var _size = /*#__PURE__*/ _interop_require_default(require("../../sourceStats/size"));
+var _size = /*#__PURE__*/ _interop_require_default(require("../../sourceStats/size.js"));
 function _interop_require_default(obj) {
     return obj && obj.__esModule ? obj : {
         default: obj

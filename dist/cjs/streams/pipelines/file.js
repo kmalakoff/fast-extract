@@ -9,7 +9,7 @@ Object.defineProperty(exports, "default", {
     }
 });
 var _path = /*#__PURE__*/ _interop_require_default(require("path"));
-var _basename = /*#__PURE__*/ _interop_require_default(require("../../sourceStats/basename"));
+var _basename = /*#__PURE__*/ _interop_require_default(require("../../sourceStats/basename.js"));
 var _DataProgress = /*#__PURE__*/ _interop_require_default(require("../transforms/DataProgress.js"));
 var _PathToData = /*#__PURE__*/ _interop_require_default(require("../transforms/PathToData.js"));
 var _file = /*#__PURE__*/ _interop_require_default(require("../write/file.js"));

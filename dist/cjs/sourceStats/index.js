@@ -8,8 +8,8 @@ Object.defineProperty(exports, "default", {
         return sourceStats;
     }
 });
-var _basename = /*#__PURE__*/ _interop_require_default(require("./basename"));
-var _size = /*#__PURE__*/ _interop_require_default(require("./size"));
+var _basename = /*#__PURE__*/ _interop_require_default(require("./basename.js"));
+var _size = /*#__PURE__*/ _interop_require_default(require("./size.js"));
 function _interop_require_default(obj) {
     return obj && obj.__esModule ? obj : {
         default: obj

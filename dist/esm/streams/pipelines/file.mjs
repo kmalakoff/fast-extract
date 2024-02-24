@@ -1,5 +1,5 @@
 import path from 'path';
-import statsBasename from '../../sourceStats/basename';
+import statsBasename from '../../sourceStats/basename.mjs';
 import DataProgressTransform from '../transforms/DataProgress.mjs';
 import PathToData from '../transforms/PathToData.mjs';
 import createWriteStream from '../write/file.mjs';

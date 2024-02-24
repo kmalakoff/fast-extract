@@ -1,5 +1,5 @@
-import getBasename from './basename';
-import getSize from './size';
+import getBasename from './basename.mjs';
+import getSize from './size.mjs';
 
 export default function sourceStats(source, options, endpoint, callback) {
   if (typeof endpoint === 'function') {

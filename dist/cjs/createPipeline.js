@@ -17,7 +17,7 @@ var _zip = /*#__PURE__*/ _interop_require_default(require("./streams/pipelines/z
 var _DestinationNotExists = /*#__PURE__*/ _interop_require_default(require("./streams/transforms/DestinationNotExists.js"));
 var _DestinationRemove = /*#__PURE__*/ _interop_require_default(require("./streams/transforms/DestinationRemove.js"));
 var _extname = /*#__PURE__*/ _interop_require_default(require("./extname.js"));
-var _basename = /*#__PURE__*/ _interop_require_default(require("./sourceStats/basename"));
+var _basename = /*#__PURE__*/ _interop_require_default(require("./sourceStats/basename.js"));
 function _interop_require_default(obj) {
     return obj && obj.__esModule ? obj : {
         default: obj

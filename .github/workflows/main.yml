@@ -9,7 +9,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node: ['20']
+        node: [latest]
         os: [ubuntu-latest, windows-latest]
         # os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
@@ -24,4 +24,5 @@ jobs:
       - run: npm ci
       - run: npm run version
       - run: npm run build
+      - run: npm run test
       - run: npm run test:engines
