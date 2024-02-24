@@ -94,7 +94,7 @@
     "fs-iterator": "^5.0.1",
     "fs-stats-spys": "^1.0.2",
     "lzma-native": "^8.0.6",
-    "ts-dev-stack": "^0.15.6"
+    "ts-dev-stack": "^0.15.8"
   },
   "engines": {
     "node": ">=0.8"
