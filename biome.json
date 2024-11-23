@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.5.3/schema.json",
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
   "files": {
     "ignore": ["assets/**", "dist/**", "node_modules/**", "test/data/**"]
   },
@@ -14,7 +14,7 @@
   "javascript": {
     "formatter": {
       "quoteStyle": "single",
-      "trailingComma": "es5"
+      "trailingCommas": "es5"
     }
   },
   "linter": {
@@ -30,7 +30,9 @@
         "noInnerDeclarations": "off"
       },
       "style": {
-        "noParameterAssign": "off"
+        "noParameterAssign": "off",
+        "useNumberNamespace": "off",
+        "useNodejsImportProtocol": "off"
       }
     }
   }
