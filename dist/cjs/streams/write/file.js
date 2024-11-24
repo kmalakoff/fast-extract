@@ -37,7 +37,7 @@ function createFilePipeline(dest, options) {
         var queue = new _queuecb.default(1);
         queue.defer(function(callback) {
             (0, _mkpath.default)(_path.default.dirname(dest), function(err) {
-                err && err.code !== "EEXIST" ? callback(err) : callback();
+                err && err.code !== 'EEXIST' ? callback(err) : callback();
             });
         });
         wroteSomething ? queue.defer(_fs.default.rename.bind(_fs.default, tempDest, dest)) : queue.defer(_writeTruncateFile.default.bind(null, dest));

@@ -18,7 +18,7 @@ function _interop_require_default(obj) {
     };
 }
 function createTarPipeline(dest, streams, options) {
-    var isPath = typeof options.source === "string";
+    var isPath = typeof options.source === 'string';
     streams = streams.slice();
     !isPath || streams.unshift(new _PathToData.default());
     streams.push(new _Tar.default());

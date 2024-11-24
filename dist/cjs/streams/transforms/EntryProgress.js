@@ -34,7 +34,7 @@ function EntryProgressTransform(options) {
         // biome-ignore lint/suspicious/noAssignInExpressions: <explanation>
         if (!entry) return done = true;
         options.progress(Object.assign({
-            progress: "extract"
+            progress: 'extract'
         }, entry));
     };
     if (options.time) this.progress = (0, _lodashthrottle.default)(this.progress, options.time, {

@@ -1,4 +1,3 @@
-/// <reference types="node" />
 export default WriteFileTransform;
 declare function WriteFileTransform(dest: any, options: any): WriteFileTransform;
 declare class WriteFileTransform {

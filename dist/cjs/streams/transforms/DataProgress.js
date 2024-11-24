@@ -23,7 +23,7 @@ function DataProgressTransform(options) {
         time: options.time
     }, function(update) {
         options.progress(Object.assign({
-            progress: "write"
+            progress: 'write'
         }, update, stats));
     });
     (0, _size.default)(options.source, options, function(err, size) {

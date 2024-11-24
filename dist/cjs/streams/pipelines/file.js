@@ -19,7 +19,7 @@ function _interop_require_default(obj) {
     };
 }
 function createFilePipeline(dest, streams, options) {
-    var isPath = typeof options.source === "string";
+    var isPath = typeof options.source === 'string';
     var basename = (0, _basename.default)(options.source, options);
     var fullPath = basename === undefined ? dest : _path.default.join(dest, basename);
     streams = streams.slice();

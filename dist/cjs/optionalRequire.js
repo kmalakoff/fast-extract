@@ -1,5 +1,5 @@
 "use strict";
-var requireOptional = require("require_optional");
+var requireOptional = require('require_optional');
 module.exports = function optionalRequire(name) {
     try {
         var mod = require(name);

@@ -39,7 +39,7 @@ DestinationRemove.prototype._transform = function _transform(chunk, encoding, ca
     if (this.removed) return callback(null, chunk, encoding);
     (0, _rimraf.default)(this.dest, function(err) {
         _this.removed = true;
-        err && err.code !== "EEXIST" ? callback(err) : callback(null, chunk, encoding);
+        err && err.code !== 'EEXIST' ? callback(err) : callback(null, chunk, encoding);
     });
 };
 var _default = DestinationRemove;

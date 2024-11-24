@@ -33,7 +33,7 @@ function ZipTransform(options) {
 _util.default.inherits(ZipTransform, _stream.Transform);
 ZipTransform.prototype._transform = function _transform(chunk, _encoding, callback) {
     var _this = this;
-    var fullPath = typeof chunk === "string" ? chunk : chunk.toString();
+    var fullPath = typeof chunk === 'string' ? chunk : chunk.toString();
     this._iterator = new _zipiterator.default(fullPath);
     this._iterator.forEach(this.push.bind(this), {
         concurrency: 1

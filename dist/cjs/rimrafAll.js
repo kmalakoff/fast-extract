@@ -22,7 +22,7 @@ function rimrafAll(fullPaths, callback) {
         (function(fullPath) {
             queue.defer(function(callback) {
                 (0, _rimraf.default)(fullPath, function(err) {
-                    err && err.code !== "ENOENT" ? callback(err) : callback();
+                    err && err.code !== 'ENOENT' ? callback(err) : callback();
                 });
             });
         })(fullPaths[index]);

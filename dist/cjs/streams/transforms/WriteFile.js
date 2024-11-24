@@ -44,7 +44,7 @@ WriteFileTransform.prototype._transform = function _transform(chunk, encoding, c
     (0, _mkpath.default)(_path.default.dirname(this.tempPath), function(err) {
         if (err) return callback(err);
         _this.stream = _fs.default.createWriteStream(_this.tempPath, {
-            flags: "w"
+            flags: 'w'
         });
         _this.stream.write(chunk, encoding, function() {
             callback();

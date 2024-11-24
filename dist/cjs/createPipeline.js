@@ -24,8 +24,8 @@ function _interop_require_default(obj) {
     };
 }
 // lzma-native module compatiblity starts at Node 6
-var major = +process.versions.node.split(".")[0];
-var lzmaNative = major >= 10 ? (0, _optionalRequirecjs.default)("lzma-native") : null;
+var major = +process.versions.node.split('.')[0];
+var lzmaNative = major >= 10 ? (0, _optionalRequirecjs.default)('lzma-native') : null;
 var TRANSORMS = {
     bz2: _unbzip2stream.default,
     tgz: _zlib.default.createUnzip.bind(_zlib.default),
@@ -38,8 +38,8 @@ var WRITERS = {
     tgz: _tar.default
 };
 function createPipeline(dest, options) {
-    var type = options.type === undefined ? (0, _extname.default)((0, _basename.default)(options.source, options) || "") : options.type;
-    var parts = type.split(".");
+    var type = options.type === undefined ? (0, _extname.default)((0, _basename.default)(options.source, options) || '') : options.type;
+    var parts = type.split('.');
     var streams = [
         options.force ? new _DestinationRemove.default(dest) : new _DestinationNotExists.default(dest)
     ];

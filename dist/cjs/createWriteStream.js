@@ -19,7 +19,7 @@ function _interop_require_default(obj) {
     };
 }
 function createWriteStream(dest, options) {
-    if (typeof options === "string") options = {
+    if (typeof options === 'string') options = {
         type: options
     };
     options = Object.assign({
@@ -62,7 +62,7 @@ function createWriteStream(dest, options) {
             err ? onError(err || error, callback) : onEnd(callback);
         });
     });
-    res.on("error", function(err) {
+    res.on('error', function(err) {
         onError(err, function() {
             write.destroy(err);
         });
