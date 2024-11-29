@@ -1,6 +1,6 @@
 var path = require('path');
 var fs = require('fs');
-var rimraf = require('rimraf');
+var rimraf2 = require('rimraf2');
 var BenchmarkSuite = require('benchmark-suite');
 
 var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
@@ -41,7 +41,7 @@ module.exports = async function run({ extract, version }) {
 
   console.log('----------' + suite.name + '----------');
   try {
-    rimraf.sync(TMP_DIR);
+    rimraf2.sync(TMP_DIR, { disableGlob: true });
     fs.mkdirSync(TMP_DIR);
   } catch (err) {}
   await suite.run({ time: 1000 });
