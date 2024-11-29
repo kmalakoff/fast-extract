@@ -1,4 +1,4 @@
-import rimraf from 'rimraf';
+import rimraf2 from 'rimraf2';
 import onExit from 'signal-exit';
 
 const fullPaths = [];
@@ -6,7 +6,7 @@ const fullPaths = [];
 onExit(function exist(_code, _signal) {
   while (fullPaths.length) {
     try {
-      rimraf.sync(fullPaths.pop());
+      rimraf2.sync(fullPaths.pop(), { disableGlob: true });
     } catch (_err) {}
   }
 });

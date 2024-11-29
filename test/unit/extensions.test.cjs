@@ -1,7 +1,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
-const rimraf = require('rimraf');
+const rimraf2 = require('rimraf2');
 const mkpath = require('mkpath');
 
 const extract = require('fast-extract');
@@ -107,7 +107,7 @@ function addTests(type) {
 
 describe('extensions', () => {
   beforeEach((callback) => {
-    rimraf(TMP_DIR, () => {
+    rimraf2(TMP_DIR, { disableGlob: true }, () => {
       mkpath(TMP_DIR, callback);
     });
   });
