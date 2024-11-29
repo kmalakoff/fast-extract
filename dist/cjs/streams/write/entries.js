@@ -26,11 +26,11 @@ function createWriteEntriesStream(dest, options) {
     return (0, _flushwritestream.default)({
         objectMode: true
     }, function write(entry, _encoding, callback) {
-        if (entry.type === "link") {
+        if (entry.type === 'link') {
             links.unshift(entry);
             return callback();
         }
-        if (entry.type === "symlink") {
+        if (entry.type === 'symlink') {
             links.push(entry);
             return callback();
         }

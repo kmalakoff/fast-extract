@@ -25,16 +25,16 @@ function _interop_require_default(obj) {
     };
 }
 function fastExtract(src, dest, options, callback) {
-    if (options === undefined && typeof dest !== "string") {
+    if (options === undefined && typeof dest !== 'string') {
         callback = options;
         options = dest;
         dest = null;
     }
-    if (typeof options === "function") {
+    if (typeof options === 'function') {
         callback = options;
         options = null;
     }
-    if (typeof callback === "function") return (0, _extract.default)(src, dest, options || {}, callback);
+    if (typeof callback === 'function') return (0, _extract.default)(src, dest, options || {}, callback);
     return new Promise(function(resolve, reject) {
         fastExtract(src, dest, options, function(err, res) {
             err ? reject(err) : resolve(res);

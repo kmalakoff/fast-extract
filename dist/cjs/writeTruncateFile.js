@@ -15,7 +15,7 @@ function _interop_require_default(obj) {
     };
 }
 function writeTruncateFile(fullPath, callback) {
-    _fs.default.open(fullPath, "w", function(err, fd) {
+    _fs.default.open(fullPath, 'w', function(err, fd) {
         if (err) return callback(err);
         _fs.default.close(fd, callback);
     });

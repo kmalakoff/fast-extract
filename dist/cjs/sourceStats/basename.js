@@ -23,11 +23,11 @@ function getBasename(source, options, endpoint) {
     var basename = options.basename || options.filename;
     if (basename !== undefined) return basename;
     // path
-    if (typeof source === "string") return _path.default.basename(source);
+    if (typeof source === 'string') return _path.default.basename(source);
     // stream
     if (source) {
-        if (source.headers && source.headers["content-disposition"]) {
-            var information = _contentdisposition.default.parse(source.headers["content-disposition"]);
+        if (source.headers && source.headers['content-disposition']) {
+            var information = _contentdisposition.default.parse(source.headers['content-disposition']);
             return information.parameters.filename;
         }
         basename = source.basename || source.filename;
@@ -35,9 +35,9 @@ function getBasename(source, options, endpoint) {
     }
     // endpoint
     if (endpoint) {
-        basename = _path.default.basename(endpoint.split("?")[0]);
-        basename = basename.replace(POSIX, "!");
-        basename = basename.replace(WINDOWS, "!");
+        basename = _path.default.basename(endpoint.split('?')[0]);
+        basename = basename.replace(POSIX, '!');
+        basename = basename.replace(WINDOWS, '!');
         return basename;
     }
 }

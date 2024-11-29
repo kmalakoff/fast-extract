@@ -19,7 +19,7 @@ function _interop_require_default(obj) {
     };
 }
 function createZipPipeline(dest, streams, options) {
-    var isPath = typeof options.source === "string";
+    var isPath = typeof options.source === 'string';
     streams = streams.slice();
     if (isPath) {
         if (streams.length) {

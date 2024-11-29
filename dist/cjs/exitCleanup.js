@@ -8,7 +8,7 @@ Object.defineProperty(exports, "default", {
         return _default;
     }
 });
-var _rimraf = /*#__PURE__*/ _interop_require_default(require("rimraf"));
+var _rimraf2 = /*#__PURE__*/ _interop_require_default(require("rimraf2"));
 var _signalexit = /*#__PURE__*/ _interop_require_default(require("signal-exit"));
 function _interop_require_default(obj) {
     return obj && obj.__esModule ? obj : {
@@ -19,7 +19,9 @@ var fullPaths = [];
 (0, _signalexit.default)(function exist(_code, _signal) {
     while(fullPaths.length){
         try {
-            _rimraf.default.sync(fullPaths.pop());
+            _rimraf2.default.sync(fullPaths.pop(), {
+                disableGlob: true
+            });
         } catch (_err) {}
     }
 });

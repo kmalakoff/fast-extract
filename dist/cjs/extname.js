@@ -16,7 +16,7 @@ function _interop_require_default(obj) {
 }
 function extname(fullPath) {
     var basename = _path.default.basename(fullPath);
-    var index = basename.indexOf(".");
-    return ~index ? basename.slice(index) : "";
+    var index = basename.indexOf('.');
+    return ~index ? basename.slice(index) : '';
 }
 /* CJS INTEROP */ if (exports.__esModule && exports.default) { Object.defineProperty(exports.default, '__esModule', { value: true }); for (var key in exports) exports.default[key] = exports[key]; module.exports = exports.default; }

@@ -1,5 +1,5 @@
 import Queue from 'queue-cb';
-import rimraf from 'rimraf';
+import rimraf2 from 'rimraf2';
 
 export default function rimrafAll(fullPaths, callback) {
   if (!fullPaths.length) return callback();
@@ -7,7 +7,7 @@ export default function rimrafAll(fullPaths, callback) {
   for (let index = 0; index < fullPaths.length; index++) {
     ((fullPath) => {
       queue.defer((callback) => {
-        rimraf(fullPath, (err) => {
+        rimraf2(fullPath, { disableGlob: true }, (err) => {
           err && err.code !== 'ENOENT' ? callback(err) : callback();
         });
       });

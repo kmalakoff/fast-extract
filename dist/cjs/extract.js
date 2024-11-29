@@ -17,7 +17,7 @@ function _interop_require_default(obj) {
     };
 }
 function extract(source, dest, options, callback) {
-    if (typeof options === "string") options = {
+    if (typeof options === 'string') options = {
         type: options
     };
     options = Object.assign({
@@ -25,10 +25,10 @@ function extract(source, dest, options, callback) {
     }, options);
     var res = (0, _createWriteStream.default)(dest, options);
     // path
-    if (typeof source === "string") {
+    if (typeof source === 'string') {
         callback = (0, _once.default)(callback);
-        res.on("error", callback);
-        res.write(source, "utf8");
+        res.on('error', callback);
+        res.write(source, 'utf8');
         return res.end(callback);
     }
     // stream

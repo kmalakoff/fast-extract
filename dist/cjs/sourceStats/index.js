@@ -16,7 +16,7 @@ function _interop_require_default(obj) {
     };
 }
 function sourceStats(source, options, endpoint, callback) {
-    if (typeof endpoint === "function") {
+    if (typeof endpoint === 'function') {
         callback = endpoint;
         endpoint = null;
     }
