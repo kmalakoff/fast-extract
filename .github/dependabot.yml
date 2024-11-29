@@ -3,11 +3,10 @@ updates:
   - package-ecosystem: npm
     directory: '/'
     schedule:
-      interval: daily
+      interval: weekly
     ignore:
       - dependency-name: 'bl'
       - dependency-name: 'readable-stream'
-      - dependency-name: 'rimraf'
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
