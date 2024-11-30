@@ -28,10 +28,10 @@ describe('extract', () => {
 
       const options = { progress: progress };
       extract(path.join(DATA_DIR, 'fixture.js'), TARGET, options, (err) => {
-        assert.ok(!err);
+        assert.ok(!err, err ? err.message : '');
 
         validateFiles(options, 'js', (err) => {
-          assert.ok(!err);
+          assert.ok(!err, err ? err.message : '');
           assert.ok(progressUpdates.length > 0);
           done();
         });
@@ -41,19 +41,19 @@ describe('extract', () => {
     it('extract file multiple times', (done) => {
       const options = {};
       extract(path.join(DATA_DIR, 'fixture.js'), TARGET, options, (err) => {
-        assert.ok(!err);
+        assert.ok(!err, err ? err.message : '');
 
         validateFiles(options, 'js', (err) => {
-          assert.ok(!err);
+          assert.ok(!err, err ? err.message : '');
 
           extract(path.join(DATA_DIR, 'fixture.js'), TARGET, options, (err) => {
             assert.ok(err);
 
             extract(path.join(DATA_DIR, 'fixture.js'), TARGET, Object.assign({ force: true }, options), (err) => {
-              assert.ok(!err);
+              assert.ok(!err, err ? err.message : '');
 
               validateFiles(options, 'js', (err) => {
-                assert.ok(!err);
+                assert.ok(!err, err ? err.message : '');
                 done();
               });
             });
@@ -74,7 +74,7 @@ describe('extract', () => {
       extract(path.join(DATA_DIR, 'fixture.js'), TARGET, options)
         .then(() => {
           validateFiles(options, 'js', (err) => {
-            assert.ok(!err);
+            assert.ok(!err, err ? err.message : '');
             assert.ok(progressUpdates.length > 0);
             done();
           });
@@ -90,10 +90,10 @@ describe('extract', () => {
 
       const options = { strip: 1, progress: progress };
       extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, options, (err) => {
-        assert.ok(!err);
+        assert.ok(!err, err ? err.message : '');
 
         validateFiles(options, 'tar', (err) => {
-          assert.ok(!err);
+          assert.ok(!err, err ? err.message : '');
           assert.equal(progressUpdates.length, 16);
           done();
         });
@@ -103,19 +103,19 @@ describe('extract', () => {
     it('extract tar multiple times', (done) => {
       const options = { strip: 1 };
       extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, options, (err) => {
-        assert.ok(!err);
+        assert.ok(!err, err ? err.message : '');
 
         validateFiles(options, 'tar', (err) => {
-          assert.ok(!err);
+          assert.ok(!err, err ? err.message : '');
 
           extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, options, (err) => {
             assert.ok(err);
 
             extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, Object.assign({ force: true }, options), (err) => {
-              assert.ok(!err);
+              assert.ok(!err, err ? err.message : '');
 
               validateFiles(options, 'tar', (err) => {
-                assert.ok(!err);
+                assert.ok(!err, err ? err.message : '');
                 done();
               });
             });
@@ -132,10 +132,10 @@ describe('extract', () => {
 
       const options = { strip: 1, progress: progress };
       extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, options, (err) => {
-        assert.ok(!err);
+        assert.ok(!err, err ? err.message : '');
 
         validateFiles(options, 'zip', (err) => {
-          assert.ok(!err);
+          assert.ok(!err, err ? err.message : '');
           assert.equal(progressUpdates.length, 16);
           done();
         });
@@ -145,19 +145,19 @@ describe('extract', () => {
     it('extract zip multiple times', (done) => {
       const options = { strip: 1 };
       extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, options, (err) => {
-        assert.ok(!err);
+        assert.ok(!err, err ? err.message : '');
 
         validateFiles(options, 'zip', (err) => {
-          assert.ok(!err);
+          assert.ok(!err, err ? err.message : '');
 
           extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, options, (err) => {
             assert.ok(err);
 
             extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, Object.assign({ force: true }, options), (err) => {
-              assert.ok(!err);
+              assert.ok(!err, err ? err.message : '');
 
               validateFiles(options, 'zip', (err) => {
-                assert.ok(!err);
+                assert.ok(!err, err ? err.message : '');
                 done();
               });
             });
