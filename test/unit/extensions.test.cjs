@@ -30,10 +30,10 @@ function addTests(type) {
     it('extract file', (done) => {
       const options = { strip: 1 };
       extract(path.join(DATA_DIR, `fixture.${type}`), TARGET, options, (err) => {
-        assert.ok(!err);
+        assert.ok(!err, err ? err.message : '');
 
         validateFiles(options, type, (err) => {
-          assert.ok(!err);
+          assert.ok(!err, err ? err.message : '');
           done();
         });
       });
@@ -42,10 +42,10 @@ function addTests(type) {
     it('extract file without type - dot', (done) => {
       const options = { strip: 1, type: `.${type}` };
       extract(path.join(DATA_DIR, `fixture-${type}`), TARGET, options, (err) => {
-        assert.ok(!err);
+        assert.ok(!err, err ? err.message : '');
 
         validateFiles(options, type, (err) => {
-          assert.ok(!err);
+          assert.ok(!err, err ? err.message : '');
           done();
         });
       });
@@ -54,10 +54,10 @@ function addTests(type) {
     it('extract file without type - no dot', (done) => {
       const options = { strip: 1, type: type };
       extract(path.join(DATA_DIR, `fixture-${type}`), TARGET, options, (err) => {
-        assert.ok(!err);
+        assert.ok(!err, err ? err.message : '');
 
         validateFiles(options, type, (err) => {
-          assert.ok(!err);
+          assert.ok(!err, err ? err.message : '');
           done();
         });
       });
@@ -66,10 +66,10 @@ function addTests(type) {
     it('extract file without type - options as type, no strip', (done) => {
       const options = type;
       extract(path.join(DATA_DIR, `fixture-${type}`), TARGET, options, (err) => {
-        assert.ok(!err);
+        assert.ok(!err, err ? err.message : '');
 
         validateFiles(options, type, (err) => {
-          assert.ok(!err);
+          assert.ok(!err, err ? err.message : '');
           done();
         });
       });
@@ -80,10 +80,10 @@ function addTests(type) {
       const stream = fs.createReadStream(path.join(DATA_DIR, `fixture-${type}`));
       stream.filename = `fixture.${type}`;
       extract(stream, TARGET, options, (err) => {
-        assert.ok(!err);
+        assert.ok(!err, err ? err.message : '');
 
         validateFiles(options, type, (err) => {
-          assert.ok(!err);
+          assert.ok(!err, err ? err.message : '');
           done();
         });
       });
@@ -94,10 +94,10 @@ function addTests(type) {
       const stream = fs.createReadStream(path.join(DATA_DIR, `fixture-${type}`));
       stream.basename = `fixture.${type}`;
       extract(stream, TARGET, options, (err) => {
-        assert.ok(!err);
+        assert.ok(!err, err ? err.message : '');
 
         validateFiles(options, type, (err) => {
-          assert.ok(!err);
+          assert.ok(!err, err ? err.message : '');
           done();
         });
       });
