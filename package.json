@@ -78,7 +78,7 @@
     "queue-cb": "^1.2.1",
     "readable-stream": "^2.3.7",
     "require_optional": "^1.0.1",
-    "rimraf2": "^2.8.1",
+    "rimraf2": "^2.8.2",
     "signal-exit": "3.0.7",
     "tar-iterator": "^1.1.2",
     "temp-suffix": "^0.1.1",
@@ -94,7 +94,7 @@
     "fs-iterator": "^5.1.1",
     "fs-stats-spys": "^1.0.2",
     "lzma-native": "^8.0.6",
-    "ts-dev-stack": "^0.17.0"
+    "ts-dev-stack": "^1.0.1"
   },
   "engines": {
     "node": ">=0.8"
