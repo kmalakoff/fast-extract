@@ -8,8 +8,8 @@ Object.defineProperty(exports, "default", {
         return extract;
     }
 });
+var _calloncefn = /*#__PURE__*/ _interop_require_default(require("call-once-fn"));
 var _endofstream = /*#__PURE__*/ _interop_require_default(require("end-of-stream"));
-var _once = /*#__PURE__*/ _interop_require_default(require("once"));
 var _createWriteStream = /*#__PURE__*/ _interop_require_default(require("./createWriteStream.js"));
 function _interop_require_default(obj) {
     return obj && obj.__esModule ? obj : {
@@ -26,7 +26,7 @@ function extract(source, dest, options, callback) {
     var res = (0, _createWriteStream.default)(dest, options);
     // path
     if (typeof source === 'string') {
-        callback = (0, _once.default)(callback);
+        callback = (0, _calloncefn.default)(callback);
         res.on('error', callback);
         res.write(source, 'utf8');
         return res.end(callback);
@@ -34,4 +34,4 @@ function extract(source, dest, options, callback) {
     // stream
     return (0, _endofstream.default)(source.pipe(res), callback);
 }
-/* CJS INTEROP */ if (exports.__esModule && exports.default) { Object.defineProperty(exports.default, '__esModule', { value: true }); for (var key in exports) exports.default[key] = exports[key]; module.exports = exports.default; }
+/* CJS INTEROP */ if (exports.__esModule && exports.default) { try { Object.defineProperty(exports.default, '__esModule', { value: true }); for (var key in exports) { exports.default[key] = exports[key]; } } catch (_) {}; module.exports = exports.default; }
