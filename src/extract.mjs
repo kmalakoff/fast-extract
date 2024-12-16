@@ -1,5 +1,5 @@
+import once from 'call-once-fn';
 import eos from 'end-of-stream';
-import once from 'once';
 
 import createWriteStream from './createWriteStream.mjs';
 
