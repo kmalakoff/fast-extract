@@ -75,15 +75,15 @@
     "next-tick": "^1.1.0",
     "progress-stream": "^2.0.0",
     "pumpify": "^2.0.1",
-    "queue-cb": "^1.4.1",
+    "queue-cb": "^1.4.2",
     "readable-stream": "^2.3.7",
     "require_optional": "^1.0.1",
     "rimraf2": "^2.8.2",
     "signal-exit": "3.0.7",
-    "tar-iterator": "^1.1.4",
+    "tar-iterator": "^1.1.5",
     "temp-suffix": "^0.1.1",
     "unbzip2-stream": "^1.4.3",
-    "zip-iterator": "^1.1.5"
+    "zip-iterator": "^1.1.6"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
@@ -97,7 +97,7 @@
     "ts-dev-stack": "^1.2.1"
   },
   "peerDependencies": {
-    "lzma-native": "^6.0.1"
+    "lzma-native": "*"
   },
   "peerDependenciesMeta": {
     "lzma-native": {
