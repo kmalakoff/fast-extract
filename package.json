@@ -57,13 +57,14 @@
     "build": "tsds build",
     "deploy": "tsds deploy",
     "format": "biome check --write --unsafe src/ test/",
-    "test": "tsds test:node --timeout=10000",
+    "test": "tsds test:node --no-timeouts",
     "test:engines": "nvu engines npm test",
     "version": "tsds version"
   },
   "dependencies": {
     "bl": "^3.0.0",
     "buffer-v6-polyfill": "^1.0.5",
+    "call-once-fn": "^1.0.1",
     "content-disposition": "^0.5.4",
     "core-js": "^3.39.0",
     "end-of-stream": "^1.4.4",
@@ -72,35 +73,39 @@
     "mkpath": "^1.0.0",
     "mock-require-lazy": "^1.0.1",
     "next-tick": "^1.1.0",
-    "once": "^1.4.0",
     "progress-stream": "^2.0.0",
     "pumpify": "^2.0.1",
-    "queue-cb": "^1.2.1",
+    "queue-cb": "^1.4.1",
     "readable-stream": "^2.3.7",
     "require_optional": "^1.0.1",
-    "rimraf2": "^2.8.1",
+    "rimraf2": "^2.8.2",
     "signal-exit": "3.0.7",
-    "tar-iterator": "^1.1.2",
+    "tar-iterator": "^1.1.3",
     "temp-suffix": "^0.1.1",
     "unbzip2-stream": "^1.4.3",
-    "zip-iterator": "^1.1.3"
+    "zip-iterator": "^1.1.4"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^22.10.1",
+    "@types/node": "^22.10.2",
     "cr": "^0.1.0",
     "depcheck": "^1.4.7",
     "fs-iterator": "^5.1.1",
-    "fs-stats-spys": "^1.0.2",
+    "fs-stats-spys": "^1.1.0",
     "lzma-native": "^8.0.6",
-    "ts-dev-stack": "^0.17.0"
+    "ts-dev-stack": "^1.2.1"
+  },
+  "peerDependencies": {
+    "lzma-native": "^6.0.1"
+  },
+  "peerDependenciesMeta": {
+    "lzma-native": {
+      "optional": true
+    }
   },
   "engines": {
     "node": ">=0.8"
-  },
-  "peerOptionalDependencies": {
-    "lzma-native": "^6.0.1"
   },
   "tsds": {
     "source": "src/index.mjs",
