@@ -3,6 +3,7 @@ import path from 'path';
 import writer from 'flush-write-stream';
 import mkdirp from 'mkdirp-classic';
 import Queue from 'queue-cb';
+import rimraf2 from 'rimraf2';
 
 import tempSuffix from 'temp-suffix';
 import writeTruncateFile from '../../writeTruncateFile.mjs';
@@ -30,7 +31,7 @@ export default function createFilePipeline(dest, options) {
         });
       });
       if (wroteSomething) {
-        queue.defer((cb) => fs.unlink(dest, cb.bind(null, null)));
+        queue.defer(rimraf2.bind(null, dest, { disableGlob: true }));
         queue.defer(fs.rename.bind(fs, tempDest, dest));
       } else queue.defer(writeTruncateFile.bind(null, dest));
       queue.await(callback);
