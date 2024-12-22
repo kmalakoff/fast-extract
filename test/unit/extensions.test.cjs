@@ -2,7 +2,7 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 const rimraf2 = require('rimraf2');
-const mkpath = require('mkpath');
+const mkdirp = require('mkdirp-classic');
 
 const extract = require('fast-extract');
 const validateFiles = require('../lib/validateFiles.cjs');
@@ -108,7 +108,7 @@ function addTests(type) {
 describe('extensions', () => {
   beforeEach((callback) => {
     rimraf2(TMP_DIR, { disableGlob: true }, () => {
-      mkpath(TMP_DIR, callback);
+      mkdirp(TMP_DIR, callback);
     });
   });
 

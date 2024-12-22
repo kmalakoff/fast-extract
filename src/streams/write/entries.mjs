@@ -24,6 +24,7 @@ export default function createWriteEntriesStream(dest, options) {
     },
     function flush(callback) {
       const queue = new Queue(1);
+      queue.defer((cb) => fs.unlink(dest, cb.bind(null, null)));
       queue.defer(fs.rename.bind(fs, tempDest, dest));
       let entry;
       for (let index = 0; index < links.length; index++) {
