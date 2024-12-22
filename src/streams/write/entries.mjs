@@ -1,6 +1,7 @@
 import fs from 'fs';
 import writer from 'flush-write-stream';
 import Queue from 'queue-cb';
+import rimraf2 from 'rimraf2';
 
 import tempSuffix from 'temp-suffix';
 
@@ -24,7 +25,7 @@ export default function createWriteEntriesStream(dest, options) {
     },
     function flush(callback) {
       const queue = new Queue(1);
-      queue.defer((cb) => fs.unlink(dest, cb.bind(null, null)));
+      queue.defer(rimraf2.bind(null, dest, { disableGlob: true }));
       queue.defer(fs.rename.bind(fs, tempDest, dest));
       let entry;
       for (let index = 0; index < links.length; index++) {
