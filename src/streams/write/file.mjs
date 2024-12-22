@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import writer from 'flush-write-stream';
-import mkpath from 'mkpath';
+import mkdirp from 'mkdirp-classic';
 import Queue from 'queue-cb';
 
 import tempSuffix from 'temp-suffix';
@@ -17,7 +17,7 @@ export default function createFilePipeline(dest, options) {
       wroteSomething = true;
       const appendFile = fs.appendFile.bind(fs, tempDest, chunk, callback);
       if (this.pathMade) return appendFile();
-      mkpath(path.dirname(tempDest), () => {
+      mkdirp(path.dirname(tempDest), () => {
         this.pathMade = true;
         appendFile();
       });
@@ -25,11 +25,14 @@ export default function createFilePipeline(dest, options) {
     function flush(callback) {
       const queue = new Queue(1);
       queue.defer((callback) => {
-        mkpath(path.dirname(dest), (err) => {
+        mkdirp(path.dirname(dest), (err) => {
           err && err.code !== 'EEXIST' ? callback(err) : callback();
         });
       });
-      wroteSomething ? queue.defer(fs.rename.bind(fs, tempDest, dest)) : queue.defer(writeTruncateFile.bind(null, dest));
+      if (wroteSomething) {
+        queue.defer((cb) => fs.unlink(dest, cb.bind(null, null)));
+        queue.defer(fs.rename.bind(fs, tempDest, dest));
+      } else queue.defer(writeTruncateFile.bind(null, dest));
       queue.await(callback);
     }
   );

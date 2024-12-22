@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { Transform } from 'stream';
 import util from 'util';
-import mkpath from 'mkpath';
+import mkdirp from 'mkdirp-classic';
 
 import tempSuffix from 'temp-suffix';
 
@@ -22,7 +22,7 @@ WriteFileTransform.prototype._transform = function _transform(chunk, encoding, c
     return this.stream.write(chunk, encoding, () => {
       callback();
     });
-  mkpath(path.dirname(this.tempPath), (err) => {
+  mkdirp(path.dirname(this.tempPath), (err) => {
     if (err) return callback(err);
     this.stream = fs.createWriteStream(this.tempPath, { flags: 'w' });
     this.stream.write(chunk, encoding, () => {
