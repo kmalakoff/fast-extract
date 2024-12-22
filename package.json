@@ -70,20 +70,20 @@
     "end-of-stream": "^1.4.4",
     "flush-write-stream": "^2.0.0",
     "lodash.throttle": "^4.1.1",
-    "mkpath": "^1.0.0",
+    "mkdirp-classic": "^0.5.3",
     "mock-require-lazy": "^1.0.1",
     "next-tick": "^1.1.0",
     "progress-stream": "^2.0.0",
     "pumpify": "^2.0.1",
-    "queue-cb": "^1.4.2",
+    "queue-cb": "^1.4.4",
     "readable-stream": "^2.3.7",
     "require_optional": "^1.0.1",
     "rimraf2": "^2.8.2",
     "signal-exit": "3.0.7",
-    "tar-iterator": "^1.1.5",
+    "tar-iterator": "^1.1.6",
     "temp-suffix": "^0.1.1",
     "unbzip2-stream": "^1.4.3",
-    "zip-iterator": "^1.1.6"
+    "zip-iterator": "^1.1.7"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
@@ -94,7 +94,7 @@
     "fs-iterator": "^5.1.1",
     "fs-stats-spys": "^1.1.0",
     "lzma-native": "^8.0.6",
-    "ts-dev-stack": "^1.2.1"
+    "ts-dev-stack": "^1.4.4"
   },
   "peerDependencies": {
     "lzma-native": "*"
@@ -104,6 +104,7 @@
       "optional": true
     }
   },
+  "packageManager": "npm@11.0.0+sha512.11dff29565d2297c74e7c594a9762581bde969f0aa5cbe6f5b3644bf008a16c065ece61094d9ffbb81125be38df8e1ba43eb8244b3d30c61eb797e9a2440e3ec",
   "engines": {
     "node": ">=0.8"
   },
