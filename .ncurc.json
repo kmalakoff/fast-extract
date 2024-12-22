@@ -1,4 +1,4 @@
 {
   "upgrade": true,
-  "reject": ["bl", "readable-stream", "signal-exit"]
+  "reject": ["@types/node","bl", "readable-stream", "signal-exit"]
 }
