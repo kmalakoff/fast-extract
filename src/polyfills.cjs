@@ -1,4 +1,3 @@
-require('core-js/actual/object/assign');
 require('buffer-v6-polyfill');
 
 // only patch legacy versions of node.js
