@@ -7,7 +7,7 @@ import rimrafAll from './rimrafAll.mjs';
 
 export default function createWriteStream(dest, options) {
   if (typeof options === 'string') options = { type: options };
-  options = Object.assign({ _tempPaths: [] }, options);
+  options = { _tempPaths: [], ...options };
   const streams = createPipeline(dest, options);
 
   const generatedFiles = [dest].concat(options._tempPaths);

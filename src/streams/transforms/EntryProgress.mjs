@@ -10,7 +10,7 @@ function EntryProgressTransform(options) {
     if (done) return; // throttle can call after done
     // biome-ignore lint/suspicious/noAssignInExpressions: <explanation>
     if (!entry) return (done = true);
-    options.progress(Object.assign({ progress: 'extract' }, entry));
+    options.progress({ progress: 'extract', ...entry });
   };
   if (options.time) this.progress = throttle(this.progress, options.time, { leading: true });
 }

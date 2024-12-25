@@ -5,7 +5,7 @@ import createWriteStream from './createWriteStream.mjs';
 
 export default function extract(source, dest, options, callback) {
   if (typeof options === 'string') options = { type: options };
-  options = Object.assign({ source: source }, options);
+  options = { source: source, ...options };
   const res = createWriteStream(dest, options);
 
   // path

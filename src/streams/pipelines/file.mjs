@@ -12,7 +12,7 @@ export default function createFilePipeline(dest, streams, options) {
 
   streams = streams.slice();
   !isPath || streams.unshift(new PathToData());
-  !options.progress || streams.push(new DataProgressTransform(Object.assign({ basename: basename, fullPath: fullPath }, options)));
+  !options.progress || streams.push(new DataProgressTransform({ basename: basename, fullPath: fullPath, ...options }));
   streams.push(createWriteStream(fullPath, options));
   return streams;
 }

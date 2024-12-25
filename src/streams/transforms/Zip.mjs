@@ -5,7 +5,7 @@ import ZipIterator from 'zip-iterator';
 
 function ZipTransform(options) {
   if (!(this instanceof ZipTransform)) return new ZipTransform(options);
-  options = Object.assign({ objectMode: true }, options || {});
+  options = options ? { ...options, objectMode: true } : { objectMode: true };
   Transform.call(this, options);
 }
 
