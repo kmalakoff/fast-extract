@@ -80,10 +80,10 @@
     "require_optional": "^1.0.1",
     "rimraf2": "^2.8.2",
     "signal-exit": "3.0.7",
-    "tar-iterator": "^1.1.8",
+    "tar-iterator": "^1.2.0",
     "temp-suffix": "^0.1.1",
     "unbzip2-stream": "^1.4.3",
-    "zip-iterator": "^1.1.8"
+    "zip-iterator": "^1.2.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
@@ -94,7 +94,7 @@
     "fs-iterator": "^5.1.1",
     "fs-stats-spys": "^1.1.0",
     "lzma-native": "^8.0.6",
-    "ts-dev-stack": "^1.5.3"
+    "ts-dev-stack": "^1.5.4"
   },
   "peerDependencies": {
     "lzma-native": "*"
