@@ -16,8 +16,8 @@
   },
   "dependencies": {
     "benchmark-suite": "^1.1.0",
-    "fast-extract-0.1.11": "npm:fast-extract@1.1.0",
-    "rimraf2": "^1.2.0"
+    "fast-extract-0.1.11": "npm:fast-extract@1.2.7",
+    "rimraf2": "^2.8.2"
   },
   "engines": {
     "node": ">=8"

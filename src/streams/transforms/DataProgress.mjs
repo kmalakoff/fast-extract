@@ -8,7 +8,7 @@ export default function DataProgressTransform(options) {
       time: options.time,
     },
     (update) => {
-      options.progress(Object.assign({ progress: 'write' }, update, stats));
+      options.progress({ progress: 'write', ...update, ...stats });
     }
   );
 
