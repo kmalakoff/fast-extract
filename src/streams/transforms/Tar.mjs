@@ -5,7 +5,7 @@ import TarIterator from 'tar-iterator';
 
 function TarTransform(options) {
   if (!(this instanceof TarTransform)) return new TarTransform(options);
-  options = Object.assign({ objectMode: true }, options || {});
+  options = options ? { ...options, objectMode: true } : { objectMode: true };
   Transform.call(this, options);
 }
 

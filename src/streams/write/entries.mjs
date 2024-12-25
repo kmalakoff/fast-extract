@@ -5,8 +5,8 @@ import rimraf2 from 'rimraf2';
 
 import tempSuffix from 'temp-suffix';
 
-export default function createWriteEntriesStream(dest, options) {
-  options = Object.assign({ now: new Date() }, options);
+export default function createWriteEntriesStream(dest, options = {}) {
+  options = { now: new Date(), ...options };
 
   const tempDest = tempSuffix(dest);
   const links = [];

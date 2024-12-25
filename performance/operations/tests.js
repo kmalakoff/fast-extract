@@ -1,3 +1,5 @@
+// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
+var Promise = require('pinkie-promise');
 var path = require('path');
 var fs = require('fs');
 var rimraf2 = require('rimraf2');
@@ -43,7 +45,7 @@ module.exports = async function run({ extract, version }) {
   try {
     rimraf2.sync(TMP_DIR, { disableGlob: true });
     fs.mkdirSync(TMP_DIR);
-  } catch (err) {}
+  } catch (err) { }
   await suite.run({ time: 1000 });
   console.log('');
 };

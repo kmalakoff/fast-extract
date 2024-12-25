@@ -8,7 +8,7 @@ import tempSuffix from 'temp-suffix';
 
 function WriteFileTransform(dest, options) {
   if (!(this instanceof WriteFileTransform)) return new WriteFileTransform(options);
-  options = Object.assign({ objectMode: true }, options || {});
+  options = options ? { ...options, objectMode: true } : { objectMode: true };
   Transform.call(this, options);
 
   this.tempPath = tempSuffix(dest);

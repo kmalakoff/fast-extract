@@ -54,7 +54,7 @@ describe('createWriteStream', () => {
           res.on('error', (err) => {
             assert.ok(err);
 
-            const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, Object.assign({ force: true }, options)));
+            const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, { force: true, ...options }));
             res.on('error', (err) => {
               assert.ok(!err, err ? err.message : '');
             });
@@ -124,7 +124,7 @@ describe('createWriteStream', () => {
           res.on('error', (err) => {
             assert.ok(err);
 
-            const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, Object.assign({ force: true }, options)));
+            const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, { force: true, ...options }));
             res.on('error', (err) => {
               assert.ok(!err, err ? err.message : '');
             });
@@ -176,7 +176,7 @@ describe('createWriteStream', () => {
           res.on('error', (err) => {
             assert.ok(err);
 
-            const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, Object.assign({ force: true }, options)));
+            const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, { force: true, ...options }));
             res.on('error', (err) => {
               assert.ok(!err, err ? err.message : '');
             });

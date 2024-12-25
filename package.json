@@ -66,13 +66,13 @@
     "buffer-v6-polyfill": "^1.0.5",
     "call-once-fn": "^1.0.1",
     "content-disposition": "^0.5.4",
-    "core-js": "^3.39.0",
     "end-of-stream": "^1.4.4",
     "flush-write-stream": "^2.0.0",
     "lodash.throttle": "^4.1.1",
     "mkdirp-classic": "^0.5.3",
     "mock-require-lazy": "^1.0.1",
     "next-tick": "^1.1.0",
+    "pinkie-promise": "^2.0.1",
     "progress-stream": "^2.0.0",
     "pumpify": "^2.0.1",
     "queue-cb": "^1.4.4",
@@ -80,10 +80,10 @@
     "require_optional": "^1.0.1",
     "rimraf2": "^2.8.2",
     "signal-exit": "3.0.7",
-    "tar-iterator": "^1.1.6",
+    "tar-iterator": "^1.1.8",
     "temp-suffix": "^0.1.1",
     "unbzip2-stream": "^1.4.3",
-    "zip-iterator": "^1.1.7"
+    "zip-iterator": "^1.1.8"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
@@ -94,7 +94,7 @@
     "fs-iterator": "^5.1.1",
     "fs-stats-spys": "^1.1.0",
     "lzma-native": "^8.0.6",
-    "ts-dev-stack": "^1.4.4"
+    "ts-dev-stack": "^1.5.3"
   },
   "peerDependencies": {
     "lzma-native": "*"
@@ -109,10 +109,6 @@
     "node": ">=0.8"
   },
   "tsds": {
-    "source": "src/index.mjs",
-    "targets": [
-      "cjs",
-      "esm"
-    ]
+    "source": "src/index.mjs"
   }
 }

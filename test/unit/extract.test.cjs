@@ -49,7 +49,7 @@ describe('extract', () => {
           extract(path.join(DATA_DIR, 'fixture.js'), TARGET, options, (err) => {
             assert.ok(err);
 
-            extract(path.join(DATA_DIR, 'fixture.js'), TARGET, Object.assign({ force: true }, options), (err) => {
+            extract(path.join(DATA_DIR, 'fixture.js'), TARGET, { force: true, ...options }, (err) => {
               assert.ok(!err, err ? err.message : '');
 
               validateFiles(options, 'js', (err) => {
@@ -63,8 +63,6 @@ describe('extract', () => {
     });
 
     it('extract file with progress - promise', (done) => {
-      if (typeof Promise === 'undefined') return done();
-
       const progressUpdates = [];
       function progress(update) {
         progressUpdates.push(update);
@@ -111,7 +109,7 @@ describe('extract', () => {
           extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, options, (err) => {
             assert.ok(err);
 
-            extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, Object.assign({ force: true }, options), (err) => {
+            extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, { force: true, ...options }, (err) => {
               assert.ok(!err, err ? err.message : '');
 
               validateFiles(options, 'tar', (err) => {
@@ -153,7 +151,7 @@ describe('extract', () => {
           extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, options, (err) => {
             assert.ok(err);
 
-            extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, Object.assign({ force: true }, options), (err) => {
+            extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, { force: true, ...options }, (err) => {
               assert.ok(!err, err ? err.message : '');
 
               validateFiles(options, 'zip', (err) => {
@@ -176,8 +174,6 @@ describe('extract', () => {
     });
 
     it('should fail with too large strip (tar) - path - promise', (done) => {
-      if (typeof Promise === 'undefined') return done();
-
       extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, { strip: 2 })
         .then(() => {
           assert.ok(false);
