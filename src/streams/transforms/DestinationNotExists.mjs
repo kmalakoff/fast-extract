@@ -4,7 +4,7 @@ import util from 'util';
 
 function DestinationNotExists(dest, options) {
   if (!(this instanceof DestinationNotExists)) return new DestinationNotExists(options);
-  options = options ? Object.assign({}, options, { objectMode: true }) : { objectMode: true };
+  options = options ? { ...options, objectMode: true } : { objectMode: true };
   Transform.call(this, options);
 
   this.dest = dest;

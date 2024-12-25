@@ -4,7 +4,7 @@ import rimraf2 from 'rimraf2';
 
 function DestinationRemove(dest, options) {
   if (!(this instanceof DestinationRemove)) return new DestinationRemove(options);
-  options = options ? Object.assign({}, options, { objectMode: true }) : { objectMode: true };
+  options = options ? { ...options, objectMode: true } : { objectMode: true };
   Transform.call(this, options);
 
   this.dest = dest;
