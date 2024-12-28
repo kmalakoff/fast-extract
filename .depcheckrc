@@ -1,1 +1,1 @@
-ignores: ["fast-extract", "depcheck", "ts-dev-stack", "@types/*", "@biomejs/*", "lzma-native", "signal-exit"]
+ignores: ["fast-extract", "depcheck", "@types/*", "@biomejs/*", "lzma-native", "signal-exit"]
