@@ -13,6 +13,19 @@ const TARGET = constants.TARGET;
 const DATA_DIR = constants.DATA_DIR;
 
 describe('extract', () => {
+  (() => {
+    // patch and restore promise
+    const root = typeof global !== 'undefined' ? global : window;
+    let rootPromise;
+    before(() => {
+      rootPromise = root.Promise;
+      root.Promise = require('pinkie-promise');
+    });
+    after(() => {
+      root.Promise = rootPromise;
+    });
+  })();
+
   beforeEach((callback) => {
     rimraf2(TMP_DIR, { disableGlob: true }, () => {
       mkdirp(TMP_DIR, callback);
@@ -62,22 +75,16 @@ describe('extract', () => {
       });
     });
 
-    it('extract file with progress - promise', (done) => {
+    it('extract file with progress - promise', async () => {
       const progressUpdates = [];
       function progress(update) {
         progressUpdates.push(update);
       }
 
       const options = { progress: progress };
-      extract(path.join(DATA_DIR, 'fixture.js'), TARGET, options)
-        .then(() => {
-          validateFiles(options, 'js', (err) => {
-            assert.ok(!err, err ? err.message : '');
-            assert.ok(progressUpdates.length > 0);
-            done();
-          });
-        })
-        .catch(done);
+      await extract(path.join(DATA_DIR, 'fixture.js'), TARGET, options);
+      await validateFiles(options, 'js');
+      assert.ok(progressUpdates.length > 0);
     });
 
     it('extract tar with progress', (done) => {
@@ -173,15 +180,13 @@ describe('extract', () => {
       });
     });
 
-    it('should fail with too large strip (tar) - path - promise', (done) => {
-      extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, { strip: 2 })
-        .then(() => {
-          assert.ok(false);
-        })
-        .catch((err) => {
-          assert.ok(!!err);
-          done();
-        });
+    it('should fail with too large strip (tar) - path - promise', async () => {
+      try {
+        await extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, { strip: 2 });
+        assert.ok(false);
+      } catch (err) {
+        assert.ok(!!err);
+      }
     });
 
     it('should fail with too large strip (tar) - stream', (done) => {
