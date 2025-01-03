@@ -70,9 +70,7 @@ module.exports = function validateFiles(options, _type, callback) {
     }
   } else {
     return new Promise(function validatePromise(resolve, reject) {
-      validateFiles(options, _type, function validateCallback(err) {
-        err ? reject(err) : resolve();
-      });
+      validateFiles(options, _type, (err) => (err ? reject(err) : resolve()));
     });
   }
 };
