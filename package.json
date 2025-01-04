@@ -65,7 +65,7 @@
   "dependencies": {
     "bl": "^3.0.0",
     "buffer-v6-polyfill": "^1.0.5",
-    "call-once-fn": "^1.0.4",
+    "call-once-fn": "^1.0.5",
     "content-disposition": "^0.5.4",
     "end-of-stream": "^1.4.4",
     "flush-write-stream": "^2.0.0",
@@ -75,15 +75,15 @@
     "next-tick": "^1.1.0",
     "progress-stream": "^2.0.0",
     "pumpify": "^2.0.1",
-    "queue-cb": "^1.4.8",
+    "queue-cb": "^1.4.9",
     "readable-stream": "^2.3.7",
     "require_optional": "^1.0.1",
     "rimraf2": "^2.8.2",
     "signal-exit": "3.0.7",
-    "tar-iterator": "^1.2.5",
+    "tar-iterator": "^1.2.6",
     "temp-suffix": "^0.1.6",
     "unbzip2-stream": "^1.4.3",
-    "zip-iterator": "^1.2.4"
+    "zip-iterator": "^1.2.5"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
