@@ -34,7 +34,7 @@
   "homepage": "https://github.com/kmalakoff/fast-extract",
   "repository": {
     "type": "git",
-    "url": "git@github.com:kmalakoff/fast-extract.git"
+    "url": "git+ssh://git@github.com/kmalakoff/fast-extract.git"
   },
   "license": "MIT",
   "author": "Kevin Malakoff <kmalakoff@gmail.com> (https://github.com/kmalakoff)",
@@ -71,19 +71,19 @@
     "flush-write-stream": "^2.0.0",
     "lodash.throttle": "^4.1.1",
     "mkdirp-classic": "^0.5.3",
-    "mock-require-lazy": "^1.0.4",
+    "mock-require-lazy": "^1.0.5",
     "next-tick": "^1.1.0",
     "progress-stream": "^2.0.0",
     "pumpify": "^2.0.1",
-    "queue-cb": "^1.4.7",
+    "queue-cb": "^1.4.8",
     "readable-stream": "^2.3.7",
     "require_optional": "^1.0.1",
     "rimraf2": "^2.8.2",
     "signal-exit": "3.0.7",
-    "tar-iterator": "^1.2.4",
+    "tar-iterator": "^1.2.5",
     "temp-suffix": "^0.1.5",
     "unbzip2-stream": "^1.4.3",
-    "zip-iterator": "^1.2.3"
+    "zip-iterator": "^1.2.4"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
