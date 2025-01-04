@@ -1,5 +1,5 @@
 import './polyfills.cjs';
-import extract from './extract.mjs';
+import worker from './worker.mjs';
 
 export { default as createWriteStream } from './createWriteStream.mjs';
 export default function fastExtract(src, dest, options, callback) {
@@ -13,10 +13,8 @@ export default function fastExtract(src, dest, options, callback) {
     callback = options;
     options = null;
   }
-  if (typeof callback === 'function') return extract(src, dest, options || {}, callback);
-  return new Promise((resolve, reject) => {
-    fastExtract(src, dest, options, (err, res) => {
-      err ? reject(err) : resolve(res);
-    });
-  });
+  options = options || {};
+
+  if (typeof callback === 'function') return worker(src, dest, options, callback);
+  return new Promise((resolve, reject) => worker(src, dest, options, (err, res) => (err ? reject(err) : resolve(res))));
 }

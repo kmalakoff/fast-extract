@@ -4,4 +4,5 @@ dist/
 docs/
 npm-debug.log
 .tmp/
+.cache/
 
