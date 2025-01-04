@@ -71,7 +71,7 @@
     "flush-write-stream": "^2.0.0",
     "lodash.throttle": "^4.1.1",
     "mkdirp-classic": "^0.5.3",
-    "mock-require-lazy": "^1.0.5",
+    "mock-require-lazy": "^1.0.6",
     "next-tick": "^1.1.0",
     "progress-stream": "^2.0.0",
     "pumpify": "^2.0.1",
@@ -81,7 +81,7 @@
     "rimraf2": "^2.8.2",
     "signal-exit": "3.0.7",
     "tar-iterator": "^1.2.5",
-    "temp-suffix": "^0.1.5",
+    "temp-suffix": "^0.1.6",
     "unbzip2-stream": "^1.4.3",
     "zip-iterator": "^1.2.4"
   },
