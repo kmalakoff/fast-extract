@@ -42,12 +42,12 @@
   "exports": {
     ".": {
       "import": "./dist/esm/index.mjs",
-      "require": "./dist/cjs/index.js",
+      "require": "./dist/cjs/index.cjs",
       "types": "./dist/types/index.d.ts"
     },
     "./*": "./*"
   },
-  "main": "dist/cjs/index.js",
+  "main": "dist/cjs/index.cjs",
   "module": "dist/esm/index.mjs",
   "types": "dist/types/index.d.ts",
   "files": [
@@ -56,6 +56,7 @@
   "scripts": {
     "build": "tsds build",
     "deploy": "tsds deploy",
+    "docs": "tsds docs",
     "format": "biome check --write --unsafe src/ test/",
     "test": "tsds test:node --no-timeouts",
     "test:engines": "nvu engines npm test",
@@ -64,23 +65,23 @@
   "dependencies": {
     "bl": "^3.0.0",
     "buffer-v6-polyfill": "^1.0.5",
-    "call-once-fn": "^1.0.1",
+    "call-once-fn": "^1.0.3",
     "content-disposition": "^0.5.4",
     "end-of-stream": "^1.4.4",
     "flush-write-stream": "^2.0.0",
     "lodash.throttle": "^4.1.1",
     "mkdirp-classic": "^0.5.3",
-    "mock-require-lazy": "^1.0.1",
+    "mock-require-lazy": "^1.0.2",
     "next-tick": "^1.1.0",
     "progress-stream": "^2.0.0",
     "pumpify": "^2.0.1",
-    "queue-cb": "^1.4.4",
+    "queue-cb": "^1.4.7",
     "readable-stream": "^2.3.7",
     "require_optional": "^1.0.1",
     "rimraf2": "^2.8.2",
     "signal-exit": "3.0.7",
     "tar-iterator": "^1.2.2",
-    "temp-suffix": "^0.1.1",
+    "temp-suffix": "^0.1.4",
     "unbzip2-stream": "^1.4.3",
     "zip-iterator": "^1.2.1"
   },
@@ -89,8 +90,7 @@
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.10.2",
     "cr": "^0.1.0",
-    "depcheck": "^1.4.7",
-    "fs-iterator": "^5.2.0",
+    "fs-iterator": "^5.2.1",
     "fs-stats-spys": "^1.1.0",
     "lzma-native": "^8.0.6",
     "pinkie-promise": "^2.0.1"

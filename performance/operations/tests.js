@@ -1,5 +1,4 @@
-// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
-var Promise = require('pinkie-promise');
+var Pinkie = require('pinkie-promise');
 var path = require('path');
 var fs = require('fs');
 var rimraf2 = require('rimraf2');
