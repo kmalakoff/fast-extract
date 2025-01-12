@@ -75,18 +75,18 @@
     "require_optional": "^1.0.1",
     "rimraf2": "^2.8.2",
     "signal-exit": "3.0.7",
-    "tar-iterator": "^1.2.9",
+    "tar-iterator": "^1.2.10",
     "temp-suffix": "^0.1.8",
     "unbzip2-stream": "^1.4.3",
-    "zip-iterator": "^1.2.7"
+    "zip-iterator": "^1.2.8"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.10.5",
     "cr": "^0.1.0",
-    "fs-iterator": "^5.2.10",
-    "fs-stats-spys": "^1.1.7",
+    "fs-iterator": "^5.2.11",
+    "fs-stats-spys": "^1.1.8",
     "lzma-native": "^8.0.6",
     "pinkie-promise": "^2.0.1"
   },
