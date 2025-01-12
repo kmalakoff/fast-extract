@@ -75,10 +75,10 @@
     "require_optional": "^1.0.1",
     "rimraf2": "^2.8.2",
     "signal-exit": "3.0.7",
-    "tar-iterator": "^1.2.10",
+    "tar-iterator": "^1.2.12",
     "temp-suffix": "^0.1.8",
     "unbzip2-stream": "^1.4.3",
-    "zip-iterator": "^1.2.8"
+    "zip-iterator": "^1.2.10"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
