@@ -1,4 +1,4 @@
-const assert = require('assert');
+const _assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 const rimraf2 = require('rimraf2');
@@ -30,10 +30,10 @@ function addTests(type) {
     it('extract file', (done) => {
       const options = { strip: 1 };
       extract(path.join(DATA_DIR, `fixture.${type}`), TARGET, options, (err) => {
-        assert.ok(!err, err ? err.message : '');
+        if (err) return done(err);
 
         validateFiles(options, type, (err) => {
-          assert.ok(!err, err ? err.message : '');
+          if (err) return done(err);
           done();
         });
       });
@@ -42,10 +42,10 @@ function addTests(type) {
     it('extract file without type - dot', (done) => {
       const options = { strip: 1, type: `.${type}` };
       extract(path.join(DATA_DIR, `fixture-${type}`), TARGET, options, (err) => {
-        assert.ok(!err, err ? err.message : '');
+        if (err) return done(err);
 
         validateFiles(options, type, (err) => {
-          assert.ok(!err, err ? err.message : '');
+          if (err) return done(err);
           done();
         });
       });
@@ -54,10 +54,10 @@ function addTests(type) {
     it('extract file without type - no dot', (done) => {
       const options = { strip: 1, type: type };
       extract(path.join(DATA_DIR, `fixture-${type}`), TARGET, options, (err) => {
-        assert.ok(!err, err ? err.message : '');
+        if (err) return done(err);
 
         validateFiles(options, type, (err) => {
-          assert.ok(!err, err ? err.message : '');
+          if (err) return done(err);
           done();
         });
       });
@@ -66,10 +66,10 @@ function addTests(type) {
     it('extract file without type - options as type, no strip', (done) => {
       const options = type;
       extract(path.join(DATA_DIR, `fixture-${type}`), TARGET, options, (err) => {
-        assert.ok(!err, err ? err.message : '');
+        if (err) return done(err);
 
         validateFiles(options, type, (err) => {
-          assert.ok(!err, err ? err.message : '');
+          if (err) return done(err);
           done();
         });
       });
@@ -80,10 +80,10 @@ function addTests(type) {
       const stream = fs.createReadStream(path.join(DATA_DIR, `fixture-${type}`));
       stream.filename = `fixture.${type}`;
       extract(stream, TARGET, options, (err) => {
-        assert.ok(!err, err ? err.message : '');
+        if (err) return done(err);
 
         validateFiles(options, type, (err) => {
-          assert.ok(!err, err ? err.message : '');
+          if (err) return done(err);
           done();
         });
       });
@@ -94,10 +94,10 @@ function addTests(type) {
       const stream = fs.createReadStream(path.join(DATA_DIR, `fixture-${type}`));
       stream.basename = `fixture.${type}`;
       extract(stream, TARGET, options, (err) => {
-        assert.ok(!err, err ? err.message : '');
+        if (err) return done(err);
 
         validateFiles(options, type, (err) => {
-          assert.ok(!err, err ? err.message : '');
+          if (err) return done(err);
           done();
         });
       });
