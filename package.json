@@ -85,8 +85,8 @@
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.10.5",
     "cr": "^0.1.0",
-    "fs-iterator": "^5.2.11",
-    "fs-stats-spys": "^1.1.8",
+    "fs-iterator": "^5.2.12",
+    "fs-stats-spys": "^1.1.9",
     "lzma-native": "^8.0.6",
     "pinkie-promise": "^2.0.1"
   },
