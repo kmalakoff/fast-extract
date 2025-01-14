@@ -170,6 +170,24 @@ describe('extract', () => {
         });
       });
     });
+
+    it.skip('extract 7z with progress', (done) => {
+      const progressUpdates = [];
+      function progress(update) {
+        progressUpdates.push(update);
+      }
+
+      const options = { strip: 1, progress: progress };
+      extract(path.join(DATA_DIR, 'fixture.7z'), TARGET, options, (err) => {
+        if (err) return done(err);
+
+        validateFiles(options, '7z', (err) => {
+          if (err) return done(err);
+          assert.equal(progressUpdates.length, 16);
+          done();
+        });
+      });
+    });
   });
 
   describe('unhappy path', () => {
