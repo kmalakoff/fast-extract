@@ -13,6 +13,7 @@ const TRANSORMS = {
   xz: lzmaNative && lzmaNative.createDecompressor ? lzmaNative.createDecompressor.bind(lzmaNative) : undefined,
 };
 
+import create7ZPipeline from './streams/pipelines/7z.mjs';
 import createFilePipeline from './streams/pipelines/file.mjs';
 import createTarPipeline from './streams/pipelines/tar.mjs';
 import createZipPipeline from './streams/pipelines/zip.mjs';
@@ -21,6 +22,7 @@ const WRITERS = {
   zip: createZipPipeline,
   tar: createTarPipeline,
   tgz: createTarPipeline,
+  '7z': create7ZPipeline,
 };
 
 import DestinationNotExists from './streams/transforms/DestinationNotExists.mjs';
