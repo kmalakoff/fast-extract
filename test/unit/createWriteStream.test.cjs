@@ -193,6 +193,26 @@ describe('createWriteStream', () => {
         });
       });
     });
+
+    it.skip('extract 7z with progress', (done) => {
+      const progressUpdates = [];
+      function progress(update) {
+        progressUpdates.push(update);
+      }
+
+      const options = { type: '7z', strip: 1, progress: progress };
+      const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.7z')).pipe(createWriteStream(TARGET, options));
+      res.on('error', (err) => {
+        if (err) return done(err);
+      });
+      res.on('finish', () => {
+        validateFiles(options, '7z', (err) => {
+          if (err) return done(err);
+          assert.equal(progressUpdates.length, 16);
+          done();
+        });
+      });
+    });
   });
 
   describe('unhappy path', () => {

@@ -12,7 +12,10 @@ const TMP_DIR = constants.TMP_DIR;
 const TARGET = constants.TARGET;
 const DATA_DIR = constants.DATA_DIR;
 
-let EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'js.gz', 'js', 'zip'];
+const EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'js.gz', 'js', 'zip'];
+
+// TODO: add 7z
+// const EXTRACT_TYPES = ['7z'];
 
 // lzma-native module compatiblity starts at Node 6
 const major = +process.versions.node.split('.')[0];
@@ -22,8 +25,6 @@ if (major >= 10) {
     if (lzmaNative) EXTRACT_TYPES.push('tar.xz');
   } catch (_err) {}
 }
-
-EXTRACT_TYPES = ['tar'];
 
 function addTests(type) {
   describe(type, () => {
