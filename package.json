@@ -60,7 +60,7 @@
   "dependencies": {
     "bl": "^3.0.0",
     "buffer-v6-polyfill": "^1.0.5",
-    "call-once-fn": "^1.0.7",
+    "call-once-fn": "^1.0.8",
     "content-disposition": "^0.5.4",
     "end-of-stream": "^1.4.4",
     "flush-write-stream": "^2.0.0",
@@ -75,10 +75,10 @@
     "require_optional": "^1.0.1",
     "rimraf2": "^2.8.2",
     "signal-exit": "3.0.7",
-    "tar-iterator": "^1.2.12",
-    "temp-suffix": "^0.1.8",
+    "tar-iterator": "^1.2.13",
+    "temp-suffix": "^0.1.9",
     "unbzip2-stream": "^1.4.3",
-    "zip-iterator": "^1.2.10"
+    "zip-iterator": "^1.2.11"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
