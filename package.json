@@ -70,15 +70,15 @@
     "next-tick": "^1.1.0",
     "progress-stream": "^2.0.0",
     "pumpify": "^2.0.1",
-    "queue-cb": "^1.4.11",
+    "queue-cb": "^1.4.12",
     "readable-stream": "^2.3.7",
     "require_optional": "^1.0.1",
     "rimraf2": "^2.8.2",
     "signal-exit": "3.0.7",
-    "tar-iterator": "^1.2.13",
+    "tar-iterator": "^1.2.14",
     "temp-suffix": "^0.1.9",
     "unbzip2-stream": "^1.4.3",
-    "zip-iterator": "^1.2.11"
+    "zip-iterator": "^1.2.12"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
