@@ -1,1 +1,1 @@
-ignores: ["@types/*", "fast-extract", "@biomejs/*", "lzma-native", "signal-exit"]
+ignores: ["fast-extract", "lzma-native", "signal-exit"]
