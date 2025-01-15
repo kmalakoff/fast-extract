@@ -29,11 +29,11 @@ describe('createWriteStream', () => {
       const options = { basename: 'fixture.js', progress: progress };
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
-        if (err) return done(err);
+        if (err) return done(err.message);
       });
       res.on('finish', () => {
         validateFiles(options, 'js', (err) => {
-          if (err) return done(err);
+          if (err) return done(err.message);
           assert.ok(progressUpdates.length > 0);
           done();
         });
@@ -44,11 +44,11 @@ describe('createWriteStream', () => {
       const options = { basename: 'fixture.js' };
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
-        if (err) return done(err);
+        if (err) return done(err.message);
       });
       res.on('finish', () => {
         validateFiles(options, 'js', (err) => {
-          if (err) return done(err);
+          if (err) return done(err.message);
 
           const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, options));
           res.on('error', (err) => {
@@ -56,11 +56,11 @@ describe('createWriteStream', () => {
 
             const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, { force: true, ...options }));
             res.on('error', (err) => {
-              if (err) return done(err);
+              if (err) return done(err.message);
             });
             res.on('finish', () => {
               validateFiles(options, 'js', (err) => {
-                if (err) return done(err);
+                if (err) return done(err.message);
                 done();
               });
             });
@@ -79,11 +79,11 @@ describe('createWriteStream', () => {
       const options = { progress: progress };
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
-        if (err) return done(err);
+        if (err) return done(err.message);
       });
       res.on('finish', () => {
         validateFiles(options, (err) => {
-          if (err) return done(err);
+          if (err) return done(err.message);
           assert.ok(progressUpdates.length > 0);
           done();
         });
@@ -99,11 +99,11 @@ describe('createWriteStream', () => {
       const options = { type: 'tar', strip: 1, progress: progress };
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
-        if (err) return done(err);
+        if (err) return done(err.message);
       });
       res.on('finish', () => {
         validateFiles(options, 'tar', (err) => {
-          if (err) return done(err);
+          if (err) return done(err.message);
           assert.equal(progressUpdates.length, 16);
           done();
         });
@@ -114,11 +114,11 @@ describe('createWriteStream', () => {
       const options = { type: 'tar', strip: 1 };
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
-        if (err) return done(err);
+        if (err) return done(err.message);
       });
       res.on('finish', () => {
         validateFiles(options, 'tar', (err) => {
-          if (err) return done(err);
+          if (err) return done(err.message);
 
           const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, options));
           res.on('error', (err) => {
@@ -126,11 +126,11 @@ describe('createWriteStream', () => {
 
             const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, { force: true, ...options }));
             res.on('error', (err) => {
-              if (err) return done(err);
+              if (err) return done(err.message);
             });
             res.on('finish', () => {
               validateFiles(options, 'tar', (err) => {
-                if (err) return done(err);
+                if (err) return done(err.message);
                 done();
               });
             });
@@ -151,11 +151,11 @@ describe('createWriteStream', () => {
       const options = { type: 'zip', strip: 1, progress: progress };
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
-        if (err) return done(err);
+        if (err) return done(err.message);
       });
       res.on('finish', () => {
         validateFiles(options, 'zip', (err) => {
-          if (err) return done(err);
+          if (err) return done(err.message);
           assert.equal(progressUpdates.length, 16);
           done();
         });
@@ -166,11 +166,11 @@ describe('createWriteStream', () => {
       const options = { type: 'zip', strip: 1 };
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
-        if (err) return done(err);
+        if (err) return done(err.message);
       });
       res.on('finish', () => {
         validateFiles(options, 'zip', (err) => {
-          if (err) return done(err);
+          if (err) return done(err.message);
 
           const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, options));
           res.on('error', (err) => {
@@ -178,11 +178,11 @@ describe('createWriteStream', () => {
 
             const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, { force: true, ...options }));
             res.on('error', (err) => {
-              if (err) return done(err);
+              if (err) return done(err.message);
             });
             res.on('finish', () => {
               validateFiles(options, 'zip', (err) => {
-                if (err) return done(err);
+                if (err) return done(err.message);
                 done();
               });
             });
@@ -203,11 +203,11 @@ describe('createWriteStream', () => {
       const options = { type: '7z', strip: 1, progress: progress };
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.7z')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
-        if (err) return done(err);
+        if (err) return done(err.message);
       });
       res.on('finish', () => {
         validateFiles(options, '7z', (err) => {
-          if (err) return done(err);
+          if (err) return done(err.message);
           assert.equal(progressUpdates.length, 16);
           done();
         });
