@@ -75,10 +75,10 @@
     "require_optional": "^1.0.1",
     "rimraf2": "^2.8.2",
     "signal-exit": "^3.0.7",
-    "tar-iterator": "^1.2.14",
+    "tar-iterator": "^1.2.15",
     "temp-suffix": "^0.1.11",
     "unbzip2-stream": "^1.4.3",
-    "zip-iterator": "^1.2.12"
+    "zip-iterator": "^1.2.13"
   },
   "devDependencies": {
     "@types/mocha": "*",
