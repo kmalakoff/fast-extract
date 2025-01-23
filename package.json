@@ -75,7 +75,7 @@
     "require_optional": "^1.0.1",
     "rimraf2": "^2.8.2",
     "signal-exit": "^3.0.7",
-    "tar-iterator": "^1.2.22",
+    "tar-iterator": "^1.2.23",
     "temp-suffix": "^0.1.13",
     "unbzip2-stream": "^1.4.3",
     "zip-iterator": "^1.2.21"
