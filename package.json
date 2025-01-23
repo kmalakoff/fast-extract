@@ -78,7 +78,7 @@
     "tar-iterator": "^1.2.19",
     "temp-suffix": "^0.1.11",
     "unbzip2-stream": "^1.4.3",
-    "zip-iterator": "^1.2.17"
+    "zip-iterator": "^1.2.18"
   },
   "devDependencies": {
     "@types/mocha": "*",
