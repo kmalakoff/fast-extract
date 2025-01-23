@@ -1,5 +1,4 @@
 import once from 'call-once-fn';
-import eos from 'end-of-stream';
 
 import createWriteStream from './createWriteStream.mjs';
 
@@ -7,15 +6,19 @@ export default function extract(source, dest, options, callback) {
   if (typeof options === 'string') options = { type: options };
   options = { source: source, ...options };
   const res = createWriteStream(dest, options);
+  const end = once(callback);
 
   // path
   if (typeof source === 'string') {
-    callback = once(callback);
-    res.on('error', callback);
+    res.on('error', end);
     res.write(source, 'utf8');
-    return res.end(callback);
+    return res.end(end);
   }
-  // stream
 
-  return eos(source.pipe(res), callback);
+  // stream
+  const stream = source.pipe(res);
+  stream.on('error', end);
+  stream.on('end', end);
+  stream.on('close', end);
+  stream.on('finish', end);
 }
