@@ -62,7 +62,6 @@
     "buffer-v6-polyfill": "^1.0.5",
     "call-once-fn": "^1.0.9",
     "content-disposition": "^0.5.4",
-    "end-of-stream": "^1.4.4",
     "flush-write-stream": "^2.0.0",
     "lodash.throttle": "^4.1.1",
     "mkdirp-classic": "^0.5.3",
