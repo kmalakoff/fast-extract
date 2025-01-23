@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { Transform } from 'stream';
-import once from 'call-once-fn';
+import oo from 'on-one';
 
 export default class PathToData extends Transform {
   constructor(options) {
@@ -14,13 +14,9 @@ export default class PathToData extends Transform {
     stream.on('data', function data(chunk) {
       self.push(chunk, 'buffer');
     });
-    const end = once((err) => {
+    oo(stream, ['error', 'end', 'close', 'finish'], (err) => {
       !err || self.push(null);
       callback(err);
     });
-    stream.on('error', end);
-    stream.on('end', end);
-    stream.on('close', end);
-    stream.on('finish', end);
   }
 }
