@@ -1,9 +1,9 @@
 import path from 'path';
 
-import statsBasename from '../../sourceStats/basename.mjs';
-import DataProgressTransform from '../transforms/DataProgress.mjs';
-import PathToData from '../transforms/PathToData.mjs';
-import createWriteStream from '../write/file.mjs';
+import statsBasename from '../../sourceStats/basename.js';
+import DataProgressTransform from '../transforms/DataProgress.js';
+import PathToData from '../transforms/PathToData.js';
+import createWriteStream from '../write/file.js';
 
 export default function createFilePipeline(dest, streams, options) {
   const isPath = typeof options.source === 'string';
@@ -12,7 +12,7 @@ export default function createFilePipeline(dest, streams, options) {
 
   streams = streams.slice();
   !isPath || streams.unshift(new PathToData());
-  !options.progress || streams.push(new DataProgressTransform({ basename: basename, fullPath: fullPath, ...options }));
+  !options.progress || streams.push(DataProgressTransform({ basename: basename, fullPath: fullPath, ...options }));
   streams.push(createWriteStream(fullPath, options));
   return streams;
 }
