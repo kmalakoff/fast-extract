@@ -6,11 +6,13 @@ import Queue from 'queue-cb';
 import rimraf2 from 'rimraf2';
 
 import tempSuffix from 'temp-suffix';
-import writeTruncateFile from '../../writeTruncateFile.mjs';
+import writeTruncateFile from '../../writeTruncateFile.js';
 
-export default function createFilePipeline(dest, options) {
+import type { WriteOptions } from '../../types.js';
+
+export default function createFilePipeline(dest: string, options: object) {
   const tempDest = tempSuffix(dest);
-  options._tempPaths.push(tempDest);
+  (options as WriteOptions)._tempPaths.push(tempDest);
 
   let wroteSomething = false;
   return writer(
