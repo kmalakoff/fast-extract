@@ -27,9 +27,8 @@ export default function createWriteEntriesStream(dest, options = {}) {
       const queue = new Queue(1);
       queue.defer(rimraf2.bind(null, dest, { disableGlob: true }));
       queue.defer(fs.rename.bind(fs, tempDest, dest));
-      let entry;
       for (let index = 0; index < links.length; index++) {
-        entry = links[index];
+        const entry = links[index];
         queue.defer(entry.create.bind(entry, dest, options));
       }
       queue.await(callback);

@@ -3,7 +3,10 @@ import { Transform } from 'stream';
 import ZipIterator from 'zip-iterator';
 
 export default class ZipTransform extends Transform {
-  constructor(options) {
+  private _iterator: ZipIterator;
+  private _callback: (error?: Error) => void;
+
+  constructor(options?: object) {
     options = options ? { ...options, objectMode: true } : { objectMode: true };
     super(options);
   }
@@ -12,7 +15,7 @@ export default class ZipTransform extends Transform {
     const fullPath = typeof chunk === 'string' ? chunk : chunk.toString();
     this._iterator = new ZipIterator(fullPath);
     this._iterator.forEach(
-      (entry) => {
+      (entry: unknown): undefined => {
         this.push(entry);
       },
       { concurrency: 1 },
@@ -34,12 +37,13 @@ export default class ZipTransform extends Transform {
     this._iterator.end();
   }
 
-  destroy(err) {
+  destroy(error?: Error): this {
     if (this._iterator) {
       const iterator = this._iterator;
       this._iterator = null;
-      iterator.destroy(err);
-      this.end(err);
+      iterator.destroy(error);
+      this.end(error);
     }
+    return this;
   }
 }

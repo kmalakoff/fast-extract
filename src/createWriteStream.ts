@@ -1,17 +1,17 @@
 import writer from 'flush-write-stream';
 import pumpify from 'pumpify';
 
-import createPipeline from './createPipeline.mjs';
-import exitCleanup from './exitCleanup.mjs';
-import rimrafAll from './rimrafAll.mjs';
+import createPipeline from './createPipeline.js';
+import exitCleanup from './exitCleanup.js';
+import rimrafAll from './rimrafAll.js';
+
+import type { WriteOptions } from './types.js';
 
 export default function createWriteStream(dest, options) {
   if (typeof options === 'string') options = { type: options };
-  options = { _tempPaths: [], ...options };
+  options = { _tempPaths: [], ...options } as WriteOptions;
   const streams = createPipeline(dest, options);
-
   const generatedFiles = [dest].concat(options._tempPaths);
-
   generatedFiles.forEach(exitCleanup.add);
 
   let error = null;
