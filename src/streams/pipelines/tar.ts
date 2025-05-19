@@ -1,7 +1,7 @@
-import EntryProgressTransform from '../transforms/EntryProgress.mjs';
-import PathToData from '../transforms/PathToData.mjs';
-import TarTransform from '../transforms/Tar.mjs';
-import createWriteEntriesStream from '../write/entries.mjs';
+import EntryProgressTransform from '../transforms/EntryProgress.js';
+import PathToData from '../transforms/PathToData.js';
+import TarTransform from '../transforms/Tar.js';
+import createWriteEntriesStream from '../write/entries.js';
 
 export default function createTarPipeline(dest, streams, options) {
   const isPath = typeof options.source === 'string';

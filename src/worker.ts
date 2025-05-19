@@ -1,7 +1,7 @@
 import once from 'call-once-fn';
 import oo from 'on-one';
 
-import createWriteStream from './createWriteStream.mjs';
+import createWriteStream from './createWriteStream.js';
 
 export default function extract(source, dest, options, callback) {
   if (typeof options === 'string') options = { type: options };

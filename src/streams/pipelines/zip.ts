@@ -1,8 +1,8 @@
-import EntryProgressTransform from '../transforms/EntryProgress.mjs';
-import PathToData from '../transforms/PathToData.mjs';
-import WriteFileTransform from '../transforms/WriteFile.mjs';
-import ZipTransform from '../transforms/Zip.mjs';
-import createWriteEntriesStream from '../write/entries.mjs';
+import EntryProgressTransform from '../transforms/EntryProgress.js';
+import PathToData from '../transforms/PathToData.js';
+import WriteFileTransform from '../transforms/WriteFile.js';
+import ZipTransform from '../transforms/Zip.js';
+import createWriteEntriesStream from '../write/entries.js';
 
 export default function createZipPipeline(dest, streams, options) {
   const isPath = typeof options.source === 'string';

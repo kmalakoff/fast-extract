@@ -13,10 +13,10 @@ const TRANSORMS = {
   xz: lzmaNative && lzmaNative.createDecompressor ? lzmaNative.createDecompressor.bind(lzmaNative) : undefined,
 };
 
-import create7ZPipeline from './streams/pipelines/7z.mjs';
-import createFilePipeline from './streams/pipelines/file.mjs';
-import createTarPipeline from './streams/pipelines/tar.mjs';
-import createZipPipeline from './streams/pipelines/zip.mjs';
+import create7ZPipeline from './streams/pipelines/7z.js';
+import createFilePipeline from './streams/pipelines/file.js';
+import createTarPipeline from './streams/pipelines/tar.js';
+import createZipPipeline from './streams/pipelines/zip.js';
 
 const WRITERS = {
   zip: createZipPipeline,
@@ -25,11 +25,11 @@ const WRITERS = {
   '7z': create7ZPipeline,
 };
 
-import DestinationNotExists from './streams/transforms/DestinationNotExists.mjs';
-import DestinationRemove from './streams/transforms/DestinationRemove.mjs';
+import DestinationNotExists from './streams/transforms/DestinationNotExists.js';
+import DestinationRemove from './streams/transforms/DestinationRemove.js';
 
-import extname from './extname.mjs';
-import statsBasename from './sourceStats/basename.mjs';
+import extname from './extname.js';
+import statsBasename from './sourceStats/basename.js';
 
 export default function createPipeline(dest, options) {
   const type = options.type === undefined ? extname(statsBasename(options.source, options) || '') : options.type;

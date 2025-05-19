@@ -2,7 +2,10 @@ import fs from 'fs';
 import { Transform } from 'stream';
 
 export default class DestinationNotExists extends Transform {
-  constructor(dest, options) {
+  private dest: string;
+  private ready: boolean;
+
+  constructor(dest: string, options = {}) {
     options = options ? { ...options, objectMode: true } : { objectMode: true };
     super(options);
     this.dest = dest;

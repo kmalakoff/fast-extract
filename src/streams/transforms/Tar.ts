@@ -3,7 +3,11 @@ import { PassThrough, Transform } from 'stream';
 import TarIterator from 'tar-iterator';
 
 export default class TarTransform extends Transform {
-  constructor(options) {
+  private _iterator: TarIterator;
+  private _callback: (error?: Error) => void;
+  private _stream: NodeJS.ReadWriteStream;
+
+  constructor(options?: object) {
     options = options ? { ...options, objectMode: true } : { objectMode: true };
     super(options);
   }
@@ -13,7 +17,7 @@ export default class TarTransform extends Transform {
     this._stream = new PassThrough();
     this._iterator = new TarIterator(this._stream);
     this._iterator.forEach(
-      (entry) => {
+      (entry: unknown): undefined => {
         this.push(entry);
       },
       { concurrency: 1 },
@@ -37,16 +41,17 @@ export default class TarTransform extends Transform {
     this._stream = null;
   };
 
-  destroy(err) {
+  destroy(error?: Error): this {
     if (this._stream) {
-      this._stream.end(err);
+      this._stream.end();
       this._stream = null;
     }
     if (this._iterator) {
       const iterator = this._iterator;
       this._iterator = null;
-      iterator.destroy(err);
-      this.end(err);
+      iterator.destroy(error);
+      this.end(error);
     }
+    return this;
   }
 }
