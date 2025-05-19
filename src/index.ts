@@ -1,7 +1,7 @@
 import './polyfills.cjs';
-import worker from './worker.mjs';
+import worker from './worker.js';
 
-export { default as createWriteStream } from './createWriteStream.mjs';
+export { default as createWriteStream } from './createWriteStream.js';
 export default function fastExtract(src, dest, options, callback) {
   if (options === undefined && typeof dest !== 'string') {
     callback = options;

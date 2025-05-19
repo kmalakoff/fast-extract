@@ -2,10 +2,12 @@ import { Transform } from 'stream';
 import throttle from 'lodash.throttle';
 
 export default class EntryProgressTransform extends Transform {
+  private progress: (entry: object) => boolean;
+
   constructor(options) {
     super({ objectMode: true });
     let done = false;
-    this.progress = function progress(entry) {
+    this.progress = function progress(entry: object) {
       if (done) return; // throttle can call after done
       // biome-ignore lint/suspicious/noAssignInExpressions: <explanation>
       if (!entry) return (done = true);

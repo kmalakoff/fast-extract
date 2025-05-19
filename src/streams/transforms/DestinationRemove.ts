@@ -2,7 +2,10 @@ import { Transform } from 'stream';
 import rimraf2 from 'rimraf2';
 
 export default class DestinationRemove extends Transform {
-  constructor(dest, options) {
+  private dest: string;
+  private removed: boolean;
+
+  constructor(dest: string, options = {}) {
     options = options ? { ...options, objectMode: true } : { objectMode: true };
     super(options);
     this.dest = dest;

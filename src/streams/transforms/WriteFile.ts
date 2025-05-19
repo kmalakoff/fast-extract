@@ -4,12 +4,17 @@ import { Transform } from 'stream';
 import mkdirp from 'mkdirp-classic';
 import tempSuffix from 'temp-suffix';
 
+import type { WriteOptions } from '../../types.js';
+
 export default class WriteFileTransform extends Transform {
-  constructor(dest, options) {
+  private tempPath: string;
+  private stream: NodeJS.WritableStream;
+
+  constructor(dest: string, options) {
     options = options ? { ...options, objectMode: true } : { objectMode: true };
     super(options);
     this.tempPath = tempSuffix(dest);
-    options._tempPaths.push(this.tempPath);
+    (options as WriteOptions)._tempPaths.push(this.tempPath);
   }
 
   _transform(chunk, encoding, callback) {
@@ -36,10 +41,12 @@ export default class WriteFileTransform extends Transform {
     });
   }
 
-  destroy(err) {
+  destroy(_error?: Error): this {
     if (this.stream) {
-      this.stream.end(err);
+      this.stream.end();
       this.stream = null;
     }
+
+    return this;
   }
 }
