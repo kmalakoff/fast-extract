@@ -4,5 +4,5 @@ export interface SourceStats {
 }
 
 export interface WriteOptions {
-  _tempPaths: Array<string>;
+  _tempPaths: string[];
 }
