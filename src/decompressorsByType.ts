@@ -1,3 +1,4 @@
+import type { Transform } from 'stream';
 import zlib from 'zlib';
 import bz2 from 'unbzip2-stream';
 
@@ -5,7 +6,7 @@ import bz2 from 'unbzip2-stream';
 const major = +process.versions.node.split('.')[0];
 const lzmaNative = major >= 10 ? require('./optionalRequire.mjs')('lzma-native') : null;
 
-export default function decompressorsByType(type) {
+export default function decompressorsByType(type: string): Transform[] {
   const parts = type.split('.').reverse();
   const streams = [];
   for (let index = 0; index < parts.length; index++) {

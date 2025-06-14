@@ -1,10 +1,17 @@
 import zlib from 'zlib';
 import bz2 from 'unbzip2-stream';
-import optionalRequire from './optionalRequire.cjs';
+import optionalRequire from './optionalRequire.js';
+
+import type { Transform } from 'stream';
+import type { Pipeline } from './types.js';
+
+interface Native {
+  createDecompressor?: () => Transform;
+}
 
 // lzma-native module compatiblity starts at Node 6
 const major = +process.versions.node.split('.')[0];
-const lzmaNative = major >= 10 ? optionalRequire('lzma-native') : null;
+const lzmaNative: Native = major >= 10 ? optionalRequire('lzma-native') : null;
 
 const TRANSORMS = {
   bz2: bz2,
@@ -31,7 +38,9 @@ import DestinationRemove from './streams/transforms/DestinationRemove.js';
 import extname from './extname.js';
 import statsBasename from './sourceStats/basename.js';
 
-export default function createPipeline(dest, options) {
+import type { OptionsInternal } from './types.js';
+
+export default function createPipeline(dest: string, options: OptionsInternal): Pipeline {
   const type = options.type === undefined ? extname(statsBasename(options.source, options) || '') : options.type;
 
   const parts = type.split('.');

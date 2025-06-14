@@ -1,13 +1,16 @@
 import progressStream from 'progress-stream';
 import statsSize from '../../sourceStats/size.js';
 
-export default function DataProgressTransform(options) {
-  const stats = { basename: options.basename };
+import type { Transform } from 'stream';
+import type { OptionsInternal, Progress } from '../../types.js';
+
+export default function DataProgressTransform(options?: OptionsInternal): Transform {
+  const stats = options ? { basename: options.basename } : {};
   const progress = progressStream(
     {
       time: options.time,
     },
-    (update) => {
+    (update: Progress) => {
       options.progress({ progress: 'write', ...update, ...stats });
     }
   );
