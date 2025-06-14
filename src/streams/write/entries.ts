@@ -5,7 +5,10 @@ import rimraf2 from 'rimraf2';
 
 import tempSuffix from 'temp-suffix';
 
-export default function createWriteEntriesStream(dest, options = {}) {
+import type { Writable } from 'stream';
+import type { OptionsInternal } from '../../types.js';
+
+export default function createWriteEntriesStream(dest: string, options: OptionsInternal = {}): Writable {
   options = { now: new Date(), ...options };
 
   const tempDest = tempSuffix(dest);

@@ -1,17 +1,19 @@
-import { Transform } from 'stream';
+import { Transform, type TransformCallback, type TransformOptions } from 'stream';
 
 import ZipIterator from 'zip-iterator';
+
+import type { OptionsInternal } from '../../types.js';
 
 export default class ZipTransform extends Transform {
   private _iterator: ZipIterator;
   private _callback: (error?: Error) => void;
 
-  constructor(options?: object) {
+  constructor(options?: OptionsInternal | TransformOptions<Transform>) {
     options = options ? { ...options, objectMode: true } : { objectMode: true };
     super(options);
   }
 
-  _transform(chunk, _encoding, callback) {
+  _transform(chunk: unknown, _encoding: BufferEncoding, callback: TransformCallback): undefined {
     const fullPath = typeof chunk === 'string' ? chunk : chunk.toString();
     this._iterator = new ZipIterator(fullPath);
     this._iterator.forEach(
@@ -31,7 +33,7 @@ export default class ZipTransform extends Transform {
     );
   }
 
-  _flush(callback) {
+  _flush(callback: TransformCallback): unknown {
     if (!this._iterator) return callback();
     this._callback = callback;
     this._iterator.end();
