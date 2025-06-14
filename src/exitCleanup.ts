@@ -3,7 +3,7 @@ import onExit from 'signal-exit';
 
 const fullPaths = [];
 
-onExit(function exist(_code, _signal) {
+onExit(() => {
   while (fullPaths.length) {
     try {
       rimraf2.sync(fullPaths.pop(), { disableGlob: true });
@@ -11,11 +11,11 @@ onExit(function exist(_code, _signal) {
   }
 });
 
-function add(fullPath) {
+function add(fullPath: string) {
   fullPaths.push(fullPath);
 }
 
-function remove(fullPath) {
+function remove(fullPath: string) {
   const index = fullPaths.indexOf(fullPath);
   if (index < 0) console.log(`Path does not exist for remove: ${fullPath}`);
   fullPaths.splice(index, 1);

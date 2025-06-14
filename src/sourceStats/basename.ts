@@ -5,7 +5,9 @@ import contentDisposition from 'content-disposition';
 const POSIX = /[<>:"\\/\\|?*\x00-\x1F]/g;
 const WINDOWS = /^(con|prn|aux|nul|com[0-9]|lpt[0-9])$/i;
 
-export default function getBasename(source, options, endpoint?) {
+import type { Options, Source } from '../types.js';
+
+export default function getBasename(source: Source, options: Options, endpoint?: string): string {
   // options
   let basename = options.basename || options.filename;
   if (basename !== undefined) return basename;

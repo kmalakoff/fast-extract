@@ -8,11 +8,12 @@ import rimraf2 from 'rimraf2';
 import tempSuffix from 'temp-suffix';
 import writeTruncateFile from '../../writeTruncateFile.js';
 
-import type { WriteOptions } from '../../types.js';
+import type { Writable } from 'stream';
+import type { OptionsInternal } from '../../types.js';
 
-export default function createFilePipeline(dest: string, options: object) {
+export default function createFilePipeline(dest: string, options: object): Writable {
   const tempDest = tempSuffix(dest);
-  (options as WriteOptions)._tempPaths.push(tempDest);
+  (options as OptionsInternal)._tempPaths.push(tempDest);
 
   let wroteSomething = false;
   return writer(

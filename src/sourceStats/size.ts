@@ -1,14 +1,19 @@
 import fs from 'fs';
 
-export default function getSize(source, options, callback) {
+import type { Options, Source } from '../types.js';
+
+export type Callback = (error?: Error, size?: number) => undefined;
+
+export default function getSize(source: Source, options: Options, callback: Callback): undefined {
   // options
   if (options.size !== undefined) return callback(null, options.size);
 
   // path
   if (typeof source === 'string') {
-    return fs.stat(source, (err, stats) => {
+    fs.stat(source, (err, stats) => {
       err ? callback(err) : callback(null, stats.size);
     });
+    return;
   }
   // stream
   if (source) {

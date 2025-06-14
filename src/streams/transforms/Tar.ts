@@ -1,19 +1,23 @@
-import { PassThrough, Transform } from 'stream';
-
+import { PassThrough, Transform, type TransformCallback, type TransformOptions } from 'stream';
 import TarIterator from 'tar-iterator';
+
+import type { OptionsInternal } from '../../types.js';
 
 export default class TarTransform extends Transform {
   private _iterator: TarIterator;
   private _callback: (error?: Error) => void;
   private _stream: NodeJS.ReadWriteStream;
 
-  constructor(options?: object) {
+  constructor(options?: OptionsInternal | TransformOptions<Transform>) {
     options = options ? { ...options, objectMode: true } : { objectMode: true };
     super(options);
   }
 
-  _transform(chunk, encoding, callback) {
-    if (this._stream) return this._stream.write(chunk, encoding, callback);
+  _transform(chunk: unknown, encoding: BufferEncoding, callback: TransformCallback): undefined {
+    if (this._stream) {
+      this._stream.write(chunk as string, encoding, callback);
+      return;
+    }
     this._stream = new PassThrough();
     this._iterator = new TarIterator(this._stream);
     this._iterator.forEach(
@@ -31,15 +35,18 @@ export default class TarTransform extends Transform {
         this._callback = null;
       }
     );
-    this._stream.write(chunk, encoding, callback);
+    this._stream.write(chunk as string, encoding, callback);
   }
 
-  _flush = function _flush(callback) {
-    if (!this._stream) return callback();
+  _flush(callback: TransformCallback): undefined {
+    if (!this._stream) {
+      callback();
+      return;
+    }
     this._callback = callback;
     this._stream.end();
     this._stream = null;
-  };
+  }
 
   destroy(error?: Error): this {
     if (this._stream) {

@@ -1,11 +1,12 @@
 import once from 'call-once-fn';
 import oo from 'on-one';
 
+import type { Callback, Options, OptionsInternal, Source } from './types.js';
+
 import createWriteStream from './createWriteStream.js';
 
-export default function extract(source, dest, options, callback) {
-  if (typeof options === 'string') options = { type: options };
-  options = { source: source, ...options };
+export default function extract(source: Source, dest: string, options_: Options, callback: Callback): undefined {
+  const options: OptionsInternal = { source, ...options_ };
   const res = createWriteStream(dest, options);
 
   // path
@@ -13,7 +14,8 @@ export default function extract(source, dest, options, callback) {
     const end = once(callback);
     res.on('error', end);
     res.write(source, 'utf8');
-    return res.end(end);
+    res.end(end);
+    return;
   }
 
   // stream

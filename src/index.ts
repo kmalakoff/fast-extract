@@ -1,20 +1,37 @@
-import './polyfills.cjs';
+import './polyfills.js';
 import worker from './worker.js';
 
+import type { Callback, Options, Source } from './types.js';
+
+export * from './types.js';
 export { default as createWriteStream } from './createWriteStream.js';
-export default function fastExtract(src, dest, options, callback) {
+
+export default function fastExtract(src: Source, dest: string): Promise<undefined>;
+export default function fastExtract(src: Source, options: Options): Promise<undefined>;
+export default function fastExtract(src: Source, dest: string, options: Options): Promise<undefined>;
+
+export default function fastExtract(src: Source, dest: string, callback: Callback): undefined;
+export default function fastExtract(src: Source, options: Options, callback: Callback): undefined;
+export default function fastExtract(src: Source, dest: string, options: Options, callback: Callback): undefined;
+
+export default function fastExtract(src: Source, dest: string | Options | Callback, options?: Options | Callback, callback?: Callback): undefined | Promise<undefined> {
   if (options === undefined && typeof dest !== 'string') {
-    callback = options;
-    options = dest;
+    callback = options as Callback;
+    options = dest as Options;
     dest = null;
   }
 
   if (typeof options === 'function') {
-    callback = options;
+    callback = options as Callback;
     options = null;
   }
+  if (typeof options === 'string') options = { type: options };
   options = options || {};
 
-  if (typeof callback === 'function') return worker(src, dest, options, callback);
-  return new Promise((resolve, reject) => worker(src, dest, options, (err, res) => (err ? reject(err) : resolve(res))));
+  if (typeof callback === 'function') return worker(src, dest as string, options as Options, callback);
+  return new Promise((resolve, reject) =>
+    worker(src, dest as string, options as Options, (err?: Error) => {
+      err ? reject(err) : resolve(undefined);
+    })
+  );
 }
