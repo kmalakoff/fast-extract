@@ -1,38 +1,44 @@
 import fs from 'fs';
 import path from 'path';
-import { Transform } from 'stream';
+import { Transform, type TransformCallback, type TransformOptions } from 'stream';
 import mkdirp from 'mkdirp-classic';
 import tempSuffix from 'temp-suffix';
 
-import type { WriteOptions } from '../../types.js';
+import type { OptionsInternal } from '../../types.js';
 
 export default class WriteFileTransform extends Transform {
   private tempPath: string;
   private stream: NodeJS.WritableStream;
 
-  constructor(dest: string, options) {
+  constructor(dest: string, options?: OptionsInternal | TransformOptions<Transform>) {
     options = options ? { ...options, objectMode: true } : { objectMode: true };
     super(options);
     this.tempPath = tempSuffix(dest);
-    (options as WriteOptions)._tempPaths.push(this.tempPath);
+    (options as OptionsInternal)._tempPaths.push(this.tempPath);
   }
 
-  _transform(chunk, encoding, callback) {
-    if (this.stream)
-      return this.stream.write(chunk, encoding, () => {
+  _transform(chunk: unknown, encoding: BufferEncoding, callback: TransformCallback): undefined {
+    if (this.stream) {
+      this.stream.write(chunk as string, encoding, () => {
         callback();
       });
+      return;
+    }
+
     mkdirp(path.dirname(this.tempPath), (err) => {
       if (err) return callback(err);
       this.stream = fs.createWriteStream(this.tempPath, { flags: 'w' });
-      this.stream.write(chunk, encoding, () => {
+      this.stream.write(chunk as string, encoding, () => {
         callback();
       });
     });
   }
 
-  _flush(callback) {
-    if (!this.stream) return callback();
+  _flush(callback: TransformCallback): undefined {
+    if (!this.stream) {
+      callback();
+      return;
+    }
     this.stream.end(() => {
       this.stream = null;
       this.push(this.tempPath);
