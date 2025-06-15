@@ -41,10 +41,16 @@ describe('extract', () => {
 
       const options = { progress: progress };
       extract(path.join(DATA_DIR, 'fixture.js'), TARGET, options, (err) => {
-        if (err) return done(err.message);
+        if (err) {
+          done(err.message);
+          return;
+        }
 
         validateFiles(options, 'js', (err) => {
-          if (err) return done(err.message);
+          if (err) {
+            done(err.message);
+            return;
+          }
           assert.ok(progressUpdates.length > 0);
           done();
         });
@@ -54,19 +60,31 @@ describe('extract', () => {
     it('extract file multiple times', (done) => {
       const options = {};
       extract(path.join(DATA_DIR, 'fixture.js'), TARGET, options, (err) => {
-        if (err) return done(err.message);
+        if (err) {
+          done(err.message);
+          return;
+        }
 
         validateFiles(options, 'js', (err) => {
-          if (err) return done(err.message);
+          if (err) {
+            done(err.message);
+            return;
+          }
 
           extract(path.join(DATA_DIR, 'fixture.js'), TARGET, options, (err) => {
             assert.ok(err);
 
             extract(path.join(DATA_DIR, 'fixture.js'), TARGET, { force: true, ...options }, (err) => {
-              if (err) return done(err.message);
+              if (err) {
+                done(err.message);
+                return;
+              }
 
               validateFiles(options, 'js', (err) => {
-                if (err) return done(err.message);
+                if (err) {
+                  done(err.message);
+                  return;
+                }
                 done();
               });
             });
@@ -95,10 +113,16 @@ describe('extract', () => {
 
       const options = { strip: 1, progress: progress };
       extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, options, (err) => {
-        if (err) return done(err.message);
+        if (err) {
+          done(err.message);
+          return;
+        }
 
         validateFiles(options, 'tar', (err) => {
-          if (err) return done(err.message);
+          if (err) {
+            done(err.message);
+            return;
+          }
           assert.equal(progressUpdates.length, 16);
           done();
         });
@@ -108,19 +132,31 @@ describe('extract', () => {
     it('extract tar multiple times', (done) => {
       const options = { strip: 1 };
       extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, options, (err) => {
-        if (err) return done(err.message);
+        if (err) {
+          done(err.message);
+          return;
+        }
 
         validateFiles(options, 'tar', (err) => {
-          if (err) return done(err.message);
+          if (err) {
+            done(err.message);
+            return;
+          }
 
           extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, options, (err) => {
             assert.ok(err);
 
             extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, { force: true, ...options }, (err) => {
-              if (err) return done(err.message);
+              if (err) {
+                done(err.message);
+                return;
+              }
 
               validateFiles(options, 'tar', (err) => {
-                if (err) return done(err.message);
+                if (err) {
+                  done(err.message);
+                  return;
+                }
                 done();
               });
             });
@@ -137,10 +173,16 @@ describe('extract', () => {
 
       const options = { strip: 1, progress: progress };
       extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, options, (err) => {
-        if (err) return done(err.message);
+        if (err) {
+          done(err.message);
+          return;
+        }
 
         validateFiles(options, 'zip', (err) => {
-          if (err) return done(err.message);
+          if (err) {
+            done(err.message);
+            return;
+          }
           assert.equal(progressUpdates.length, 16);
           done();
         });
@@ -150,19 +192,31 @@ describe('extract', () => {
     it('extract zip multiple times', (done) => {
       const options = { strip: 1 };
       extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, options, (err) => {
-        if (err) return done(err.message);
+        if (err) {
+          done(err.message);
+          return;
+        }
 
         validateFiles(options, 'zip', (err) => {
-          if (err) return done(err.message);
+          if (err) {
+            done(err.message);
+            return;
+          }
 
           extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, options, (err) => {
             assert.ok(err);
 
             extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, { force: true, ...options }, (err) => {
-              if (err) return done(err.message);
+              if (err) {
+                done(err.message);
+                return;
+              }
 
               validateFiles(options, 'zip', (err) => {
-                if (err) return done(err.message);
+                if (err) {
+                  done(err.message);
+                  return;
+                }
                 done();
               });
             });
@@ -179,10 +233,16 @@ describe('extract', () => {
 
       const options = { strip: 1, progress: progress };
       extract(path.join(DATA_DIR, 'fixture.7z'), TARGET, options, (err) => {
-        if (err) return done(err.message);
+        if (err) {
+          done(err.message);
+          return;
+        }
 
         validateFiles(options, '7z', (err) => {
-          if (err) return done(err.message);
+          if (err) {
+            done(err.message);
+            return;
+          }
           assert.equal(progressUpdates.length, 16);
           done();
         });
