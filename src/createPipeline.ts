@@ -1,8 +1,7 @@
-import zlib from 'zlib';
-import bz2 from 'unbzip2-stream';
-import optionalRequire from './optionalRequire.js';
-
 import type { Transform } from 'stream';
+import bz2 from 'unbzip2-stream';
+import zlib from 'zlib';
+import optionalRequire from './optionalRequire.js';
 import type { Pipeline } from './types.js';
 
 interface Native {
@@ -32,11 +31,10 @@ const WRITERS = {
   '7z': create7ZPipeline,
 };
 
-import DestinationNotExists from './streams/transforms/DestinationNotExists.js';
-import DestinationRemove from './streams/transforms/DestinationRemove.js';
-
 import extname from './extname.js';
 import statsBasename from './sourceStats/basename.js';
+import DestinationNotExists from './streams/transforms/DestinationNotExists.js';
+import DestinationRemove from './streams/transforms/DestinationRemove.js';
 
 import type { OptionsInternal } from './types.js';
 

@@ -1,11 +1,10 @@
 import path from 'path';
 
 import statsBasename from '../../sourceStats/basename.js';
+import type { OptionsInternal, Pipeline } from '../../types.js';
 import DataProgressTransform from '../transforms/DataProgress.js';
 import PathToData from '../transforms/PathToData.js';
 import createWriteStream from '../write/file.js';
-
-import type { OptionsInternal, Pipeline } from '../../types.js';
 
 export default function createFilePipeline(dest: string, streams: Pipeline, options: OptionsInternal): Pipeline {
   const isPath = typeof options.source === 'string';

@@ -1,6 +1,6 @@
 import type { ReadStream } from 'fs';
-import type { Transform, Writable } from 'stream';
 import type { Progress as ProgressBase } from 'progress-stream';
+import type { Transform, Writable } from 'stream';
 
 export interface StreamResponse extends ReadStream {
   statusCode: number;

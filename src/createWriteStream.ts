@@ -1,6 +1,6 @@
-import type { Writable } from 'stream';
 import writer from 'flush-write-stream';
 import pumpify from 'pumpify';
+import type { Writable } from 'stream';
 
 import createPipeline from './createPipeline.js';
 import exitCleanup from './exitCleanup.js';

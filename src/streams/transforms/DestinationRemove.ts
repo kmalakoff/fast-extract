@@ -1,5 +1,5 @@
-import { Transform, type TransformCallback, type TransformOptions } from 'stream';
 import rimraf2 from 'rimraf2';
+import { Transform, type TransformCallback, type TransformOptions } from 'stream';
 
 export default class DestinationRemove extends Transform {
   private dest: string;

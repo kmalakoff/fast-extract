@@ -1,6 +1,6 @@
 import type { Transform } from 'stream';
-import zlib from 'zlib';
 import bz2 from 'unbzip2-stream';
+import zlib from 'zlib';
 
 // lzma-native module compatiblity starts at Node 6
 const major = +process.versions.node.split('.')[0];
