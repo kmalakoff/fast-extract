@@ -1,7 +1,7 @@
 import fs from 'fs';
+import mkdirp from 'mkdirp-classic';
 import path from 'path';
 import { Transform, type TransformCallback, type TransformOptions } from 'stream';
-import mkdirp from 'mkdirp-classic';
 import tempSuffix from 'temp-suffix';
 
 import type { OptionsInternal } from '../../types.js';

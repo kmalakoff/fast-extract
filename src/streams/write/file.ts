@@ -1,15 +1,13 @@
-import fs from 'fs';
-import path from 'path';
 import writer from 'flush-write-stream';
+import fs from 'fs';
 import mkdirp from 'mkdirp-classic';
+import path from 'path';
 import Queue from 'queue-cb';
 import rimraf2 from 'rimraf2';
-
-import tempSuffix from 'temp-suffix';
-import writeTruncateFile from '../../writeTruncateFile.js';
-
 import type { Writable } from 'stream';
+import tempSuffix from 'temp-suffix';
 import type { OptionsInternal } from '../../types.js';
+import writeTruncateFile from '../../writeTruncateFile.js';
 
 export default function createFilePipeline(dest: string, options: object): Writable {
   const tempDest = tempSuffix(dest);

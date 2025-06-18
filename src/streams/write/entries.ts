@@ -1,11 +1,9 @@
-import fs from 'fs';
 import writer from 'flush-write-stream';
+import fs from 'fs';
 import Queue from 'queue-cb';
 import rimraf2 from 'rimraf2';
-
-import tempSuffix from 'temp-suffix';
-
 import type { Writable } from 'stream';
+import tempSuffix from 'temp-suffix';
 import type { OptionsInternal } from '../../types.js';
 
 export default function createWriteEntriesStream(dest: string, options: OptionsInternal = {}): Writable {
