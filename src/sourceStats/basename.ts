@@ -1,7 +1,7 @@
-import path from 'path';
 import contentDisposition from 'content-disposition';
+import path from 'path';
 
-// biome-ignore lint/suspicious/noControlCharactersInRegex: <explanation>
+// biome-ignore lint/suspicious/noControlCharactersInRegex: Platform specific characters
 const POSIX = /[<>:"\\/\\|?*\x00-\x1F]/g;
 const WINDOWS = /^(con|prn|aux|nul|com[0-9]|lpt[0-9])$/i;
 

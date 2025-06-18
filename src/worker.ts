@@ -1,9 +1,7 @@
 import once from 'call-once-fn';
 import oo from 'on-one';
-
-import type { Callback, Options, OptionsInternal, Source } from './types.js';
-
 import createWriteStream from './createWriteStream.js';
+import type { Callback, Options, OptionsInternal, Source } from './types.js';
 
 export default function extract(source: Source, dest: string, options_: Options, callback: Callback): undefined {
   const options: OptionsInternal = { source, ...options_ };

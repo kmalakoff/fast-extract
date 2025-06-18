@@ -10,14 +10,18 @@ export default class EntryProgressTransform extends Transform {
   constructor(options: OptionsInternal | TransformOptions<Transform>) {
     options = options ? { ...options, objectMode: true } : { objectMode: true };
     super(options);
+    const internalOptions = options as OptionsInternal;
+
     let done = false;
     this.progress = function progress(entry: Progress) {
       if (done) return; // throttle can call after done
-      // biome-ignore lint/suspicious/noAssignInExpressions: <explanation>
-      if (!entry) return (done = true);
-      (options as OptionsInternal).progress({ progress: 'extract', ...entry });
+      if (!entry) {
+        done = true;
+        return done;
+      }
+      internalOptions.progress({ progress: 'extract', ...entry });
     };
-    const time = (options as OptionsInternal).time;
+    const time = internalOptions.time;
     if (time !== undefined) this.progress = throttle(this.progress, time, { leading: true });
   }
 

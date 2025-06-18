@@ -1,6 +1,6 @@
 import fs from 'fs';
-import { Transform, type TransformCallback, type TransformOptions } from 'stream';
 import oo from 'on-one';
+import { Transform, type TransformCallback, type TransformOptions } from 'stream';
 
 import type { OptionsInternal } from '../../types.js';
 
