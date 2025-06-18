@@ -1,10 +1,9 @@
+import type { OptionsInternal, Pipeline } from '../../types.js';
 import EntryProgressTransform from '../transforms/EntryProgress.js';
 import PathToData from '../transforms/PathToData.js';
 import WriteFileTransform from '../transforms/WriteFile.js';
 import ZipTransform from '../transforms/Zip.js';
 import createWriteEntriesStream from '../write/entries.js';
-
-import type { OptionsInternal, Pipeline } from '../../types.js';
 
 export default function createZipPipeline(dest: string, streams: Pipeline, options: OptionsInternal): Pipeline {
   const isPath = typeof options.source === 'string';
