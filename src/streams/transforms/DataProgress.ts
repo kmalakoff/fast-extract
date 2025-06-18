@@ -1,7 +1,6 @@
 import progressStream from 'progress-stream';
-import statsSize from '../../sourceStats/size.js';
-
 import type { Transform } from 'stream';
+import statsSize from '../../sourceStats/size.js';
 import type { OptionsInternal, Progress } from '../../types.js';
 
 export default function DataProgressTransform(options?: OptionsInternal): Transform {
