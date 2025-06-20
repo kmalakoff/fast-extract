@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const rimraf2 = require('rimraf2');
 const mkdirp = require('mkdirp-classic');
+const Pinkie = require('pinkie-promise');
 
 const extract = require('fast-extract');
 const validateFiles = require('../lib/validateFiles.cjs');
@@ -15,14 +16,13 @@ const DATA_DIR = constants.DATA_DIR;
 describe('extract', () => {
   (() => {
     // patch and restore promise
-    const root = typeof global !== 'undefined' ? global : window;
-    let rootPromise;
+    if (typeof global === 'undefined') return;
+    const globalPromise = global.Promise;
     before(() => {
-      rootPromise = root.Promise;
-      root.Promise = require('pinkie-promise');
+      global.Promise = Pinkie;
     });
     after(() => {
-      root.Promise = rootPromise;
+      global.Promise = globalPromise;
     });
   })();
 

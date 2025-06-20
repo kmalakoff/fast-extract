@@ -54,8 +54,8 @@
   "scripts": {
     "build": "tsds build",
     "format": "biome check --write --unsafe",
-    "test": "tsds test:node --no-timeouts",
-    "test:engines": "nvu engines npm test",
+    "test": "mocha --no-timeouts test/**/*.test.*",
+    "test:engines": "nvu engines tsds test:node --no-timeouts",
     "version": "tsds version"
   },
   "dependencies": {
@@ -76,10 +76,10 @@
     "require_optional": "^1.0.1",
     "rimraf2": "^2.8.2",
     "signal-exit": "^3.0.7",
-    "tar-iterator": "^2.0.1",
+    "tar-iterator": "^2.0.2",
     "temp-suffix": "^0.1.19",
     "unbzip2-stream": "^1.4.3",
-    "zip-iterator": "^2.0.1"
+    "zip-iterator": "^2.0.2"
   },
   "devDependencies": {
     "@types/mocha": "*",
