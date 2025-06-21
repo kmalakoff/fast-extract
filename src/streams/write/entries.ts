@@ -4,7 +4,7 @@ import Queue from 'queue-cb';
 import rimraf2 from 'rimraf2';
 import type { Writable } from 'stream';
 import tempSuffix from 'temp-suffix';
-import type { OptionsInternal } from '../../types.js';
+import type { OptionsInternal } from '../../types.ts';
 
 export default function createWriteEntriesStream(dest: string, options: OptionsInternal = {}): Writable {
   options = { now: new Date(), ...options };
