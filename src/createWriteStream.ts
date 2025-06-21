@@ -2,11 +2,11 @@ import writer from 'flush-write-stream';
 import pumpify from 'pumpify';
 import type { Writable } from 'stream';
 
-import createPipeline from './createPipeline.js';
-import exitCleanup from './exitCleanup.js';
-import rimrafAll from './rimrafAll.js';
+import createPipeline from './createPipeline.ts';
+import exitCleanup from './exitCleanup.ts';
+import rimrafAll from './rimrafAll.ts';
 
-import type { Options, OptionsInternal } from './types.js';
+import type { Options, OptionsInternal } from './types.ts';
 
 export default function createWriteStream(dest: string, options_: Options | string): Writable {
   if (typeof options_ === 'string') options_ = { type: options_ };

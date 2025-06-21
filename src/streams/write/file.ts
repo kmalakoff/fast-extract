@@ -6,8 +6,8 @@ import Queue from 'queue-cb';
 import rimraf2 from 'rimraf2';
 import type { Writable } from 'stream';
 import tempSuffix from 'temp-suffix';
-import type { OptionsInternal } from '../../types.js';
-import writeTruncateFile from '../../writeTruncateFile.js';
+import type { OptionsInternal } from '../../types.ts';
+import writeTruncateFile from '../../writeTruncateFile.ts';
 
 export default function createFilePipeline(dest: string, options: object): Writable {
   const tempDest = tempSuffix(dest);

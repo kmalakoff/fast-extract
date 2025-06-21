@@ -5,7 +5,7 @@ import path from 'path';
 const POSIX = /[<>:"\\/\\|?*\x00-\x1F]/g;
 const WINDOWS = /^(con|prn|aux|nul|com[0-9]|lpt[0-9])$/i;
 
-import type { Options, Source } from '../types.js';
+import type { Options, Source } from '../types.ts';
 
 export default function getBasename(source: Source, options: Options, endpoint?: string): string {
   // options

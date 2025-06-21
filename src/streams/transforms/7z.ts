@@ -2,7 +2,7 @@ import { Transform, type TransformCallback, type TransformOptions } from 'stream
 
 import ZipIterator from 'zip-iterator';
 
-import type { OptionsInternal } from '../../types.js';
+import type { OptionsInternal } from '../../types.ts';
 
 export default class ZipTransform extends Transform {
   private _iterator: ZipIterator;
