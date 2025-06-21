@@ -2,7 +2,7 @@ import throttle from 'lodash.throttle';
 
 import { Transform, type TransformCallback, type TransformOptions } from 'stream';
 
-import type { OptionsInternal, Progress } from '../../types.js';
+import type { OptionsInternal, Progress } from '../../types.ts';
 
 export default class EntryProgressTransform extends Transform {
   private progress: (entry: Progress) => boolean;

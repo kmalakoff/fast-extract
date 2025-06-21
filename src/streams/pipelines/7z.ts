@@ -1,10 +1,10 @@
-// import SevenZTransform from '../transforms/7z.js';
-// import EntryProgressTransform from '../transforms/EntryProgress.js';
-// import PathToData from '../transforms/PathToData.js';
-// import WriteFileTransform from '../transforms/WriteFile.js';
-// import createWriteEntriesStream from '../write/entries.js';
+// import SevenZTransform from '../transforms/7z.ts';
+// import EntryProgressTransform from '../transforms/EntryProgress.ts';
+// import PathToData from '../transforms/PathToData.ts';
+// import WriteFileTransform from '../transforms/WriteFile.ts';
+// import createWriteEntriesStream from '../write/entries.ts';
 
-import type { OptionsInternal, Pipeline } from '../../types.js';
+import type { OptionsInternal, Pipeline } from '../../types.ts';
 
 export default function create7zPipeline(_dest: string, _streams: Pipeline, _options: OptionsInternal): Pipeline {
   throw new Error('7z not supported');
