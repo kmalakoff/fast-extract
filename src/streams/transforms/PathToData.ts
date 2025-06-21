@@ -2,7 +2,7 @@ import fs from 'fs';
 import oo from 'on-one';
 import { Transform, type TransformCallback, type TransformOptions } from 'stream';
 
-import type { OptionsInternal } from '../../types.js';
+import type { OptionsInternal } from '../../types.ts';
 
 export default class PathToData extends Transform {
   constructor(options?: OptionsInternal | TransformOptions<Transform>) {

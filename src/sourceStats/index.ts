@@ -1,6 +1,6 @@
-import type { Options, Source, SourceStats } from '../types.js';
-import getBasename from './basename.js';
-import getSize from './size.js';
+import type { Options, Source, SourceStats } from '../types.ts';
+import getBasename from './basename.ts';
+import getSize from './size.ts';
 
 export type Callback = (error?: Error, stats?: SourceStats) => undefined;
 
