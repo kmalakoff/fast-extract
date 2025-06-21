@@ -1,10 +1,10 @@
-import './polyfills.js';
+import './polyfills.ts';
 
-import type { Callback, Options, Source } from './types.js';
-import worker from './worker.js';
+import type { Callback, Options, Source } from './types.ts';
+import worker from './worker.ts';
 
-export { default as createWriteStream } from './createWriteStream.js';
-export * from './types.js';
+export { default as createWriteStream } from './createWriteStream.ts';
+export * from './types.ts';
 
 export default function fastExtract(src: Source, dest: string): Promise<undefined>;
 export default function fastExtract(src: Source, options: Options): Promise<undefined>;
