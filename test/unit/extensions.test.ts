@@ -1,18 +1,18 @@
-const _assert = require('assert');
-const fs = require('fs');
-const path = require('path');
-const rimraf2 = require('rimraf2');
-const mkdirp = require('mkdirp-classic');
-
-const extract = require('fast-extract');
-const validateFiles = require('../lib/validateFiles.cjs');
-
-const constants = require('../lib/constants.cjs');
-const TMP_DIR = constants.TMP_DIR;
-const TARGET = constants.TARGET;
-const DATA_DIR = constants.DATA_DIR;
+// @ts-ignore
+import extract from 'fast-extract';
+import fs from 'fs';
+import mkdirp from 'mkdirp-classic';
+import path from 'path';
+import rimraf2 from 'rimraf2';
+import { DATA_DIR, TARGET, TMP_DIR } from '../lib/constants.ts';
+import validateFiles from '../lib/validateFiles.ts';
 
 const EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'js.gz', 'js', 'zip'];
+
+interface SpecifiedStream {
+  filename?: string;
+  basename?: string;
+}
 
 // TODO: add 7z
 // const EXTRACT_TYPES = ['7z'];
@@ -103,7 +103,7 @@ function addTests(type) {
     it('extract file by stream - filename', (done) => {
       const options = { strip: 1 };
       const stream = fs.createReadStream(path.join(DATA_DIR, `fixture-${type}`));
-      stream.filename = `fixture.${type}`;
+      (stream as SpecifiedStream).filename = `fixture.${type}`;
       extract(stream, TARGET, options, (err) => {
         if (err) {
           done(err.message);
@@ -123,7 +123,7 @@ function addTests(type) {
     it('extract file by stream - basename', (done) => {
       const options = { strip: 1 };
       const stream = fs.createReadStream(path.join(DATA_DIR, `fixture-${type}`));
-      stream.basename = `fixture.${type}`;
+      (stream as SpecifiedStream).basename = `fixture.${type}`;
       extract(stream, TARGET, options, (err) => {
         if (err) {
           done(err.message);
