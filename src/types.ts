@@ -1,8 +1,7 @@
-import type { ReadStream } from 'fs';
 import type { Progress as ProgressBase } from 'progress-stream';
 import type { Transform, Writable } from 'stream';
 
-export interface StreamSource extends ReadStream {
+export interface StreamSource extends NodeJS.ReadableStream {
   statusCode?: number;
   headers?: object;
   size?: number;
