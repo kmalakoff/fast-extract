@@ -66,7 +66,7 @@
     "flush-write-stream": "^2.0.0",
     "lodash.throttle": "^4.1.1",
     "mkdirp-classic": "^0.5.3",
-    "mock-require-lazy": "^1.0.20",
+    "mock-require-lazy": "^1.0.21",
     "next-tick": "^1.1.0",
     "on-one": "^0.1.9",
     "progress-stream": "^2.0.0",
@@ -88,7 +88,7 @@
     "fs-iterator": "*",
     "fs-stats-spys": "*",
     "lzma-native": "*",
-    "pinkie-promise": "*"
+    "pinkie-promise": "^2.0.1"
   },
   "peerDependencies": {
     "lzma-native": "*"

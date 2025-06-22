@@ -2,12 +2,9 @@ import type { ReadStream } from 'fs';
 import type { Progress as ProgressBase } from 'progress-stream';
 import type { Transform, Writable } from 'stream';
 
-export interface StreamResponse extends ReadStream {
-  statusCode: number;
-  headers: object;
-}
-
-export interface StreamSource extends StreamResponse {
+export interface StreamSource extends ReadStream {
+  statusCode?: number;
+  headers?: object;
   size?: number;
   basename?: string;
   filename?: string;
@@ -33,6 +30,7 @@ export type Options = {
   size?: number;
   type?: string;
   force?: boolean;
+  strip?: number;
   progress?: (update: Progress) => undefined;
 };
 
