@@ -1,6 +1,6 @@
 import assert from 'assert';
 // @ts-ignore
-import { createWriteStream } from 'fast-extract';
+import { createWriteStream, type Progress } from 'fast-extract';
 import fs from 'fs';
 import mkdirp from 'mkdirp-classic';
 import path from 'path';
@@ -18,11 +18,11 @@ describe('createWriteStream', () => {
   describe('happy path', () => {
     it('extract file with progress', (done) => {
       const progressUpdates = [];
-      function progress(update) {
+      const progress = (update: Progress): undefined => {
         progressUpdates.push(update);
-      }
+      };
 
-      const options = { basename: 'fixture.js', progress: progress };
+      const options = { basename: 'fixture.js', progress };
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
         if (err) {
@@ -86,11 +86,11 @@ describe('createWriteStream', () => {
 
     it('extract file with progress - no basename', (done) => {
       const progressUpdates = [];
-      function progress(update) {
+      const progress = (update: Progress): undefined => {
         progressUpdates.push(update);
-      }
+      };
 
-      const options = { progress: progress };
+      const options = { progress };
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
         if (err) {
@@ -112,11 +112,11 @@ describe('createWriteStream', () => {
 
     it('extract tar with progress', (done) => {
       const progressUpdates = [];
-      function progress(update) {
+      const progress = (update: Progress): undefined => {
         progressUpdates.push(update);
-      }
+      };
 
-      const options = { type: 'tar', strip: 1, progress: progress };
+      const options = { type: 'tar', strip: 1, progress };
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
         if (err) {
@@ -182,11 +182,11 @@ describe('createWriteStream', () => {
 
     it('extract zip with progress', (done) => {
       const progressUpdates = [];
-      function progress(update) {
+      const progress = (update: Progress): undefined => {
         progressUpdates.push(update);
-      }
+      };
 
-      const options = { type: 'zip', strip: 1, progress: progress };
+      const options = { type: 'zip', strip: 1, progress };
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
         if (err) {
@@ -252,11 +252,11 @@ describe('createWriteStream', () => {
 
     it.skip('extract 7z with progress', (done) => {
       const progressUpdates = [];
-      function progress(update) {
+      const progress = (update: Progress): undefined => {
         progressUpdates.push(update);
-      }
+      };
 
-      const options = { type: '7z', strip: 1, progress: progress };
+      const options = { type: '7z', strip: 1, progress };
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.7z')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
         if (err) {

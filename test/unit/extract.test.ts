@@ -1,6 +1,6 @@
 import assert from 'assert';
 // @ts-ignore
-import extract from 'fast-extract';
+import extract, { type Progress } from 'fast-extract';
 import fs from 'fs';
 import mkdirp from 'mkdirp-classic';
 import path from 'path';
@@ -31,11 +31,11 @@ describe('extract', () => {
   describe('happy path', () => {
     it('extract file with progress', (done) => {
       const progressUpdates = [];
-      function progress(update) {
+      const progress = (update: Progress): undefined => {
         progressUpdates.push(update);
-      }
+      };
 
-      const options = { progress: progress };
+      const options = { progress };
       extract(path.join(DATA_DIR, 'fixture.js'), TARGET, options, (err) => {
         if (err) {
           done(err.message);
@@ -91,11 +91,11 @@ describe('extract', () => {
 
     it('extract file with progress - promise', async () => {
       const progressUpdates = [];
-      function progress(update) {
+      const progress = (update: Progress): undefined => {
         progressUpdates.push(update);
-      }
+      };
 
-      const options = { progress: progress };
+      const options = { progress };
       await extract(path.join(DATA_DIR, 'fixture.js'), TARGET, options);
       await validateFiles(options, 'js');
       assert.ok(progressUpdates.length > 0);
@@ -103,11 +103,11 @@ describe('extract', () => {
 
     it('extract tar with progress', (done) => {
       const progressUpdates = [];
-      function progress(update) {
+      const progress = (update: Progress): undefined => {
         progressUpdates.push(update);
-      }
+      };
 
-      const options = { strip: 1, progress: progress };
+      const options = { strip: 1, progress };
       extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, options, (err) => {
         if (err) {
           done(err.message);
@@ -163,11 +163,11 @@ describe('extract', () => {
 
     it('extract zip with progress', (done) => {
       const progressUpdates = [];
-      function progress(update) {
+      const progress = (update: Progress): undefined => {
         progressUpdates.push(update);
-      }
+      };
 
-      const options = { strip: 1, progress: progress };
+      const options = { strip: 1, progress };
       extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, options, (err) => {
         if (err) {
           done(err.message);
@@ -223,11 +223,11 @@ describe('extract', () => {
 
     it.skip('extract 7z with progress', (done) => {
       const progressUpdates = [];
-      function progress(update) {
+      const progress = (update: Progress): undefined => {
         progressUpdates.push(update);
-      }
+      };
 
-      const options = { strip: 1, progress: progress };
+      const options = { strip: 1, progress };
       extract(path.join(DATA_DIR, 'fixture.7z'), TARGET, options, (err) => {
         if (err) {
           done(err.message);

@@ -8,7 +8,7 @@ import rimrafAll from './rimrafAll.ts';
 
 import type { Options, OptionsInternal } from './types.ts';
 
-export default function createWriteStream(dest: string, options_: Options | string): Writable {
+export default function createWriteStream(dest: string, options_: Options): Writable {
   if (typeof options_ === 'string') options_ = { type: options_ };
   const options: OptionsInternal = { _tempPaths: [], ...options_ };
   const streams = createPipeline(dest, options);
