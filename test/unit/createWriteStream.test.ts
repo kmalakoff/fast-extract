@@ -1,16 +1,12 @@
-const assert = require('assert');
-const fs = require('fs');
-const path = require('path');
-const rimraf2 = require('rimraf2');
-const mkdirp = require('mkdirp-classic');
-
-const { createWriteStream } = require('fast-extract');
-const validateFiles = require('../lib/validateFiles.cjs');
-
-const constants = require('../lib/constants.cjs');
-const TMP_DIR = constants.TMP_DIR;
-const TARGET = constants.TARGET;
-const DATA_DIR = constants.DATA_DIR;
+import assert from 'assert';
+// @ts-ignore
+import { createWriteStream } from 'fast-extract';
+import fs from 'fs';
+import mkdirp from 'mkdirp-classic';
+import path from 'path';
+import rimraf2 from 'rimraf2';
+import { DATA_DIR, TARGET, TMP_DIR } from '../lib/constants.ts';
+import validateFiles from '../lib/validateFiles.ts';
 
 describe('createWriteStream', () => {
   beforeEach((callback) => {
