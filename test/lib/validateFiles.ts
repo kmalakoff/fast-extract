@@ -1,16 +1,13 @@
-const assert = require('assert');
-const fs = require('fs');
-const path = require('path');
-const cr = require('cr');
-const Iterator = require('fs-iterator');
-const statsSpys = require('fs-stats-spys');
+import assert from 'assert';
+import cr from 'cr';
+import fs from 'fs';
+import Iterator from 'fs-iterator';
+import statsSpys from 'fs-stats-spys';
+import path from 'path';
 
-const constants = require('./constants.cjs');
-const TMP_DIR = constants.TMP_DIR;
-const TARGET = constants.TARGET;
-const CONTENTS = constants.CONTENTS;
+import { CONTENTS, TARGET, TMP_DIR } from './constants.ts';
 
-module.exports = function validateFiles(options, _type, callback) {
+export default function validateFiles(options, _type, callback?) {
   if (typeof _type === 'function') {
     callback = _type;
     _type = undefined;
@@ -24,7 +21,7 @@ module.exports = function validateFiles(options, _type, callback) {
       const dataPath = TMP_DIR;
       fs.readdir(dataPath, (err, files) => {
         if (err) {
-          done(err.message);
+          callback(err);
           return;
         }
         assert.equal(files.length, 1);
@@ -36,7 +33,7 @@ module.exports = function validateFiles(options, _type, callback) {
       const dataPath = TARGET;
       fs.readdir(dataPath, (err, files) => {
         if (err) {
-          done(err.message);
+          callback(err);
           return;
         }
         assert.equal(files.length, 1);
@@ -48,7 +45,7 @@ module.exports = function validateFiles(options, _type, callback) {
       const dataPath = TARGET;
       fs.readdir(dataPath, (err, files) => {
         if (err) {
-          done(err.message);
+          callback(err);
           return;
         }
         assert.equal(files.length, 1);
@@ -60,7 +57,7 @@ module.exports = function validateFiles(options, _type, callback) {
       const dataPath = !options.strip ? path.join(TARGET, 'data') : TARGET;
       const spys = statsSpys();
       new Iterator(dataPath, { lstat: true }).forEach(
-        (entry) => {
+        (entry): undefined => {
           spys(entry.stats);
           if (entry.stats.isFile()) {
             assert.equal(cr(fs.readFileSync(entry.fullPath).toString()), CONTENTS);
@@ -70,7 +67,7 @@ module.exports = function validateFiles(options, _type, callback) {
         },
         (err) => {
           if (err) {
-            done(err.message);
+            callback(err);
             return;
           }
           assert.equal(spys.dir.callCount, 3);
@@ -85,4 +82,4 @@ module.exports = function validateFiles(options, _type, callback) {
       validateFiles(options, _type, (err) => (err ? reject(err) : resolve(undefined)));
     });
   }
-};
+}
