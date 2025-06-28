@@ -1,5 +1,3 @@
-import './polyfills.ts';
-
 import type { Callback, Options, Source } from './types.ts';
 import worker from './worker.ts';
 
