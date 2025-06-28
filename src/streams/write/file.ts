@@ -1,4 +1,3 @@
-import writer from 'flush-write-stream';
 import fs from 'fs';
 import mkdirp from 'mkdirp-classic';
 import path from 'path';
@@ -6,6 +5,7 @@ import Queue from 'queue-cb';
 import rimraf2 from 'rimraf2';
 import type { Writable } from 'stream';
 import tempSuffix from 'temp-suffix';
+import writer from '../../compat/flush-write-stream.ts';
 import type { OptionsInternal } from '../../types.ts';
 import writeTruncateFile from '../../writeTruncateFile.ts';
 

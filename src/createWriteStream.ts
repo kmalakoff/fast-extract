@@ -1,14 +1,12 @@
-import writer from 'flush-write-stream';
-import pumpify from 'pumpify';
-import type { Writable } from 'stream';
-
+import writer from './compat/flush-write-stream.ts';
+import pumpify from './compat/pumpify.ts';
+import rimrafAll from './compat/rimrafAll.ts';
 import createPipeline from './createPipeline.ts';
 import exitCleanup from './exitCleanup.ts';
-import rimrafAll from './rimrafAll.ts';
 
 import type { Options, OptionsInternal } from './types.ts';
 
-export default function createWriteStream(dest: string, options_: Options): Writable {
+export default function createWriteStream(dest: string, options_: Options): NodeJS.WritableStream {
   if (typeof options_ === 'string') options_ = { type: options_ };
   const options: OptionsInternal = { _tempPaths: [], ...options_ };
   const streams = createPipeline(dest, options);

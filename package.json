@@ -49,7 +49,8 @@
   "main": "dist/cjs/index.js",
   "types": "dist/cjs/index.d.cts",
   "files": [
-    "dist"
+    "dist",
+    "assets"
   ],
   "scripts": {
     "build": "tsds build",
@@ -59,8 +60,9 @@
     "version": "tsds version"
   },
   "dependencies": {
-    "bl": "^3.0.0",
-    "buffer-v6-polyfill": "^1.0.5",
+    "bl": "^3.0.1",
+    "buffer-alloc-unsafe": "^1.1.0",
+    "buffer-fill": "^1.0.0",
     "call-once-fn": "^1.0.20",
     "content-disposition": "^0.5.4",
     "flush-write-stream": "^2.0.0",
@@ -72,14 +74,15 @@
     "progress-stream": "^2.0.0",
     "pumpify": "^2.0.1",
     "queue-cb": "^1.5.5",
-    "readable-stream": "^2.3.7",
+    "readable-stream": "^2.3.8",
     "require_optional": "^1.0.1",
     "rimraf2": "^2.8.2",
+    "safe-buffer": "^5.2.1",
     "signal-exit": "^3.0.7",
     "tar-iterator": "^2.2.0",
     "temp-suffix": "^0.1.20",
     "unbzip2-stream": "^1.4.3",
-    "zip-iterator": "^2.1.0"
+    "zip-iterator": "^2.1.1"
   },
   "devDependencies": {
     "@types/mocha": "*",
