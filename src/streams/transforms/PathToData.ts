@@ -1,11 +1,12 @@
 import fs from 'fs';
 import oo from 'on-one';
-import { Transform, type TransformCallback, type TransformOptions } from 'stream';
+import type { TransformCallback, TransformOptions, Transform as TransformT } from 'stream';
+import { Transform } from '../../compat/stream.ts';
 
 import type { OptionsInternal } from '../../types.ts';
 
 export default class PathToData extends Transform {
-  constructor(options?: OptionsInternal | TransformOptions<Transform>) {
+  constructor(options?: OptionsInternal | TransformOptions<TransformT>) {
     options = options ? { ...options, objectMode: true } : { objectMode: true };
     super(options);
   }

@@ -1,13 +1,13 @@
 import throttle from 'lodash.throttle';
-
-import { Transform, type TransformCallback, type TransformOptions } from 'stream';
+import type { TransformCallback, TransformOptions, Transform as TransformT } from 'stream';
+import { Transform } from '../../compat/stream.ts';
 
 import type { OptionsInternal, Progress } from '../../types.ts';
 
 export default class EntryProgressTransform extends Transform {
   private progress: (entry: Progress) => boolean;
 
-  constructor(options: OptionsInternal | TransformOptions<Transform>) {
+  constructor(options: OptionsInternal | TransformOptions<TransformT>) {
     options = options ? { ...options, objectMode: true } : { objectMode: true };
     super(options);
     const internalOptions = options as OptionsInternal;
