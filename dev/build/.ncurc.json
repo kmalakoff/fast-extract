@@ -1,0 +1,4 @@
+{
+  "upgrade": true,
+  "reject": ["tar-stream", "bl", "readable-stream"]
+}

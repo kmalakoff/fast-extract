@@ -1,8 +1,9 @@
 import fs from 'fs';
 import mkdirp from 'mkdirp-classic';
 import path from 'path';
-import { Transform, type TransformCallback, type TransformOptions } from 'stream';
+import type { TransformCallback, TransformOptions, Transform as TransformT } from 'stream';
 import tempSuffix from 'temp-suffix';
+import { Transform } from '../../compat/stream.ts';
 
 import type { OptionsInternal } from '../../types.ts';
 
@@ -10,7 +11,7 @@ export default class WriteFileTransform extends Transform {
   private tempPath: string;
   private stream: NodeJS.WritableStream;
 
-  constructor(dest: string, options?: OptionsInternal | TransformOptions<Transform>) {
+  constructor(dest: string, options?: OptionsInternal | TransformOptions<TransformT>) {
     options = options ? { ...options, objectMode: true } : { objectMode: true };
     super(options);
     this.tempPath = tempSuffix(dest);

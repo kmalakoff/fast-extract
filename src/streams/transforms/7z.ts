@@ -1,6 +1,6 @@
-import { Transform, type TransformCallback, type TransformOptions } from 'stream';
-
+import type { TransformCallback, TransformOptions, Transform as TransformT } from 'stream';
 import ZipIterator from 'zip-iterator';
+import { Transform } from '../../compat/stream.ts';
 
 import type { OptionsInternal } from '../../types.ts';
 
@@ -8,7 +8,7 @@ export default class ZipTransform extends Transform {
   private _iterator: ZipIterator;
   private _callback: (error?: Error) => void;
 
-  constructor(options?: OptionsInternal | TransformOptions<Transform>) {
+  constructor(options?: OptionsInternal | TransformOptions<TransformT>) {
     options = options ? { ...options, objectMode: true } : { objectMode: true };
     super(options);
   }
