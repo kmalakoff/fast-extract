@@ -1,1 +1,1 @@
-ignores: ["fast-extract", "lzma-native", "signal-exit", "bl", "mock-require-lazy", "readable-stream", "next-tick", "pumpify"]
+ignores: ["fast-extract", "lzma-native", "signal-exit"]
