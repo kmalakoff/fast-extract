@@ -1,6 +1,6 @@
 import type { Transform } from 'stream';
-import bz2 from 'unbzip2-stream';
 import zlib from 'zlib';
+import bz2 from './compat/unbzip2-stream.ts';
 import optionalRequire from './optionalRequire.ts';
 import type { Pipeline } from './types.ts';
 

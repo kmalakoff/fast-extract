@@ -1,0 +1,1 @@
+ignores: ["bl", "readable-stream", "tar-stream", "safe-buffer", "rollup", "patch-package"]
