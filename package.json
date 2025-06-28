@@ -60,7 +60,6 @@
     "version": "tsds version"
   },
   "dependencies": {
-    "bl": "^3.0.1",
     "buffer-alloc-unsafe": "^1.1.0",
     "buffer-fill": "^1.0.0",
     "call-once-fn": "^1.0.20",
@@ -68,8 +67,6 @@
     "flush-write-stream": "^2.0.0",
     "lodash.throttle": "^4.1.1",
     "mkdirp-classic": "^0.5.3",
-    "mock-require-lazy": "^1.0.21",
-    "next-tick": "^1.1.0",
     "on-one": "^0.1.9",
     "progress-stream": "^2.0.0",
     "pumpify": "^2.0.1",
