@@ -26,14 +26,17 @@ export default class EntryProgressTransform extends Transform {
   }
 
   _transform(entry: Progress, encoding: BufferEncoding, callback: TransformCallback): undefined {
-    this.progress(entry);
+    if (this.progress) this.progress(entry);
     this.push(entry, encoding);
     callback();
   }
 
   _flush(callback: TransformCallback): undefined {
-    this.progress(null);
-    if ((this.progress as typeof throttle).cancel) (this.progress as typeof throttle).cancel();
+    if (this.progress) {
+      this.progress(null);
+      if ((this.progress as typeof throttle).cancel) (this.progress as typeof throttle).cancel();
+      this.progress = null;
+    }
     callback();
   }
 }
