@@ -33,6 +33,7 @@ export default class EntryProgressTransform extends Transform {
 
   _flush(callback: TransformCallback): undefined {
     this.progress(null);
+    if ((this.progress as typeof throttle).cancel) (this.progress as typeof throttle).cancel();
     callback();
   }
 }
