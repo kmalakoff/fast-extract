@@ -76,7 +76,7 @@
     "rimraf2": "^2.8.2",
     "safe-buffer": "^5.2.1",
     "signal-exit": "^3.0.7",
-    "tar-iterator": "^2.2.3",
+    "tar-iterator": "^2.2.4",
     "temp-suffix": "^1.0.1",
     "unbzip2-stream": "^1.4.3",
     "zip-iterator": "^2.1.2"
