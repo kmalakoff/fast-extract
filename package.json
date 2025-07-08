@@ -60,26 +60,26 @@
     "version": "tsds version"
   },
   "dependencies": {
-    "buffer-alloc-unsafe": "^1.1.0",
-    "buffer-fill": "^1.0.0",
-    "call-once-fn": "^1.1.0",
-    "content-disposition": "^0.5.4",
-    "flush-write-stream": "^2.0.0",
-    "lodash.throttle": "^4.1.1",
-    "mkdirp-classic": "^0.5.3",
-    "on-one": "^1.0.1",
-    "progress-stream": "^2.0.0",
-    "pumpify": "^2.0.1",
-    "queue-cb": "^1.5.5",
+    "buffer-alloc-unsafe": "*",
+    "buffer-fill": "*",
+    "call-once-fn": "*",
+    "content-disposition": "*",
+    "flush-write-stream": "*",
+    "lodash.throttle": "*",
+    "mkdirp-classic": "*",
+    "on-one": "*",
+    "progress-stream": "*",
+    "pumpify": "*",
+    "queue-cb": "*",
     "readable-stream": "^2.3.8",
-    "require_optional": "^1.0.1",
-    "rimraf2": "^2.8.2",
-    "safe-buffer": "^5.2.1",
+    "require_optional": "*",
+    "rimraf2": "*",
+    "safe-buffer": "*",
     "signal-exit": "^3.0.7",
-    "tar-iterator": "^2.2.5",
-    "temp-suffix": "^1.0.1",
-    "unbzip2-stream": "^1.4.3",
-    "zip-iterator": "^2.1.4"
+    "tar-iterator": "*",
+    "temp-suffix": "*",
+    "unbzip2-stream": "*",
+    "zip-iterator": "*"
   },
   "devDependencies": {
     "@types/mocha": "*",
@@ -88,7 +88,7 @@
     "fs-iterator": "*",
     "fs-stats-spys": "*",
     "lzma-native": "*",
-    "pinkie-promise": "^2.0.1"
+    "pinkie-promise": "*"
   },
   "peerDependencies": {
     "lzma-native": "*"
