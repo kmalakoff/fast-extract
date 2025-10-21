@@ -1,5 +1,4 @@
 import assert from 'assert';
-// @ts-ignore
 import extract, { type Progress } from 'fast-extract';
 import fs from 'fs';
 import mkdirp from 'mkdirp-classic';
