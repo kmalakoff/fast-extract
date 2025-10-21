@@ -1,4 +1,3 @@
-// @ts-ignore
 import extract from 'fast-extract';
 import fs from 'fs';
 import mkdirp from 'mkdirp-classic';
