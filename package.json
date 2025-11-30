@@ -1,6 +1,6 @@
 {
   "name": "fast-extract",
-  "version": "1.7.5",
+  "version": "1.7.6",
   "description": "Extract contents from various archive types (tar, tar.bz2, tar.gz, tar.xz, tgz, zip)",
   "keywords": [
     "fast",
