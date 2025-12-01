@@ -1,11 +1,11 @@
+import SevenZipIterator from '7z-iterator';
 import type { TransformCallback, TransformOptions, Transform as TransformT } from 'stream';
-import ZipIterator from 'zip-iterator';
 import { Transform } from '../../compat/stream.ts';
 
 import type { OptionsInternal } from '../../types.ts';
 
-export default class ZipTransform extends Transform {
-  private _iterator: ZipIterator;
+export default class SevenZTransform extends Transform {
+  private _iterator: SevenZipIterator;
   private _callback: (error?: Error) => void;
 
   constructor(options?: OptionsInternal | TransformOptions<TransformT>) {
@@ -15,7 +15,7 @@ export default class ZipTransform extends Transform {
 
   _transform(chunk: unknown, _encoding: BufferEncoding, callback: TransformCallback): undefined {
     const fullPath = typeof chunk === 'string' ? chunk : chunk.toString();
-    this._iterator = new ZipIterator(fullPath);
+    this._iterator = new SevenZipIterator(fullPath);
     this._iterator.forEach(
       (entry: unknown): undefined => {
         this.push(entry);
@@ -33,8 +33,11 @@ export default class ZipTransform extends Transform {
     );
   }
 
-  _flush(callback: TransformCallback): unknown {
-    if (!this._iterator) return callback();
+  _flush(callback: TransformCallback): undefined {
+    if (!this._iterator) {
+      callback();
+      return;
+    }
     this._callback = callback;
     this._iterator.end();
   }
