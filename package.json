@@ -61,6 +61,7 @@
     "version": "tsds version"
   },
   "dependencies": {
+    "7z-iterator": "*",
     "buffer-alloc-unsafe": "*",
     "buffer-fill": "*",
     "call-once-fn": "*",

@@ -6,15 +6,12 @@ import rimraf2 from 'rimraf2';
 import { DATA_DIR, TARGET, TMP_DIR } from '../lib/constants.ts';
 import validateFiles from '../lib/validateFiles.ts';
 
-const EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'js.gz', 'js', 'zip'];
+const EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'js.gz', 'js', 'zip', '7z'];
 
 interface SpecifiedStream {
   filename?: string;
   basename?: string;
 }
-
-// TODO: add 7z
-// const EXTRACT_TYPES = ['7z'];
 
 // lzma-native module compatiblity starts at Node 6
 const major = +process.versions.node.split('.')[0];
