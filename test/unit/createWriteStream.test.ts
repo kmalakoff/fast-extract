@@ -249,7 +249,7 @@ describe('createWriteStream', () => {
       });
     });
 
-    it.skip('extract 7z with progress', (done) => {
+    it('extract 7z with progress', (done) => {
       const progressUpdates = [];
       const progress = (update: Progress): undefined => {
         progressUpdates.push(update);
