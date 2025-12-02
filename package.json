@@ -56,12 +56,12 @@
     "build": "tsds build",
     "format": "biome check --write --unsafe",
     "prepublishOnly": "tsds validate",
-    "test": "mocha --no-timeouts test/**/*.test.*",
+    "test": "tsds test:node --no-timeouts",
     "test:engines": "nvu engines tsds test:node --no-timeouts",
     "version": "tsds version"
   },
   "dependencies": {
-    "7z-iterator": "*",
+    "7z-iterator": "^0.2.0",
     "buffer-alloc-unsafe": "*",
     "buffer-fill": "*",
     "call-once-fn": "*",
@@ -84,13 +84,16 @@
     "zip-iterator": "*"
   },
   "devDependencies": {
+    "@biomejs/biome": "*",
     "@types/mocha": "*",
     "@types/node": "*",
     "cr": "*",
     "fs-iterator": "*",
     "fs-stats-spys": "*",
     "lzma-native": "*",
-    "pinkie-promise": "*"
+    "node-version-use": "*",
+    "pinkie-promise": "*",
+    "ts-dev-stack": "*"
   },
   "peerDependencies": {
     "lzma-native": "*"
