@@ -1,8 +1,22 @@
-import StreamCompat from 'readable-stream';
 import Stream from 'stream';
 
 const major = +process.versions.node.split('.')[0];
-export const Readable = major > 0 ? Stream.Readable : (StreamCompat.Readable as typeof Stream.Readable);
-export const Writable = major > 0 ? Stream.Writable : (StreamCompat.Writable as typeof Stream.Writable);
-export const Transform = major > 0 ? Stream.Transform : (StreamCompat.Transform as typeof Stream.Transform);
-export const PassThrough = major > 0 ? Stream.PassThrough : (StreamCompat.PassThrough as typeof Stream.PassThrough);
+let Readable: typeof Stream.Readable;
+let Writable: typeof Stream.Writable;
+let Transform: typeof Stream.Transform;
+let PassThrough: typeof Stream.PassThrough;
+
+if (major > 0) {
+  Readable = Stream.Readable;
+  Writable = Stream.Writable;
+  Transform = Stream.Transform;
+  PassThrough = Stream.PassThrough;
+} else {
+  const StreamCompat = require('readable-stream');
+  Readable = StreamCompat.Readable;
+  Writable = StreamCompat.Writable;
+  Transform = StreamCompat.Transform;
+  PassThrough = StreamCompat.PassThrough;
+}
+
+export { Readable, Writable, Transform, PassThrough };
