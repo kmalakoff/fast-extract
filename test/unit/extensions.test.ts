@@ -1,8 +1,8 @@
 import extract from 'fast-extract';
 import fs from 'fs';
+import { safeRm } from 'fs-remove-compat';
 import mkdirp from 'mkdirp-classic';
 import path from 'path';
-import rimraf2 from 'rimraf2';
 import { DATA_DIR, TARGET, TMP_DIR } from '../lib/constants.ts';
 import validateFiles from '../lib/validateFiles.ts';
 
@@ -140,7 +140,7 @@ function addTests(type) {
 
 describe('extensions', () => {
   beforeEach((callback) => {
-    rimraf2(TMP_DIR, { disableGlob: true }, () => {
+    safeRm(TMP_DIR, () => {
       mkdirp(TMP_DIR, callback);
     });
   });
