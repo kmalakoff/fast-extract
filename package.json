@@ -47,6 +47,7 @@
     "./package.json": "./package.json"
   },
   "main": "dist/cjs/index.js",
+  "source": "src/index.ts",
   "types": "dist/cjs/index.d.ts",
   "files": [
     "dist",
@@ -61,7 +62,7 @@
     "version": "tsds version"
   },
   "dependencies": {
-    "7z-iterator": "^0.2.1",
+    "7z-iterator": "^0.2.3",
     "buffer-alloc-unsafe": "*",
     "buffer-fill": "*",
     "call-once-fn": "*",
@@ -105,8 +106,5 @@
   },
   "engines": {
     "node": ">=0.8"
-  },
-  "tsds": {
-    "source": "src/index.ts"
   }
 }
