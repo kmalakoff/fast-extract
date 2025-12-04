@@ -1,6 +1,6 @@
 import fs from 'fs';
+import { safeRm } from 'fs-remove-compat';
 import Queue from 'queue-cb';
-import rimraf2 from 'rimraf2';
 import type { Writable } from 'stream';
 import tempSuffix from 'temp-suffix';
 import writer from '../../compat/flush-write-stream.ts';
@@ -26,7 +26,7 @@ export default function createWriteEntriesStream(dest: string, options: OptionsI
     },
     function flush(callback) {
       const queue = new Queue(1);
-      queue.defer(rimraf2.bind(null, dest, { disableGlob: true }));
+      queue.defer((cb) => safeRm(dest, cb));
       queue.defer(fs.rename.bind(fs, tempDest, dest));
       for (let index = 0; index < links.length; index++) {
         const entry = links[index];
