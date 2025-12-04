@@ -1,4 +1,4 @@
-import rimraf2 from 'rimraf2';
+import { safeRm } from 'fs-remove-compat';
 import type { TransformCallback, TransformOptions, Transform as TransformT } from 'stream';
 import { Transform } from '../../compat/stream.ts';
 
@@ -17,7 +17,7 @@ export default class DestinationRemove extends Transform {
       callback(null, chunk);
       return;
     }
-    rimraf2(this.dest, { disableGlob: true }, (err) => {
+    safeRm(this.dest, (err) => {
       this.removed = true;
       err && err.code !== 'EEXIST' ? callback(err) : callback(null, chunk);
     });

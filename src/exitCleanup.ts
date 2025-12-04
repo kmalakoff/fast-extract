@@ -1,4 +1,4 @@
-import rimraf2 from 'rimraf2';
+import { safeRmSync } from 'fs-remove-compat';
 import onExit from 'signal-exit';
 
 const fullPaths = [];
@@ -6,7 +6,7 @@ const fullPaths = [];
 onExit(() => {
   while (fullPaths.length) {
     try {
-      rimraf2.sync(fullPaths.pop(), { disableGlob: true });
+      safeRmSync(fullPaths.pop());
     } catch (_err) {}
   }
 });

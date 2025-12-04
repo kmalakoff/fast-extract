@@ -62,12 +62,13 @@
     "version": "tsds version"
   },
   "dependencies": {
-    "7z-iterator": "^0.2.5",
+    "7z-iterator": "^0.2.7",
     "buffer-alloc-unsafe": "*",
     "buffer-fill": "*",
     "call-once-fn": "*",
     "content-disposition": "*",
     "flush-write-stream": "*",
+    "fs-remove-compat": "*",
     "lodash.throttle": "*",
     "mkdirp-classic": "*",
     "on-one": "*",
@@ -76,7 +77,6 @@
     "queue-cb": "*",
     "readable-stream": "^2.3.8",
     "require_optional": "*",
-    "rimraf2": "*",
     "safe-buffer": "*",
     "signal-exit": "^3.0.7",
     "tar-iterator": "*",

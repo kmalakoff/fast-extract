@@ -1,8 +1,8 @@
 import fs from 'fs';
+import { safeRm } from 'fs-remove-compat';
 import mkdirp from 'mkdirp-classic';
 import path from 'path';
 import Queue from 'queue-cb';
-import rimraf2 from 'rimraf2';
 import type { Writable } from 'stream';
 import tempSuffix from 'temp-suffix';
 import writer from '../../compat/flush-write-stream.ts';
@@ -32,7 +32,7 @@ export default function createFilePipeline(dest: string, options: object): Writa
         });
       });
       if (wroteSomething) {
-        queue.defer(rimraf2.bind(null, dest, { disableGlob: true }));
+        queue.defer((cb) => safeRm(dest, cb));
         queue.defer(fs.rename.bind(fs, tempDest, dest));
       } else queue.defer(writeTruncateFile.bind(null, dest));
       queue.await(callback);
