@@ -25,14 +25,14 @@ describe('createWriteStream', () => {
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
       });
       res.on('finish', () => {
         validateFiles(options, 'js', (err) => {
           if (err) {
-            done(err.message);
+            done(err);
             return;
           }
           assert.ok(progressUpdates.length > 0);
@@ -46,14 +46,14 @@ describe('createWriteStream', () => {
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
       });
       res.on('finish', () => {
         validateFiles(options, 'js', (err) => {
           if (err) {
-            done(err.message);
+            done(err);
             return;
           }
 
@@ -64,14 +64,14 @@ describe('createWriteStream', () => {
             const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, { force: true, ...options }));
             res.on('error', (err) => {
               if (err) {
-                done(err.message);
+                done(err);
                 return;
               }
             });
             res.on('finish', () => {
               validateFiles(options, 'js', (err) => {
                 if (err) {
-                  done(err.message);
+                  done(err);
                   return;
                 }
                 done();
@@ -93,14 +93,14 @@ describe('createWriteStream', () => {
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
       });
       res.on('finish', () => {
         validateFiles(options, (err) => {
           if (err) {
-            done(err.message);
+            done(err);
             return;
           }
           assert.ok(progressUpdates.length > 0);
@@ -119,14 +119,14 @@ describe('createWriteStream', () => {
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
       });
       res.on('finish', () => {
         validateFiles(options, 'tar', (err) => {
           if (err) {
-            done(err.message);
+            done(err);
             return;
           }
           assert.equal(progressUpdates.length, 16);
@@ -140,14 +140,14 @@ describe('createWriteStream', () => {
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
       });
       res.on('finish', () => {
         validateFiles(options, 'tar', (err) => {
           if (err) {
-            done(err.message);
+            done(err);
             return;
           }
 
@@ -158,14 +158,14 @@ describe('createWriteStream', () => {
             const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, { force: true, ...options }));
             res.on('error', (err) => {
               if (err) {
-                done(err.message);
+                done(err);
                 return;
               }
             });
             res.on('finish', () => {
               validateFiles(options, 'tar', (err) => {
                 if (err) {
-                  done(err.message);
+                  done(err);
                   return;
                 }
                 done();
@@ -189,14 +189,14 @@ describe('createWriteStream', () => {
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
       });
       res.on('finish', () => {
         validateFiles(options, 'zip', (err) => {
           if (err) {
-            done(err.message);
+            done(err);
             return;
           }
           assert.equal(progressUpdates.length, 16);
@@ -210,14 +210,14 @@ describe('createWriteStream', () => {
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
       });
       res.on('finish', () => {
         validateFiles(options, 'zip', (err) => {
           if (err) {
-            done(err.message);
+            done(err);
             return;
           }
 
@@ -228,14 +228,14 @@ describe('createWriteStream', () => {
             const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, { force: true, ...options }));
             res.on('error', (err) => {
               if (err) {
-                done(err.message);
+                done(err);
                 return;
               }
             });
             res.on('finish', () => {
               validateFiles(options, 'zip', (err) => {
                 if (err) {
-                  done(err.message);
+                  done(err);
                   return;
                 }
                 done();
@@ -259,14 +259,14 @@ describe('createWriteStream', () => {
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.7z')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
       });
       res.on('finish', () => {
         validateFiles(options, '7z', (err) => {
           if (err) {
-            done(err.message);
+            done(err);
             return;
           }
           assert.equal(progressUpdates.length, 16);
