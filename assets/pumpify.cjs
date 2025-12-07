@@ -243,12 +243,13 @@ function requirePump() {
             if (closed) return;
             if (destroyed) return;
             destroyed = true;
-            if (isFS(stream)) return stream.close(noop) // use close for fs streams to avoid fd leaks
+            if (isFn(stream.destroy)) return stream.destroy();
+            if (isFS(stream) && isFn(stream.close)) return stream.close(noop) // use close for fs streams to avoid fd leaks
             ;
             if (isRequest(stream)) return stream.abort() // request.destroy just do .end - .abort is what we want
             ;
-            if (isFn(stream.destroy)) return stream.destroy();
-            callback(err || new Error('stream was destroyed'));
+            // Don't throw an error if no destroy method - just let the stream continue naturally
+            // This is needed for Node 6 compatibility where some streams don't have proper destroy methods
         };
     };
     var call = function call(fn) {
