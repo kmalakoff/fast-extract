@@ -18,7 +18,7 @@ export default class PathToData extends Transform {
       this.push(chunk);
     });
     oo(stream, ['error', 'end', 'close', 'finish'], (err?: Error) => {
-      !err || this.push(null);
+      if (!err) this.push(null);
       callback(err);
     });
   }
