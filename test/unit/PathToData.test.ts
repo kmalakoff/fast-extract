@@ -13,7 +13,7 @@ describe('PathToData', () => {
       transform.on('data', (chunk) => chunks.push(chunk));
       transform.on('end', () => {
         const content = Buffer.concat(chunks).toString();
-        assert.ok(content.includes('thing'), 'Should contain file content');
+        assert.ok(content.indexOf('thing') !== -1, 'Should contain file content');
         done();
       });
       transform.on('error', done);
@@ -31,7 +31,7 @@ describe('PathToData', () => {
       transform.on('data', (chunk) => chunks.push(chunk));
       transform.on('end', () => {
         const content = Buffer.concat(chunks).toString();
-        assert.ok(content.includes('thing'), 'Should contain file content');
+        assert.ok(content.indexOf('thing') !== -1, 'Should contain file content');
         end();
       });
       transform.on('error', end);
