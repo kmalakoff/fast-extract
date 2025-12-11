@@ -17,8 +17,8 @@ interface SpecifiedStream {
 const major = +process.versions.node.split('.')[0];
 if (major >= 10) {
   try {
-    const lzmaNative = require('require_optional')('lzma-native');
-    if (lzmaNative) EXTRACT_TYPES.push('tar.xz');
+    require('lzma-native');
+    EXTRACT_TYPES.push('tar.xz');
   } catch (_err) {}
 }
 

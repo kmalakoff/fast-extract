@@ -76,7 +76,6 @@
     "pumpify": "^2.0.1",
     "queue-cb": "^1.6.1",
     "readable-stream": "^2.3.8",
-    "require_optional": "^1.0.1",
     "safe-buffer": "^5.2.1",
     "signal-exit": "^3.0.7",
     "tar-iterator": "^3.1.6",
@@ -86,12 +85,12 @@
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
-    "@types/node": "^24.10.1",
+    "@types/node": "^25.0.0",
     "cr": "^0.1.0",
     "fs-iterator": "^6.1.10",
     "fs-stats-spys": "^1.2.7",
     "lzma-native": "^8.0.6",
-    "node-version-use": "^1.9.7",
+    "node-version-use": "^2.1.0",
     "pinkie-promise": "^2.0.1",
     "ts-dev-stack": "^1.21.2",
     "tsds-config": "^0.2.0"
