@@ -62,7 +62,7 @@
     "version": "tsds version"
   },
   "dependencies": {
-    "7z-iterator": "^0.2.9",
+    "7z-iterator": "^0.2.10",
     "buffer-alloc-unsafe": "^1.1.0",
     "buffer-fill": "^1.0.0",
     "call-once-fn": "^1.1.8",
@@ -78,7 +78,7 @@
     "readable-stream": "^2.3.8",
     "safe-buffer": "^5.2.1",
     "signal-exit": "^3.0.7",
-    "tar-iterator": "^3.1.6",
+    "tar-iterator": "^3.1.7",
     "temp-suffix": "^1.0.8",
     "unbzip2-stream": "^1.4.3",
     "zip-iterator": "^3.0.15"
