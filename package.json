@@ -81,7 +81,7 @@
     "tar-iterator": "^3.1.6",
     "temp-suffix": "^1.0.8",
     "unbzip2-stream": "^1.4.3",
-    "zip-iterator": "^3.0.14"
+    "zip-iterator": "^3.0.15"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
@@ -93,7 +93,7 @@
     "node-version-use": "^2.1.5",
     "pinkie-promise": "^2.0.1",
     "ts-dev-stack": "^1.21.3",
-    "tsds-config": "^0.2.0"
+    "tsds-config": "^0.2.1"
   },
   "peerDependencies": {
     "lzma-native": "^8.0.6"
