@@ -62,7 +62,7 @@
     "version": "tsds version"
   },
   "dependencies": {
-    "7z-iterator": "^0.2.11",
+    "7z-iterator": "^0.2.12",
     "buffer-alloc-unsafe": "^1.1.0",
     "buffer-fill": "^1.0.0",
     "call-once-fn": "^1.1.10",
@@ -78,10 +78,10 @@
     "readable-stream": "^2.3.8",
     "safe-buffer": "^5.2.1",
     "signal-exit": "^3.0.7",
-    "tar-iterator": "^3.1.8",
+    "tar-iterator": "^3.1.9",
     "temp-suffix": "^1.0.10",
     "unbzip2-stream": "^1.4.3",
-    "zip-iterator": "^3.0.16"
+    "zip-iterator": "^3.0.17"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
@@ -90,7 +90,7 @@
     "fs-iterator": "^6.1.12",
     "fs-stats-spys": "^1.2.9",
     "lzma-native": "^8.0.6",
-    "node-version-use": "^2.1.5",
+    "node-version-use": "^2.1.6",
     "pinkie-promise": "^2.0.1",
     "ts-dev-stack": "^1.21.3",
     "tsds-config": "^0.2.1"
