@@ -2,7 +2,7 @@ import assert from 'assert';
 import once from 'call-once-fn';
 import path from 'path';
 import PathToData from '../../src/streams/transforms/PathToData.ts';
-import { DATA_DIR } from '../lib/constants.ts';
+import { DATA_DIR } from '../lib/fixtures.ts';
 
 describe('PathToData', () => {
   describe('happy path', () => {
