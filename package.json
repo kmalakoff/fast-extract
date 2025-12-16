@@ -83,6 +83,7 @@
     "cr": "^0.1.0",
     "fs-iterator": "^6.1.12",
     "fs-stats-spys": "^1.0.0",
+    "get-file-compat": "^2.0.1",
     "node-version-use": "*",
     "pinkie-promise": "*",
     "ts-dev-stack": "*",
