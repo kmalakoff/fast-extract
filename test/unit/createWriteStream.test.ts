@@ -1,11 +1,49 @@
 import assert from 'assert';
+import cr from 'cr';
 import { createWriteStream, type Progress } from 'fast-extract';
 import fs from 'fs';
 import { safeRm } from 'fs-remove-compat';
 import mkdirp from 'mkdirp-classic';
 import path from 'path';
-import { DATA_DIR, TARGET, TMP_DIR } from '../lib/constants.ts';
-import validateFiles from '../lib/validateFiles.ts';
+import { CONTENTS, TARGET, TMP_DIR } from '../lib/constants.ts';
+import { DATA_DIR, getFixture } from '../lib/fixtures.ts';
+import getStats from '../lib/getStats.ts';
+
+function verifyFileExtraction(callback: (err?: Error) => void) {
+  const files = fs.readdirSync(TARGET);
+  assert.equal(files.length, 1);
+  assert.ok(files[0] === 'fixture.js' || files[0] === 'fixture-js');
+  assert.equal(cr(fs.readFileSync(path.join(TARGET, files[0])).toString()), CONTENTS);
+  callback();
+}
+
+function verifyNoBasenameExtraction(callback: (err?: Error) => void) {
+  const files = fs.readdirSync(TMP_DIR);
+  assert.equal(files.length, 1);
+  assert.deepEqual(files.sort(), ['target']);
+  assert.equal(cr(fs.readFileSync(path.join(TMP_DIR, files[0])).toString()), CONTENTS);
+  callback();
+}
+
+function verifyArchiveExtraction(fixtureName: string, callback: (err?: Error) => void) {
+  const { expected } = getFixture(fixtureName);
+  getStats(
+    TARGET,
+    (err, stats) => {
+      if (err) {
+        callback(err);
+        return;
+      }
+      assert.equal(stats.dirs, expected.dirs, `expected ${expected.dirs} dirs, got ${stats.dirs}`);
+      assert.equal(stats.files, expected.files, `expected ${expected.files} files, got ${stats.files}`);
+      assert.equal(stats.links, expected.links, `expected ${expected.links} links, got ${stats.links}`);
+      callback();
+    },
+    (_fullPath, content) => {
+      assert.equal(cr(content.toString()), CONTENTS, 'file content mismatch');
+    }
+  );
+}
 
 describe('createWriteStream', () => {
   beforeEach((callback) => {
@@ -30,7 +68,7 @@ describe('createWriteStream', () => {
         }
       });
       res.on('finish', () => {
-        validateFiles(options, 'js', (err) => {
+        verifyFileExtraction((err) => {
           if (err) {
             done(err);
             return;
@@ -51,7 +89,7 @@ describe('createWriteStream', () => {
         }
       });
       res.on('finish', () => {
-        validateFiles(options, 'js', (err) => {
+        verifyFileExtraction((err) => {
           if (err) {
             done(err);
             return;
@@ -69,13 +107,7 @@ describe('createWriteStream', () => {
               }
             });
             res.on('finish', () => {
-              validateFiles(options, 'js', (err) => {
-                if (err) {
-                  done(err);
-                  return;
-                }
-                done();
-              });
+              verifyFileExtraction(done);
             });
           });
           res.on('finish', () => {});
@@ -98,7 +130,7 @@ describe('createWriteStream', () => {
         }
       });
       res.on('finish', () => {
-        validateFiles(options, (err) => {
+        verifyNoBasenameExtraction((err) => {
           if (err) {
             done(err);
             return;
@@ -124,7 +156,7 @@ describe('createWriteStream', () => {
         }
       });
       res.on('finish', () => {
-        validateFiles(options, 'tar', (err) => {
+        verifyArchiveExtraction('fixture.tar', (err) => {
           if (err) {
             done(err);
             return;
@@ -145,7 +177,7 @@ describe('createWriteStream', () => {
         }
       });
       res.on('finish', () => {
-        validateFiles(options, 'tar', (err) => {
+        verifyArchiveExtraction('fixture.tar', (err) => {
           if (err) {
             done(err);
             return;
@@ -163,13 +195,7 @@ describe('createWriteStream', () => {
               }
             });
             res.on('finish', () => {
-              validateFiles(options, 'tar', (err) => {
-                if (err) {
-                  done(err);
-                  return;
-                }
-                done();
-              });
+              verifyArchiveExtraction('fixture.tar', done);
             });
           });
           res.on('finish', () => {
@@ -194,7 +220,7 @@ describe('createWriteStream', () => {
         }
       });
       res.on('finish', () => {
-        validateFiles(options, 'zip', (err) => {
+        verifyArchiveExtraction('fixture.zip', (err) => {
           if (err) {
             done(err);
             return;
@@ -215,7 +241,7 @@ describe('createWriteStream', () => {
         }
       });
       res.on('finish', () => {
-        validateFiles(options, 'zip', (err) => {
+        verifyArchiveExtraction('fixture.zip', (err) => {
           if (err) {
             done(err);
             return;
@@ -233,13 +259,7 @@ describe('createWriteStream', () => {
               }
             });
             res.on('finish', () => {
-              validateFiles(options, 'zip', (err) => {
-                if (err) {
-                  done(err);
-                  return;
-                }
-                done();
-              });
+              verifyArchiveExtraction('fixture.zip', done);
             });
           });
           res.on('finish', () => {
@@ -264,7 +284,7 @@ describe('createWriteStream', () => {
         }
       });
       res.on('finish', () => {
-        validateFiles(options, '7z', (err) => {
+        verifyArchiveExtraction('fixture.7z', (err) => {
           if (err) {
             done(err);
             return;
