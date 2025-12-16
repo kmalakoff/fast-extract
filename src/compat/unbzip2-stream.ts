@@ -4,18 +4,10 @@
 // Pattern from 7z-iterator: buffering decoder that collects all input, decompresses in flush
 
 import Module from 'module';
-import Stream from 'stream';
+import type { Transform as TransformT } from 'stream';
+import { Transform } from './stream.ts';
 
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
-
-// Use native Transform for Node 1+, readable-stream for Node 0.x
-const major = +process.versions.node.split('.')[0];
-let Transform: typeof Stream.Transform;
-if (major > 0) {
-  Transform = Stream.Transform;
-} else {
-  Transform = _require('readable-stream').Transform;
-}
 
 // seek-bzip for bzip2 decompression (pure JS, works on Node 0.8+)
 const Bunzip = _require('seek-bzip');
@@ -26,7 +18,7 @@ type TransformCallback = (error?: Error | null, data?: Buffer) => void;
  * Create a BZip2 decompression Transform stream
  * Uses buffering decoder pattern: collects all input chunks, decompresses in flush
  */
-export default function unbzip2Stream(): Stream.Transform {
+export default function unbzip2Stream(): TransformT {
   const chunks: Buffer[] = [];
 
   return new Transform({
