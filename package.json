@@ -83,19 +83,10 @@
     "cr": "^0.1.0",
     "fs-iterator": "^6.1.12",
     "fs-stats-spys": "^1.0.0",
-    "lzma-native": "^8.0.6",
     "node-version-use": "*",
     "pinkie-promise": "*",
     "ts-dev-stack": "*",
     "tsds-config": "*"
-  },
-  "peerDependencies": {
-    "lzma-native": "^8.0.6"
-  },
-  "peerDependenciesMeta": {
-    "lzma-native": {
-      "optional": true
-    }
   },
   "engines": {
     "node": ">=0.8"
