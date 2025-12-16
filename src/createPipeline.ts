@@ -1,22 +1,13 @@
-import type { Transform } from 'stream';
 import zlib from 'zlib';
 import bz2 from './compat/unbzip2-stream.ts';
-import optionalRequire from './optionalRequire.ts';
+import xz from './compat/xz-stream.ts';
 import type { Pipeline } from './types.ts';
-
-interface Native {
-  createDecompressor?: () => Transform;
-}
-
-// lzma-native module compatiblity starts at Node 6
-const major = +process.versions.node.split('.')[0];
-const lzmaNative: Native = major >= 10 ? optionalRequire('lzma-native') : null;
 
 const TRANSORMS = {
   bz2: bz2,
   tgz: zlib.createUnzip.bind(zlib),
   gz: zlib.createUnzip.bind(zlib),
-  xz: lzmaNative && lzmaNative.createDecompressor ? lzmaNative.createDecompressor.bind(lzmaNative) : undefined,
+  xz: xz,
 };
 
 import create7ZPipeline from './streams/pipelines/7z.ts';

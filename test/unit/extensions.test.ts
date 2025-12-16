@@ -6,20 +6,11 @@ import path from 'path';
 import { DATA_DIR, TARGET, TMP_DIR } from '../lib/constants.ts';
 import validateFiles from '../lib/validateFiles.ts';
 
-const EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'js.gz', 'js', 'zip', '7z'];
+const EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'js.gz', 'js', 'zip', '7z', 'tar.xz'];
 
 interface SpecifiedStream {
   filename?: string;
   basename?: string;
-}
-
-// lzma-native module compatiblity starts at Node 6
-const major = +process.versions.node.split('.')[0];
-if (major >= 10) {
-  try {
-    require('lzma-native');
-    EXTRACT_TYPES.push('tar.xz');
-  } catch (_err) {}
 }
 
 function addTests(type) {

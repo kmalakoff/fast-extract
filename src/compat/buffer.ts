@@ -89,3 +89,15 @@ export function bufferCompare(source: Buffer, target: Buffer, targetStart?: numb
 
   return compareOffset(source, target, targetStart, sourceStart, targetEnd, sourceEnd);
 }
+
+/**
+ * Check if buffer region equals byte array
+ * Useful for magic number detection without Buffer.from()
+ */
+export function bufferEquals(buf: Buffer, offset: number, expected: number[]): boolean {
+  if (offset + expected.length > buf.length) return false;
+  for (let i = 0; i < expected.length; i++) {
+    if (buf[offset + i] !== expected[i]) return false;
+  }
+  return true;
+}
