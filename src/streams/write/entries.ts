@@ -26,11 +26,17 @@ export default function createWriteEntriesStream(dest: string, options: OptionsI
     },
     function flush(callback) {
       const queue = new Queue(1);
-      queue.defer((cb) => safeRm(dest, cb));
-      queue.defer(fs.rename.bind(fs, tempDest, dest));
+      queue.defer((cb) => {
+        safeRm(dest, cb);
+      });
+      queue.defer((cb) => {
+        fs.rename(tempDest, dest, cb);
+      });
       for (let index = 0; index < links.length; index++) {
         const entry = links[index];
-        queue.defer(entry.create.bind(entry, dest, options));
+        queue.defer((cb) => {
+          entry.create(dest, options, cb);
+        });
       }
       queue.await(callback);
     }

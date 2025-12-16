@@ -26,7 +26,11 @@ class FlushWriteStream extends Writable {
   // biome-ignore lint/suspicious/noExplicitAny: Object mode allows any chunk type
   _write(chunk: any, enc: BufferEncoding, cb: Callback): void {
     if (chunk === SIGNAL_FLUSH) {
-      this._flushFn ? this._flushFn(cb) : cb();
+      if (this._flushFn) {
+        this._flushFn(cb);
+      } else {
+        cb();
+      }
     } else {
       this._writeFn.call(this, chunk, enc, cb);
     }
@@ -41,8 +45,15 @@ class FlushWriteStream extends Writable {
     else if (typeof enc === 'function') [enc, cb] = [null, enc];
 
     if (chunk) this.write(chunk);
+
+    // Wait for SIGNAL_FLUSH write to complete before ending stream
     // biome-ignore lint/suspicious/noExplicitAny: Access internal _writableState
-    if (!(this as any)._writableState.ending) this.write(SIGNAL_FLUSH);
+    if (!(this as any)._writableState.ending) {
+      this.write(SIGNAL_FLUSH, () => {
+        super.end(cb);
+      });
+      return this;
+    }
     return super.end(cb);
   }
 

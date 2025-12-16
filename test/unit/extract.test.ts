@@ -1,12 +1,42 @@
 import assert from 'assert';
+import cr from 'cr';
 import extract, { type Progress } from 'fast-extract';
 import fs from 'fs';
 import { safeRm } from 'fs-remove-compat';
 import mkdirp from 'mkdirp-classic';
 import path from 'path';
 import Pinkie from 'pinkie-promise';
-import { DATA_DIR, TARGET, TMP_DIR } from '../lib/constants.ts';
-import validateFiles from '../lib/validateFiles.ts';
+import { CONTENTS, TARGET, TMP_DIR } from '../lib/constants.ts';
+import { DATA_DIR, getFixture } from '../lib/fixtures.ts';
+import getStats from '../lib/getStats.ts';
+
+function verifyFileExtraction(callback: (err?: Error) => void) {
+  const files = fs.readdirSync(TARGET);
+  assert.equal(files.length, 1);
+  assert.ok(files[0] === 'fixture.js' || files[0] === 'fixture-js');
+  assert.equal(cr(fs.readFileSync(path.join(TARGET, files[0])).toString()), CONTENTS);
+  callback();
+}
+
+function verifyArchiveExtraction(fixtureName: string, callback: (err?: Error) => void) {
+  const { expected } = getFixture(fixtureName);
+  getStats(
+    TARGET,
+    (err, stats) => {
+      if (err) {
+        callback(err);
+        return;
+      }
+      assert.equal(stats.dirs, expected.dirs, `expected ${expected.dirs} dirs, got ${stats.dirs}`);
+      assert.equal(stats.files, expected.files, `expected ${expected.files} files, got ${stats.files}`);
+      assert.equal(stats.links, expected.links, `expected ${expected.links} links, got ${stats.links}`);
+      callback();
+    },
+    (_fullPath, content) => {
+      assert.equal(cr(content.toString()), CONTENTS, 'file content mismatch');
+    }
+  );
+}
 
 describe('extract', () => {
   (() => {
@@ -34,14 +64,12 @@ describe('extract', () => {
         progressUpdates.push(update);
       };
 
-      const options = { progress };
-      extract(path.join(DATA_DIR, 'fixture.js'), TARGET, options, (err) => {
+      extract(path.join(DATA_DIR, 'fixture.js'), TARGET, { progress }, (err) => {
         if (err) {
           done(err);
           return;
         }
-
-        validateFiles(options, 'js', (err) => {
+        verifyFileExtraction((err) => {
           if (err) {
             done(err);
             return;
@@ -53,35 +81,24 @@ describe('extract', () => {
     });
 
     it('extract file multiple times', (done) => {
-      const options = {};
-      extract(path.join(DATA_DIR, 'fixture.js'), TARGET, options, (err) => {
+      extract(path.join(DATA_DIR, 'fixture.js'), TARGET, {}, (err) => {
         if (err) {
           done(err);
           return;
         }
-
-        validateFiles(options, 'js', (err) => {
+        verifyFileExtraction((err) => {
           if (err) {
             done(err);
             return;
           }
-
-          extract(path.join(DATA_DIR, 'fixture.js'), TARGET, options, (err) => {
+          extract(path.join(DATA_DIR, 'fixture.js'), TARGET, {}, (err) => {
             assert.ok(err);
-
-            extract(path.join(DATA_DIR, 'fixture.js'), TARGET, { force: true, ...options }, (err) => {
+            extract(path.join(DATA_DIR, 'fixture.js'), TARGET, { force: true }, (err) => {
               if (err) {
                 done(err);
                 return;
               }
-
-              validateFiles(options, 'js', (err) => {
-                if (err) {
-                  done(err);
-                  return;
-                }
-                done();
-              });
+              verifyFileExtraction(done);
             });
           });
         });
@@ -94,9 +111,11 @@ describe('extract', () => {
         progressUpdates.push(update);
       };
 
-      const options = { progress };
-      await extract(path.join(DATA_DIR, 'fixture.js'), TARGET, options);
-      await validateFiles(options, 'js');
+      await extract(path.join(DATA_DIR, 'fixture.js'), TARGET, { progress });
+      const files = fs.readdirSync(TARGET);
+      assert.equal(files.length, 1);
+      assert.ok(files[0] === 'fixture.js' || files[0] === 'fixture-js');
+      assert.equal(cr(fs.readFileSync(path.join(TARGET, files[0])).toString()), CONTENTS);
       assert.ok(progressUpdates.length > 0);
     });
 
@@ -106,14 +125,12 @@ describe('extract', () => {
         progressUpdates.push(update);
       };
 
-      const options = { strip: 1, progress };
-      extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, options, (err) => {
+      extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, { strip: 1, progress }, (err) => {
         if (err) {
           done(err);
           return;
         }
-
-        validateFiles(options, 'tar', (err) => {
+        verifyArchiveExtraction('fixture.tar', (err) => {
           if (err) {
             done(err);
             return;
@@ -125,35 +142,24 @@ describe('extract', () => {
     });
 
     it('extract tar multiple times', (done) => {
-      const options = { strip: 1 };
-      extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, options, (err) => {
+      extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, { strip: 1 }, (err) => {
         if (err) {
           done(err);
           return;
         }
-
-        validateFiles(options, 'tar', (err) => {
+        verifyArchiveExtraction('fixture.tar', (err) => {
           if (err) {
             done(err);
             return;
           }
-
-          extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, options, (err) => {
+          extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, { strip: 1 }, (err) => {
             assert.ok(err);
-
-            extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, { force: true, ...options }, (err) => {
+            extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, { force: true, strip: 1 }, (err) => {
               if (err) {
                 done(err);
                 return;
               }
-
-              validateFiles(options, 'tar', (err) => {
-                if (err) {
-                  done(err);
-                  return;
-                }
-                done();
-              });
+              verifyArchiveExtraction('fixture.tar', done);
             });
           });
         });
@@ -166,14 +172,12 @@ describe('extract', () => {
         progressUpdates.push(update);
       };
 
-      const options = { strip: 1, progress };
-      extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, options, (err) => {
+      extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, { strip: 1, progress }, (err) => {
         if (err) {
           done(err);
           return;
         }
-
-        validateFiles(options, 'zip', (err) => {
+        verifyArchiveExtraction('fixture.zip', (err) => {
           if (err) {
             done(err);
             return;
@@ -185,35 +189,24 @@ describe('extract', () => {
     });
 
     it('extract zip multiple times', (done) => {
-      const options = { strip: 1 };
-      extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, options, (err) => {
+      extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, { strip: 1 }, (err) => {
         if (err) {
           done(err);
           return;
         }
-
-        validateFiles(options, 'zip', (err) => {
+        verifyArchiveExtraction('fixture.zip', (err) => {
           if (err) {
             done(err);
             return;
           }
-
-          extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, options, (err) => {
+          extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, { strip: 1 }, (err) => {
             assert.ok(err);
-
-            extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, { force: true, ...options }, (err) => {
+            extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, { force: true, strip: 1 }, (err) => {
               if (err) {
                 done(err);
                 return;
               }
-
-              validateFiles(options, 'zip', (err) => {
-                if (err) {
-                  done(err);
-                  return;
-                }
-                done();
-              });
+              verifyArchiveExtraction('fixture.zip', done);
             });
           });
         });
@@ -226,14 +219,12 @@ describe('extract', () => {
         progressUpdates.push(update);
       };
 
-      const options = { strip: 1, progress };
-      extract(path.join(DATA_DIR, 'fixture.7z'), TARGET, options, (err) => {
+      extract(path.join(DATA_DIR, 'fixture.7z'), TARGET, { strip: 1, progress }, (err) => {
         if (err) {
           done(err);
           return;
         }
-
-        validateFiles(options, '7z', (err) => {
+        verifyArchiveExtraction('fixture.7z', (err) => {
           if (err) {
             done(err);
             return;
