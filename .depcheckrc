@@ -1,1 +1,1 @@
-ignores: ["node-version-use", "ts-dev-stack", "fast-extract", "lzma-native", "signal-exit"]
+ignores: ["node-version-use", "ts-dev-stack", "fast-extract", "lzma-native", "signal-exit", "seek-bzip"]
