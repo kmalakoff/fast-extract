@@ -50,8 +50,7 @@
   "source": "src/index.ts",
   "types": "dist/cjs/index.d.ts",
   "files": [
-    "dist",
-    "assets"
+    "dist"
   ],
   "scripts": {
     "build": "tsds build",
@@ -62,38 +61,33 @@
     "version": "tsds version"
   },
   "dependencies": {
-    "7z-iterator": "^0.2.11",
-    "buffer-alloc-unsafe": "^1.1.0",
-    "buffer-fill": "^1.0.0",
-    "call-once-fn": "^1.1.10",
+    "7z-iterator": "^0.3.0",
+    "call-once-fn": "^1.0.1",
     "content-disposition": "^1.0.1",
-    "flush-write-stream": "^2.0.0",
-    "fs-remove-compat": "^0.2.3",
+    "fs-remove-compat": "^1.0.0",
     "lodash.throttle": "^4.1.1",
-    "mkdirp-classic": "^0.5.3",
-    "on-one": "^1.0.10",
+    "mkdirp-classic": "^0.5.2",
+    "on-one": "^1.0.0",
     "progress-stream": "^2.0.0",
-    "pumpify": "^2.0.1",
-    "queue-cb": "^1.6.3",
-    "readable-stream": "^2.3.8",
-    "safe-buffer": "^5.2.1",
+    "queue-cb": "^1.0.0",
+    "readable-stream": "^2.0.2",
+    "seek-bzip": "^2.0.0",
     "signal-exit": "^3.0.7",
-    "tar-iterator": "^3.1.8",
+    "tar-iterator": "^3.1.11",
     "temp-suffix": "^1.0.10",
-    "unbzip2-stream": "^1.4.3",
-    "zip-iterator": "^3.0.16"
+    "zip-iterator": "^3.0.18"
   },
   "devDependencies": {
-    "@types/mocha": "^10.0.10",
-    "@types/node": "^25.0.1",
+    "@types/mocha": "*",
+    "@types/node": "*",
     "cr": "^0.1.0",
     "fs-iterator": "^6.1.12",
-    "fs-stats-spys": "^1.2.9",
+    "fs-stats-spys": "^1.0.0",
     "lzma-native": "^8.0.6",
-    "node-version-use": "^2.1.5",
-    "pinkie-promise": "^2.0.1",
-    "ts-dev-stack": "^1.21.3",
-    "tsds-config": "^0.2.1"
+    "node-version-use": "*",
+    "pinkie-promise": "*",
+    "ts-dev-stack": "*",
+    "tsds-config": "*"
   },
   "peerDependencies": {
     "lzma-native": "^8.0.6"
