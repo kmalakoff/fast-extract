@@ -24,7 +24,7 @@ const WRITERS = {
 
 import extname from './extname.ts';
 import statsBasename from './sourceStats/basename.ts';
-import DestinationNotExists from './streams/transforms/DestinationNotExists.ts';
+import DestinationExists from './streams/transforms/DestinationExists.ts';
 import DestinationRemove from './streams/transforms/DestinationRemove.ts';
 
 import type { OptionsInternal } from './types.ts';
@@ -33,7 +33,7 @@ export default function createPipeline(dest: string, options: OptionsInternal): 
   const type = options.type === undefined ? extname(statsBasename(options.source, options) || '') : options.type;
 
   const parts = type.split('.');
-  const streams = [options.force ? new DestinationRemove(dest) : new DestinationNotExists(dest)];
+  const streams = [options.force ? new DestinationRemove(dest) : new DestinationExists(dest)];
   for (let index = parts.length - 1; index >= 0; index--) {
     // append transform
     const transform = TRANSORMS[parts[index]];

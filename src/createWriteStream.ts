@@ -9,10 +9,9 @@ import type { Options, OptionsInternal } from './types.ts';
 
 export default function createWriteStream(dest: string, options_: Options): NodeJS.WritableStream {
   if (typeof options_ === 'string') options_ = { type: options_ };
-  const options: OptionsInternal = { _tempPaths: [], ...options_ };
+  const options: OptionsInternal = { ...options_ };
   const streams = createPipeline(dest, options);
-  const generatedFiles = [dest].concat(options._tempPaths);
-  generatedFiles.forEach(exitCleanup.add);
+  exitCleanup.add(dest);
 
   // Get first and last streams
   const first = streams[0];
@@ -40,9 +39,9 @@ export default function createWriteStream(dest: string, options_: Options): Node
       errorEmittedOnWrite = true;
       write.destroy(err);
     }
-    // Clean up files async
-    rimrafAll(generatedFiles, () => {
-      generatedFiles.forEach(exitCleanup.remove);
+    // Clean up dest on error
+    rimrafAll([dest], () => {
+      exitCleanup.remove(dest);
     });
   }
 
@@ -64,10 +63,8 @@ export default function createWriteStream(dest: string, options_: Options): Node
   function onEnd(callback) {
     if (error || ended) return callback();
     ended = true;
-    return rimrafAll(options._tempPaths, (err) => {
-      generatedFiles.forEach(exitCleanup.remove);
-      callback(err);
-    });
+    exitCleanup.remove(dest);
+    callback();
   }
 
   const write = writer(
