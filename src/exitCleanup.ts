@@ -17,8 +17,7 @@ function add(fullPath: string) {
 
 function remove(fullPath: string) {
   const index = fullPaths.indexOf(fullPath);
-  if (index < 0) console.log(`Path does not exist for remove: ${fullPath}`);
-  fullPaths.splice(index, 1);
+  if (index >= 0) fullPaths.splice(index, 1);
 }
 
 export default {
