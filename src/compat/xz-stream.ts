@@ -51,15 +51,6 @@ function crc32(buf: Buffer, start = 0, end: number = buf.length): number {
   return (crc ^ 0xffffffff) >>> 0;
 }
 
-// Reset bit models to initial probability (same as lzma-purejs initBitModels)
-// Initial probability is 1024 (0x400) which represents 50% probability
-function resetBitModels(models: number[]): void {
-  if (!models) return;
-  for (let i = 0; i < models.length; i++) {
-    models[i] = 1024;
-  }
-}
-
 // Decode variable-length integer (XZ multibyte encoding)
 function decodeMultibyte(buf: Buffer, offset: number): { value: number; bytesRead: number } {
   let value = 0;
@@ -273,71 +264,13 @@ function decodeLzma2(input: Buffer, properties: Buffer, unpackSize?: number): Bu
       const inStream = createInputStream(input, offset, compSize);
       const outStream = createOutputStream(uncompSize);
 
-      // For state reset WITHOUT dict reset (0xa0-0xdf), we need special handling:
-      // - Reset probability tables and state
-      // - Keep dictionary data and cumulative position (_nowPos64)
-      // The lzma-purejs decoder's setSolid(false) resets _nowPos64, which breaks
-      // LZ matches that reference dictionary data from previous chunks.
-      // Fix: manually reset probability tables while preserving _nowPos64.
+      // For state reset WITHOUT dict reset (0xa0-0xdf), use resetProbabilities()
+      // to reset probability tables while preserving _nowPos64 for dictionary refs
       if (resetState && !dictReset) {
-        // Save cumulative position (critical for rep0 validation)
         const savedNowPos64 = decoder._nowPos64;
-
-        // Reset probability tables manually (can't call decoder.init() because it
-        // would try to read from stream before code() sets it up)
-        // initBitModels sets all values to 1024 (0x400) - the initial probability
-        resetBitModels(decoder._isMatchDecoders);
-        resetBitModels(decoder._isRepDecoders);
-        resetBitModels(decoder._isRepG0Decoders);
-        resetBitModels(decoder._isRepG1Decoders);
-        resetBitModels(decoder._isRepG2Decoders);
-        resetBitModels(decoder._isRep0LongDecoders);
-        resetBitModels(decoder._posDecoders);
-
-        // Reset literal decoder
-        if (decoder._literalDecoder._coders) {
-          for (let i = 0; i < decoder._literalDecoder._coders.length; i++) {
-            if (decoder._literalDecoder._coders[i]) {
-              resetBitModels(decoder._literalDecoder._coders[i]._decoders);
-            }
-          }
-        }
-
-        // Reset pos slot decoders
-        for (let i = 0; i < decoder._posSlotDecoder.length; i++) {
-          resetBitModels(decoder._posSlotDecoder[i]._models);
-        }
-
-        // Reset len decoders
-        resetBitModels(decoder._lenDecoder._choice);
-        decoder._lenDecoder._highCoder._models && resetBitModels(decoder._lenDecoder._highCoder._models);
-        for (let i = 0; i < decoder._lenDecoder._lowCoder.length; i++) {
-          decoder._lenDecoder._lowCoder[i]._models && resetBitModels(decoder._lenDecoder._lowCoder[i]._models);
-          decoder._lenDecoder._midCoder[i]._models && resetBitModels(decoder._lenDecoder._midCoder[i]._models);
-        }
-
-        resetBitModels(decoder._repLenDecoder._choice);
-        decoder._repLenDecoder._highCoder._models && resetBitModels(decoder._repLenDecoder._highCoder._models);
-        for (let i = 0; i < decoder._repLenDecoder._lowCoder.length; i++) {
-          decoder._repLenDecoder._lowCoder[i]._models && resetBitModels(decoder._repLenDecoder._lowCoder[i]._models);
-          decoder._repLenDecoder._midCoder[i]._models && resetBitModels(decoder._repLenDecoder._midCoder[i]._models);
-        }
-
-        // Reset pos align decoder
-        decoder._posAlignDecoder._models && resetBitModels(decoder._posAlignDecoder._models);
-
-        // Reset state variables (same as code() does for non-solid)
-        decoder._state = 0;
-        decoder._rep0 = 0;
-        decoder._rep1 = 0;
-        decoder._rep2 = 0;
-        decoder._rep3 = 0;
-
-        // Restore cumulative position - critical for rep0 validation
+        decoder.resetProbabilities();
         decoder._nowPos64 = savedNowPos64;
-
-        // Use solid mode so code() doesn't reset _nowPos64 again
-        decoder.setSolid(true);
+        decoder.setSolid(true); // Preserve _nowPos64 in code()
       } else {
         // For solid mode (0x80-0x9f) or full reset (0xe0-0xff), use normal path
         decoder.setSolid(!resetState);

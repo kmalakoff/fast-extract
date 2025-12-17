@@ -61,7 +61,7 @@
     "version": "tsds version"
   },
   "dependencies": {
-    "7z-iterator": "^1.0.0",
+    "7z-iterator": "^1.0.1",
     "call-once-fn": "^1.0.1",
     "content-disposition": "^1.0.1",
     "fs-remove-compat": "^1.0.0",
