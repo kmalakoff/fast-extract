@@ -4,6 +4,7 @@ dist/
 docs/
 npm-debug.log*
 .tmp/
+.tmp-comparison/
 .cache/
 
 # agents
