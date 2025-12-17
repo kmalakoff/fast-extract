@@ -105,12 +105,8 @@ export default function createWriteStream(dest: string, options_: Options): Node
         // Wait for last stream to finish
         finishCallback = onComplete;
 
-        // End the first stream to start pipeline completion, unless it's self-ending
-        // (e.g., PathToData ends itself via push(null) after reading the file)
-        // biome-ignore lint/suspicious/noExplicitAny: Check for marker property
-        if (!(first as any)._selfEnding) {
-          first.end();
-        }
+        // End the first stream to signal no more data - this propagates through the pipeline
+        first.end();
       }
     }
   );

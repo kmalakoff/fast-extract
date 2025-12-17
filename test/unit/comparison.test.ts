@@ -1,15 +1,13 @@
 /**
- * Comparison test between native tar and fast-extract
+ * Comparison tests between native tools and fast-extract
  *
- * This test downloads a real-world tar file (Node.js distribution) and compares
- * the extracted results between system tar and fast-extract to verify they
+ * These tests download real-world archives (Node.js distributions) and compare
+ * the extracted results between system tools and fast-extract to verify they
  * produce identical output.
  *
- * This test also serves as a regression test for the Node 18 flush-write-stream
- * race condition issue.
+ * Tests are skipped if the required native tool is not available.
  */
 
-import assert from 'assert';
 import { exec as execCallback } from 'child_process';
 import extract from 'fast-extract';
 import fs from 'fs';
@@ -21,15 +19,56 @@ import path from 'path';
 import url from 'url';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
-const TMP_DIR = path.join(__dirname, '..', '..', '.tmp');
-
-// Test configuration - use Node 18 distribution for regression testing
-const TAR_URL = 'https://nodejs.org/dist/v18.20.8/node-v18.20.8-linux-x64.tar.gz';
-const TAR_NAME = 'node-v18.20.8-linux-x64';
+// Use separate directories from other tests to avoid cleanup conflicts
+// (extract.test.ts removes .tmp before each test)
+const TMP_DIR = path.join(__dirname, '..', '..', '.tmp-comparison');
 const CACHE_DIR = path.join(__dirname, '..', '..', '.cache');
-const CACHE_PATH = path.join(CACHE_DIR, `${TAR_NAME}.tar.gz`);
-const TAR_EXTRACT_DIR = path.join(TMP_DIR, 'tar');
-const FAST_EXTRACT_DIR = path.join(TMP_DIR, 'fast-extract');
+
+// Base URL for Node.js downloads
+const NODE_DIST_BASE = 'https://nodejs.org/dist/v24.12.0';
+
+// Test configurations for each archive type
+const TEST_CONFIGS = {
+  'tar.gz': {
+    url: `${NODE_DIST_BASE}/node-v24.12.0-linux-x64.tar.gz`,
+    filename: 'node-v24.12.0-linux-x64.tar.gz',
+    extractedName: 'node-v24.12.0-linux-x64',
+    nativeCmd: (cachePath: string, tmpDir: string) => `cd "${tmpDir}" && tar -xzf "${cachePath}"`,
+    checkCmd: 'which tar',
+    strip: 1,
+    skipModeCheck: false,
+  },
+  'tar.xz': {
+    url: `${NODE_DIST_BASE}/node-v24.12.0-linux-x64.tar.xz`,
+    filename: 'node-v24.12.0-linux-x64.tar.xz',
+    extractedName: 'node-v24.12.0-linux-x64',
+    nativeCmd: (cachePath: string, tmpDir: string) => `cd "${tmpDir}" && tar -xJf "${cachePath}"`,
+    checkCmd: 'which tar && which xz',
+    strip: 1,
+    skipModeCheck: false,
+  },
+  zip: {
+    url: `${NODE_DIST_BASE}/node-v24.12.0-win-arm64.zip`,
+    filename: 'node-v24.12.0-win-arm64.zip',
+    extractedName: 'node-v24.12.0-win-arm64',
+    nativeCmd: (cachePath: string, tmpDir: string) => `cd "${tmpDir}" && unzip -q "${cachePath}"`,
+    checkCmd: 'which unzip',
+    strip: 1,
+    skipModeCheck: false,
+  },
+  '7z': {
+    url: `${NODE_DIST_BASE}/node-v24.12.0-win-arm64.7z`,
+    filename: 'node-v24.12.0-win-arm64.7z',
+    extractedName: 'node-v24.12.0-win-arm64',
+    nativeCmd: (cachePath: string, tmpDir: string, sevenZipCmd?: string) => `cd "${tmpDir}" && ${sevenZipCmd || '7z'} x -y "${cachePath}"`,
+    checkCmd: 'which 7zz || which 7z',
+    strip: 1,
+    // 7z archives from Windows don't preserve Unix permissions - different extractors use different defaults
+    skipModeCheck: true,
+  },
+};
+
+type ArchiveType = keyof typeof TEST_CONFIGS;
 
 /**
  * Interface for file stats collected from directory tree
@@ -39,6 +78,30 @@ interface FileStats {
   mode: number;
   mtime: number;
   type: 'directory' | 'file' | 'symlink' | 'other';
+}
+
+/**
+ * Check if a native tool is available
+ */
+function checkToolAvailable(checkCmd: string, callback: (available: boolean) => void): void {
+  execCallback(checkCmd, (err) => {
+    callback(!err);
+  });
+}
+
+/**
+ * Find the available 7z command (7zz or 7z)
+ */
+function find7zCommand(callback: (cmd: string | null) => void): void {
+  execCallback('which 7zz', (err) => {
+    if (!err) {
+      callback('7zz');
+    } else {
+      execCallback('which 7z', (err) => {
+        callback(err ? null : '7z');
+      });
+    }
+  });
 }
 
 /**
@@ -52,7 +115,6 @@ function collectStats(dirPath: string, callback: (err: Error | null, stats?: Rec
 
   iterator.forEach(
     (entry): undefined => {
-      // entry.path is already relative to dirPath
       stats[entry.path] = {
         size: entry.stats.size,
         mode: entry.stats.mode,
@@ -80,146 +142,209 @@ function removeDir(dirPath: string): void {
   }
 }
 
-describe('Comparison - fast-extract vs native tar', function () {
-  this.timeout(120000); // Allow time for download and extraction
-
-  before((done) => {
-    // Ensure .cache directory exists
-    if (!fs.existsSync(CACHE_DIR)) {
-      mkdirp.sync(CACHE_DIR);
-    }
-
-    // Download tar file if it doesn't exist
-    if (!fs.existsSync(CACHE_PATH)) {
-      console.log(`Downloading ${TAR_URL}...`);
-      getFile(TAR_URL, CACHE_PATH, (err) => {
-        if (err) {
-          done(err);
-          return;
-        }
-        console.log('Download complete');
-        setupExtractions(done);
-      });
-    } else {
-      console.log('Using cached tar file');
-      setupExtractions(done);
-    }
-  });
-
-  function setupExtractions(done: (err?: Error) => void): void {
-    // Clean up previous extractions
-    removeDir(TAR_EXTRACT_DIR);
-    removeDir(FAST_EXTRACT_DIR);
-
-    // Ensure TMP_DIR exists
-    if (!fs.existsSync(TMP_DIR)) {
-      mkdirp.sync(TMP_DIR);
-    }
-
-    // Extract with native tar
-    console.log('Extracting with native tar...');
-    execCallback(`cd "${TMP_DIR}" && tar -xzf "${CACHE_PATH}"`, (err) => {
-      if (err) {
-        done(err);
-        return;
-      }
-
-      // Find the extracted directory (should be node-v18.20.8-linux-x64)
-      const tarDir = path.join(TMP_DIR, TAR_NAME);
-      assert.ok(fs.existsSync(tarDir), `Native tar should create ${TAR_NAME} directory`);
-
-      // Rename it to TAR_EXTRACT_DIR
-      fs.renameSync(tarDir, TAR_EXTRACT_DIR);
-
-      // Extract with fast-extract
-      console.log('Extracting with fast-extract...');
-      let entryCount = 0;
-      let lastEntry = '';
-      const progressFn = (info): undefined => {
-        entryCount++;
-        if (info && info.entry) lastEntry = info.entry.path || info.entry.basename || '';
-        if (entryCount % 500 === 0) {
-          console.log(`  Progress: ${entryCount} entries extracted, last: ${lastEntry}`);
-        }
-      };
-
-      // Set a timeout to show where we stopped
-      const timeout = setTimeout(() => {
-        console.log(`  TIMEOUT: stopped at ${entryCount} entries, last: ${lastEntry}`);
-      }, 100000);
-
-      extract(CACHE_PATH, FAST_EXTRACT_DIR, { strip: 1, progress: progressFn }, (err) => {
-        clearTimeout(timeout);
-        if (err) {
-          done(err);
-          return;
-        }
-        console.log(`Both extractions complete (${entryCount} entries)`);
-        done();
-      });
-    });
+/**
+ * Download file to cache if not present
+ */
+function ensureCached(fileUrl: string, cachePath: string, callback: (err?: Error) => void): void {
+  if (fs.existsSync(cachePath)) {
+    console.log(`    Using cached: ${path.basename(cachePath)}`);
+    callback();
+    return;
   }
 
-  it('should produce identical extraction results', (done) => {
-    // Collect stats from both directories
-    console.log('Collecting stats from native tar extraction...');
-    collectStats(TAR_EXTRACT_DIR, (err, statsTar) => {
+  console.log(`    Downloading: ${fileUrl}...`);
+  getFile(fileUrl, cachePath, (err) => {
+    if (err) {
+      callback(err);
+      return;
+    }
+    console.log('    Download complete');
+    callback();
+  });
+}
+
+/**
+ * Compare two directory trees and report differences
+ */
+function compareExtractions(nativeDir: string, fastExtractDir: string, skipModeCheck: boolean, callback: (err: Error | null, differences?: string[]) => void): void {
+  console.log('    Collecting stats from native extraction...');
+  collectStats(nativeDir, (err, statsNative) => {
+    if (err) {
+      callback(err);
+      return;
+    }
+
+    console.log('    Collecting stats from fast-extract...');
+    collectStats(fastExtractDir, (err, statsFastExtract) => {
       if (err) {
-        done(err);
+        callback(err);
         return;
       }
 
-      console.log('Collecting stats from fast-extract extraction...');
-      collectStats(FAST_EXTRACT_DIR, (err, statsFastExtract) => {
+      const differences: string[] = [];
+
+      // Check for files only in native
+      for (const filePath in statsNative) {
+        if (!(filePath in statsFastExtract)) {
+          differences.push(`File exists in native but not in fast-extract: ${filePath}`);
+        }
+      }
+
+      // Check for files only in fast-extract
+      for (const filePath in statsFastExtract) {
+        if (!(filePath in statsNative)) {
+          differences.push(`File exists in fast-extract but not in native: ${filePath}`);
+        }
+      }
+
+      // Check for differences in files that exist in both
+      for (const filePath in statsNative) {
+        if (filePath in statsFastExtract) {
+          const statNative = statsNative[filePath];
+          const statFastExtract = statsFastExtract[filePath];
+
+          if (statNative.type !== statFastExtract.type) {
+            differences.push(`Type mismatch for ${filePath}: native=${statNative.type}, fast-extract=${statFastExtract.type}`);
+          }
+
+          if (statNative.size !== statFastExtract.size) {
+            differences.push(`Size mismatch for ${filePath}: native=${statNative.size}, fast-extract=${statFastExtract.size}`);
+          }
+
+          // Check mode (permissions), but allow for minor differences due to umask
+          // Skip mode check for formats that don't preserve Unix permissions well (e.g., 7z from Windows)
+          if (!skipModeCheck) {
+            const modeDiff = Math.abs(Number(statNative.mode) - Number(statFastExtract.mode));
+            if (modeDiff > 0o22) {
+              differences.push(`Mode mismatch for ${filePath}: native=${statNative.mode.toString(8)}, fast-extract=${statFastExtract.mode.toString(8)}`);
+            }
+          }
+        }
+      }
+
+      console.log(`    Compared ${Object.keys(statsNative).length} files`);
+      callback(null, differences);
+    });
+  });
+}
+
+/**
+ * Create a test suite for a specific archive type
+ */
+function createArchiveTestSuite(archiveType: ArchiveType): void {
+  const config = TEST_CONFIGS[archiveType];
+  const cachePath = path.join(CACHE_DIR, config.filename);
+  const nativeExtractDir = path.join(TMP_DIR, `native-${archiveType}`);
+  const fastExtractDir = path.join(TMP_DIR, `fast-extract-${archiveType}`);
+
+  describe(`Comparison - ${archiveType}`, function () {
+    this.timeout(300000); // Allow time for download and extraction
+
+    let toolAvailable = false;
+    let sevenZipCmd: string | null = null;
+
+    before((done) => {
+      // For 7z, find the specific command available (7zz or 7z)
+      if (archiveType === '7z') {
+        find7zCommand((cmd) => {
+          sevenZipCmd = cmd;
+          toolAvailable = cmd !== null;
+          if (!toolAvailable) {
+            console.log(`    Skipping ${archiveType} tests - native 7zz/7z not available`);
+            done();
+            return;
+          }
+          proceedWithSetup();
+        });
+      } else {
+        // Check if native tool is available
+        checkToolAvailable(config.checkCmd, (available) => {
+          toolAvailable = available;
+          if (!available) {
+            console.log(`    Skipping ${archiveType} tests - native tool not available`);
+            done();
+            return;
+          }
+          proceedWithSetup();
+        });
+      }
+
+      function proceedWithSetup(): void {
+        // Ensure directories exist
+        if (!fs.existsSync(CACHE_DIR)) {
+          mkdirp.sync(CACHE_DIR);
+        }
+        if (!fs.existsSync(TMP_DIR)) {
+          mkdirp.sync(TMP_DIR);
+        }
+
+        // Download file if needed
+        ensureCached(config.url, cachePath, (err) => {
+          if (err) {
+            done(err);
+            return;
+          }
+
+          // Clean up previous extractions
+          removeDir(nativeExtractDir);
+          removeDir(fastExtractDir);
+
+          // Extract with native tool
+          const toolName = archiveType === '7z' ? sevenZipCmd : archiveType;
+          console.log(`    Extracting with native ${toolName} tool...`);
+          const nativeCmd = config.nativeCmd(cachePath, TMP_DIR, sevenZipCmd || undefined);
+          execCallback(nativeCmd, (err) => {
+            if (err) {
+              done(err);
+              return;
+            }
+
+            // Find and rename the extracted directory
+            const extractedDir = path.join(TMP_DIR, config.extractedName);
+            if (fs.existsSync(extractedDir)) {
+              fs.renameSync(extractedDir, nativeExtractDir);
+            } else {
+              done(new Error(`Native extraction did not create expected directory: ${config.extractedName}`));
+              return;
+            }
+
+            // Extract with fast-extract
+            console.log('    Extracting with fast-extract...');
+            let entryCount = 0;
+            const progressFn = (): undefined => {
+              entryCount++;
+              if (entryCount % 500 === 0) {
+                console.log(`      Progress: ${entryCount} entries`);
+              }
+            };
+
+            extract(cachePath, fastExtractDir, { strip: config.strip, progress: progressFn }, (err) => {
+              if (err) {
+                done(err);
+                return;
+              }
+              console.log(`    Both extractions complete (${entryCount} entries)`);
+              done();
+            });
+          });
+        });
+      }
+    });
+
+    it('should produce identical extraction results', function (done) {
+      if (!toolAvailable) {
+        this.skip();
+        return;
+      }
+
+      compareExtractions(nativeExtractDir, fastExtractDir, config.skipModeCheck, (err, differences) => {
         if (err) {
           done(err);
           return;
         }
 
-        // Find differences
-        const differences: string[] = [];
-
-        // Check for files only in native tar
-        for (const filePath in statsTar) {
-          if (!(filePath in statsFastExtract)) {
-            differences.push(`File exists in native tar but not in fast-extract: ${filePath}`);
-          }
-        }
-
-        // Check for files only in fast-extract
-        for (const filePath in statsFastExtract) {
-          if (!(filePath in statsTar)) {
-            differences.push(`File exists in fast-extract but not in native tar: ${filePath}`);
-          }
-        }
-
-        // Check for differences in files that exist in both
-        for (const filePath in statsTar) {
-          if (filePath in statsFastExtract) {
-            const statTar = statsTar[filePath];
-            const statFastExtract = statsFastExtract[filePath];
-
-            if (statTar.type !== statFastExtract.type) {
-              differences.push(`Type mismatch for ${filePath}: native=${statTar.type}, fast-extract=${statFastExtract.type}`);
-            }
-
-            if (statTar.size !== statFastExtract.size) {
-              differences.push(`Size mismatch for ${filePath}: native=${statTar.size}, fast-extract=${statFastExtract.size}`);
-            }
-
-            // Check mode (permissions), but allow for minor differences due to umask
-            // Use Number() to handle BigInt on older Windows Node versions
-            const modeDiff = Math.abs(Number(statTar.mode) - Number(statFastExtract.mode));
-            if (modeDiff > 0o22) {
-              // Allow up to umask differences (typically 0o022)
-              differences.push(`Mode mismatch for ${filePath}: native=${statTar.mode.toString(8)}, fast-extract=${statFastExtract.mode.toString(8)}`);
-            }
-          }
-        }
-
-        // Report any differences
         if (differences.length > 0) {
-          console.error('\n=== DIFFERENCES FOUND ===');
+          console.error(`\n=== DIFFERENCES FOUND (${archiveType}) ===`);
           for (let i = 0; i < Math.min(differences.length, 20); i++) {
             console.error(differences[i]);
           }
@@ -228,14 +353,25 @@ describe('Comparison - fast-extract vs native tar', function () {
           }
           console.error('=========================\n');
 
-          done(new Error(`Found ${differences.length} difference(s) between native tar and fast-extract extraction`));
+          done(new Error(`Found ${differences.length} difference(s) in ${archiveType} extraction`));
           return;
         }
 
-        console.log(`Compared ${Object.keys(statsTar).length} files - all match`);
-        assert.strictEqual(Object.keys(statsTar).length, Object.keys(statsFastExtract).length, 'Should have same number of files');
+        console.log(`    All files match for ${archiveType}`);
         done();
       });
     });
+
+    after(() => {
+      // Clean up extraction directories (keep cache)
+      removeDir(nativeExtractDir);
+      removeDir(fastExtractDir);
+    });
   });
-});
+}
+
+// Create test suites for each archive type
+createArchiveTestSuite('tar.gz');
+createArchiveTestSuite('tar.xz');
+createArchiveTestSuite('zip');
+createArchiveTestSuite('7z');
