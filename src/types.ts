@@ -34,7 +34,6 @@ export type Options = {
 };
 
 export interface OptionsInternal extends Options {
-  _tempPaths?: string[];
   fullPath?: string;
   source?: Source;
   now?: Date;

@@ -17,9 +17,10 @@ export default class DestinationRemove extends Transform {
       callback(null, chunk);
       return;
     }
+    // safeRm handles non-existent paths gracefully (returns no error)
     safeRm(this.dest, (err) => {
       this.removed = true;
-      err && err.code !== 'EEXIST' ? callback(err) : callback(null, chunk);
+      err ? callback(err) : callback(null, chunk);
     });
   }
 }
