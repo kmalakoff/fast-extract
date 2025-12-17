@@ -6,12 +6,12 @@ import Queue from 'queue-cb';
 import type { Writable } from 'stream';
 import tempSuffix from 'temp-suffix';
 import writer from '../../compat/flush-write-stream.ts';
-import type { OptionsInternal } from '../../types.ts';
+import exitCleanup from '../../exitCleanup.ts';
 import writeTruncateFile from '../../writeTruncateFile.ts';
 
-export default function createFilePipeline(dest: string, options: object): Writable {
+export default function createFilePipeline(dest: string, _options: object): Writable {
   const tempDest = tempSuffix(dest);
-  (options as OptionsInternal)._tempPaths.push(tempDest);
+  exitCleanup.add(tempDest);
 
   let wroteSomething = false;
   return writer(
@@ -33,8 +33,21 @@ export default function createFilePipeline(dest: string, options: object): Writa
       });
       if (wroteSomething) {
         queue.defer((cb) => safeRm(dest, cb));
-        queue.defer(fs.rename.bind(fs, tempDest, dest));
-      } else queue.defer(writeTruncateFile.bind(null, dest));
+        queue.defer((cb) => {
+          fs.rename(tempDest, dest, (err) => {
+            if (!err) exitCleanup.remove(tempDest);
+            cb(err);
+          });
+        });
+      } else {
+        queue.defer((cb) => {
+          exitCleanup.remove(tempDest);
+          writeTruncateFile(dest, (err) => {
+            cb(err);
+            return undefined;
+          });
+        });
+      }
       queue.await(callback);
     }
   );
