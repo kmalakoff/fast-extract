@@ -25,13 +25,13 @@ export default class EntryProgressTransform extends Transform {
     if (time !== undefined) this.progress = throttle(this.progress, time, { leading: true });
   }
 
-  _transform(entry: Progress, encoding: BufferEncoding, callback: TransformCallback): undefined {
+  _transform(entry: Progress, encoding: BufferEncoding, callback: TransformCallback): void {
     if (this.progress) this.progress(entry);
     this.push(entry, encoding);
     callback();
   }
 
-  _flush(callback: TransformCallback): undefined {
+  _flush(callback: TransformCallback): void {
     if (this.progress) {
       this.progress(null);
       if ((this.progress as typeof throttle).cancel) (this.progress as typeof throttle).cancel();
