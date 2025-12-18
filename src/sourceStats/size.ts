@@ -2,9 +2,9 @@ import fs from 'fs';
 
 import type { Options, Source } from '../types.ts';
 
-export type Callback = (error?: Error, size?: number) => undefined;
+export type Callback = (error?: Error, size?: number) => void;
 
-export default function getSize(source: Source, options: Options, callback: Callback): undefined {
+export default function getSize(source: Source, options: Options, callback: Callback): void {
   // options
   if (options.size !== undefined) return callback(null, options.size);
 

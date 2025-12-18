@@ -1,33 +1,48 @@
+import SevenZipIterator from '7z-iterator';
+import type { Transform } from 'stream';
+import TarIterator from 'tar-iterator';
+import unbzip2Stream from 'unbzip2-stream';
+import ZipIterator from 'zip-iterator';
 import zlib from 'zlib';
-import bz2 from './compat/unbzip2-stream.ts';
-import xz from './compat/xz-stream.ts';
-import type { Pipeline } from './types.ts';
 
-const TRANSORMS = {
-  bz2: bz2,
+import xz from './compat/xz-stream.ts';
+import extname from './extname.ts';
+import statsBasename from './sourceStats/basename.ts';
+import createFilePipeline from './streams/pipelines/file.ts';
+import DestinationExists from './streams/transforms/DestinationExists.ts';
+import DestinationRemove from './streams/transforms/DestinationRemove.ts';
+import EntryProgressTransform from './streams/transforms/EntryProgress.ts';
+import createIteratorTransform from './streams/transforms/IteratorTransform.ts';
+import createWriteEntriesStream from './streams/write/entries.ts';
+
+import type { OptionsInternal, Pipeline } from './types.ts';
+
+const TRANSFORMS = {
+  bz2: unbzip2Stream,
   tgz: zlib.createUnzip.bind(zlib),
   gz: zlib.createUnzip.bind(zlib),
   xz: xz,
 };
 
-import create7ZPipeline from './streams/pipelines/7z.ts';
-import createFilePipeline from './streams/pipelines/file.ts';
-import createTarPipeline from './streams/pipelines/tar.ts';
-import createZipPipeline from './streams/pipelines/zip.ts';
+// Create transform classes for each iterator type
+const ZipTransform = createIteratorTransform(ZipIterator);
+const TarTransform = createIteratorTransform(TarIterator);
+const SevenZTransform = createIteratorTransform(SevenZipIterator);
+
+function createArchivePipeline(dest: string, streams: Pipeline, options: OptionsInternal, TransformClass: new () => Transform): Pipeline {
+  streams = streams.slice();
+  streams.push(new TransformClass());
+  if (options.progress) streams.push(new EntryProgressTransform(options));
+  streams.push(createWriteEntriesStream(dest, options));
+  return streams;
+}
 
 const WRITERS = {
-  zip: createZipPipeline,
-  tar: createTarPipeline,
-  tgz: createTarPipeline,
-  '7z': create7ZPipeline,
+  zip: (dest: string, streams: Pipeline, options: OptionsInternal) => createArchivePipeline(dest, streams, options, ZipTransform),
+  tar: (dest: string, streams: Pipeline, options: OptionsInternal) => createArchivePipeline(dest, streams, options, TarTransform),
+  tgz: (dest: string, streams: Pipeline, options: OptionsInternal) => createArchivePipeline(dest, streams, options, TarTransform),
+  '7z': (dest: string, streams: Pipeline, options: OptionsInternal) => createArchivePipeline(dest, streams, options, SevenZTransform),
 };
-
-import extname from './extname.ts';
-import statsBasename from './sourceStats/basename.ts';
-import DestinationExists from './streams/transforms/DestinationExists.ts';
-import DestinationRemove from './streams/transforms/DestinationRemove.ts';
-
-import type { OptionsInternal } from './types.ts';
 
 export default function createPipeline(dest: string, options: OptionsInternal): Pipeline {
   const type = options.type === undefined ? extname(statsBasename(options.source, options) || '') : options.type;
@@ -36,7 +51,7 @@ export default function createPipeline(dest: string, options: OptionsInternal): 
   const streams = [options.force ? new DestinationRemove(dest) : new DestinationExists(dest)];
   for (let index = parts.length - 1; index >= 0; index--) {
     // append transform
-    const transform = TRANSORMS[parts[index]];
+    const transform = TRANSFORMS[parts[index]];
     if (transform) streams.push(transform());
 
     // finish with a write stream
