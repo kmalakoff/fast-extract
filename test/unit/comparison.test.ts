@@ -114,7 +114,7 @@ function collectStats(dirPath: string, callback: (err: Error | null, stats?: Rec
   const iterator = new Iterator(dirPath, { alwaysStat: true, lstat: true });
 
   iterator.forEach(
-    (entry): undefined => {
+    (entry): void => {
       stats[entry.path] = {
         size: entry.stats.size,
         mode: entry.stats.mode,
@@ -154,10 +154,7 @@ function ensureCached(fileUrl: string, cachePath: string, callback: (err?: Error
 
   console.log(`    Downloading: ${fileUrl}...`);
   getFile(fileUrl, cachePath, (err) => {
-    if (err) {
-      callback(err);
-      return;
-    }
+    if (err) return callback(err);
     console.log('    Download complete');
     callback();
   });
@@ -169,17 +166,11 @@ function ensureCached(fileUrl: string, cachePath: string, callback: (err?: Error
 function compareExtractions(nativeDir: string, fastExtractDir: string, skipModeCheck: boolean, callback: (err: Error | null, differences?: string[]) => void): void {
   console.log('    Collecting stats from native extraction...');
   collectStats(nativeDir, (err, statsNative) => {
-    if (err) {
-      callback(err);
-      return;
-    }
+    if (err) return callback(err);
 
     console.log('    Collecting stats from fast-extract...');
     collectStats(fastExtractDir, (err, statsFastExtract) => {
-      if (err) {
-        callback(err);
-        return;
-      }
+      if (err) return callback(err);
 
       const differences: string[] = [];
 
@@ -311,7 +302,7 @@ function createArchiveTestSuite(archiveType: ArchiveType): void {
             // Extract with fast-extract
             console.log('    Extracting with fast-extract...');
             let entryCount = 0;
-            const progressFn = (): undefined => {
+            const progressFn = (): void => {
               entryCount++;
               if (entryCount % 500 === 0) {
                 console.log(`      Progress: ${entryCount} entries`);

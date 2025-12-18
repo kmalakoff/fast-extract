@@ -30,7 +30,7 @@ export type Options = {
   type?: string;
   force?: boolean;
   strip?: number;
-  progress?: (update: Progress) => undefined;
+  progress?: (update: Progress) => void;
 };
 
 export interface OptionsInternal extends Options {
@@ -40,4 +40,4 @@ export interface OptionsInternal extends Options {
   time?: number;
 }
 
-export type Callback = (error?: Error) => undefined;
+export type Callback = (error?: Error) => void;

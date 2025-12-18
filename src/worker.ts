@@ -3,7 +3,7 @@ import oo from 'on-one';
 import createWriteStream from './createWriteStream.ts';
 import type { Callback, Options, OptionsInternal, Source } from './types.ts';
 
-export default function extract(source: Source, dest: string, options_: Options, callback: Callback): undefined {
+export default function extract(source: Source, dest: string, options_: Options, callback: Callback): void {
   const options: OptionsInternal = { source, ...options_ };
   const res = createWriteStream(dest, options);
 

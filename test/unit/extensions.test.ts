@@ -27,10 +27,7 @@ function verifyExtraction(type: string, callback: (err?: Error) => void) {
     getStats(
       TARGET,
       (err, stats) => {
-        if (err) {
-          callback(err);
-          return;
-        }
+        if (err) return callback(err);
         assert.equal(stats.dirs, expected.dirs, `expected ${expected.dirs} dirs, got ${stats.dirs}`);
         assert.equal(stats.files, expected.files, `expected ${expected.files} files, got ${stats.files}`);
         assert.equal(stats.links, expected.links, `expected ${expected.links} links, got ${stats.links}`);
@@ -57,10 +54,7 @@ function verifyArchiveNoStrip(type: string, callback: (err?: Error) => void) {
   getStats(
     dataPath,
     (err, stats) => {
-      if (err) {
-        callback(err);
-        return;
-      }
+      if (err) return callback(err);
       assert.equal(stats.dirs, expected.dirs, `expected ${expected.dirs} dirs, got ${stats.dirs}`);
       assert.equal(stats.files, expected.files, `expected ${expected.files} files, got ${stats.files}`);
       assert.equal(stats.links, expected.links, `expected ${expected.links} links, got ${stats.links}`);
