@@ -10,21 +10,18 @@ export interface Stats {
 
 export type FileCallback = (fullPath: string, content: Buffer) => void;
 
-export default function getStats(dir: string, callback?: (err: Error | null, stats?: Stats) => void, onFile?: FileCallback): undefined | Promise<Stats> {
+export default function getStats(dir: string, callback?: (err: Error | null, stats?: Stats) => void, onFile?: FileCallback): void | Promise<Stats> {
   if (typeof callback === 'function') {
     const spys = statsSpys();
     new Iterator(dir, { lstat: true }).forEach(
-      (entry): undefined => {
+      (entry): void => {
         spys(entry.stats);
         if (onFile && entry.stats.isFile()) {
           onFile(entry.fullPath, fs.readFileSync(entry.fullPath));
         }
       },
-      (err): undefined => {
-        if (err) {
-          callback(err);
-          return;
-        }
+      (err): void => {
+        if (err) return callback(err);
         callback(null, {
           dirs: spys.dir.callCount,
           files: spys.file.callCount,

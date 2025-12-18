@@ -1,6 +1,6 @@
 import type { Transform } from 'stream';
+import unbzip2Stream from 'unbzip2-stream';
 import zlib from 'zlib';
-import bz2 from './compat/unbzip2-stream.ts';
 
 // lzma-native module compatiblity starts at Node 6
 const major = +process.versions.node.split('.')[0];
@@ -11,7 +11,7 @@ export default function decompressorsByType(type: string): Transform[] {
   const streams = [];
   for (let index = 0; index < parts.length; index++) {
     const part = parts[index];
-    if (part === 'bz2') streams.push(bz2());
+    if (part === 'bz2') streams.push(unbzip2Stream());
     else if (part === 'xz' && lzmaNative) streams.push(lzmaNative.createDecompressor());
     else if (part === 'tgz' || part === 'gz') streams.push(zlib.createUnzip());
   }

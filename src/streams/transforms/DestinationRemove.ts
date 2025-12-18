@@ -12,11 +12,8 @@ export default class DestinationRemove extends Transform {
     this.dest = dest;
   }
 
-  _transform(chunk: unknown, _encoding: BufferEncoding, callback: TransformCallback): undefined {
-    if (this.removed) {
-      callback(null, chunk);
-      return;
-    }
+  _transform(chunk: unknown, _encoding: BufferEncoding, callback: TransformCallback): void {
+    if (this.removed) return callback(null, chunk);
     // safeRm handles non-existent paths gracefully (returns no error)
     safeRm(this.dest, (err) => {
       this.removed = true;
