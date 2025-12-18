@@ -30,10 +30,7 @@ function verifyArchiveExtraction(fixtureName: string, callback: (err?: Error) =>
   getStats(
     TARGET,
     (err, stats) => {
-      if (err) {
-        callback(err);
-        return;
-      }
+      if (err) return callback(err);
       assert.equal(stats.dirs, expected.dirs, `expected ${expected.dirs} dirs, got ${stats.dirs}`);
       assert.equal(stats.files, expected.files, `expected ${expected.files} files, got ${stats.files}`);
       assert.equal(stats.links, expected.links, `expected ${expected.links} links, got ${stats.links}`);
@@ -55,7 +52,7 @@ describe('createWriteStream', () => {
   describe('happy path', () => {
     it('extract file with progress', (done) => {
       const progressUpdates = [];
-      const progress = (update: Progress): undefined => {
+      const progress = (update: Progress): void => {
         progressUpdates.push(update);
       };
 
@@ -117,7 +114,7 @@ describe('createWriteStream', () => {
 
     it('extract file with progress - no basename', (done) => {
       const progressUpdates = [];
-      const progress = (update: Progress): undefined => {
+      const progress = (update: Progress): void => {
         progressUpdates.push(update);
       };
 
@@ -143,7 +140,7 @@ describe('createWriteStream', () => {
 
     it('extract tar with progress', (done) => {
       const progressUpdates = [];
-      const progress = (update: Progress): undefined => {
+      const progress = (update: Progress): void => {
         progressUpdates.push(update);
       };
 
@@ -207,7 +204,7 @@ describe('createWriteStream', () => {
 
     it('extract zip with progress', (done) => {
       const progressUpdates = [];
-      const progress = (update: Progress): undefined => {
+      const progress = (update: Progress): void => {
         progressUpdates.push(update);
       };
 
@@ -271,7 +268,7 @@ describe('createWriteStream', () => {
 
     it('extract 7z with progress', (done) => {
       const progressUpdates = [];
-      const progress = (update: Progress): undefined => {
+      const progress = (update: Progress): void => {
         progressUpdates.push(update);
       };
 
