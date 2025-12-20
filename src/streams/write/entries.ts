@@ -1,3 +1,4 @@
+import { waitForAccess } from 'extract-base-iterator';
 import fs from 'fs';
 import { safeRm } from 'fs-remove-compat';
 import Queue from 'queue-cb';
@@ -26,12 +27,9 @@ export default function createWriteEntriesStream(dest: string, options: OptionsI
     },
     function flush(callback) {
       const queue = new Queue(1);
-      queue.defer((cb) => {
-        safeRm(dest, cb);
-      });
-      queue.defer((cb) => {
-        fs.rename(tempDest, dest, cb);
-      });
+      queue.defer(safeRm.bind(null, dest));
+      queue.defer(fs.rename.bind(null, tempDest, dest));
+      queue.defer(waitForAccess.bind(null, dest));
       for (let index = 0; index < links.length; index++) {
         const entry = links[index];
         queue.defer((cb) => {
