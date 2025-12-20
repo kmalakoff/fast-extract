@@ -1,6 +1,6 @@
+import { Transform } from 'extract-base-iterator';
 import throttle from 'lodash.throttle';
 import type { TransformCallback, TransformOptions, Transform as TransformT } from 'stream';
-import { Transform } from '../../compat/stream.ts';
 
 import type { OptionsInternal, Progress } from '../../types.ts';
 

@@ -1,5 +1,5 @@
+import { PassThrough, Transform } from 'extract-base-iterator';
 import type { TransformCallback, TransformOptions, Transform as TransformT } from 'stream';
-import { PassThrough, Transform } from '../../compat/stream.ts';
 
 import type { OptionsInternal } from '../../types.ts';
 
