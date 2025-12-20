@@ -5,31 +5,20 @@ export { default as createWriteStream } from './createWriteStream.ts';
 export * from './types.ts';
 
 export default function fastExtract(src: Source, dest: string): Promise<void>;
+export default function fastExtract(src: Source, dest: string, type: string): Promise<void>;
 export default function fastExtract(src: Source, options: Options): Promise<void>;
 export default function fastExtract(src: Source, dest: string, options: Options): Promise<void>;
 
 export default function fastExtract(src: Source, dest: string, callback: Callback): void;
+export default function fastExtract(src: Source, dest: string, type: string, callback: Callback): void;
 export default function fastExtract(src: Source, options: Options, callback: Callback): void;
 export default function fastExtract(src: Source, dest: string, options: Options, callback: Callback): void;
 
-export default function fastExtract(src: Source, dest: string | Options | Callback, options?: Options | Callback, callback?: Callback): void | Promise<void> {
-  if (options === undefined && typeof dest !== 'string') {
-    callback = options as Callback;
-    options = dest as Options;
-    dest = null;
-  }
+export default function fastExtract(src: Source, dest: string | Options | Callback, options?: Options | Callback | string, callback?: Callback): void | Promise<void> {
+  callback = typeof options === 'function' ? options : callback;
+  options = typeof options === 'function' ? (dest as Options) || {} : typeof options === 'string' ? { type: options } : ((options || {}) as Options);
+  options = typeof dest === 'string' ? options : { ...options, type: dest as string };
 
-  if (typeof options === 'function') {
-    callback = options as Callback;
-    options = null;
-  }
-  if (typeof options === 'string') options = { type: options };
-  options = options || {};
-
-  if (typeof callback === 'function') return worker(src, dest as string, options as Options, callback);
-  return new Promise((resolve, reject) =>
-    worker(src, dest as string, options as Options, (err?: Error) => {
-      err ? reject(err) : resolve();
-    })
-  );
+  if (typeof callback === 'function') return worker(src, dest as string, options, callback);
+  return new Promise((resolve, reject) => worker(src, dest as string, options, (err?: Error) => (err ? reject(err) : resolve())));
 }
