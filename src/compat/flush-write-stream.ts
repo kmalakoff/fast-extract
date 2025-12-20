@@ -1,7 +1,7 @@
 // Writable stream with flush callback support for Node 0.8+
 
+import { Writable } from 'extract-base-iterator';
 import { bufferFrom } from './buffer.ts';
-import { Writable } from './stream.ts';
 
 type Callback = (error?: Error | null) => void;
 // biome-ignore lint/suspicious/noExplicitAny: Object mode allows any chunk type

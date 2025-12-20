@@ -1,6 +1,6 @@
+import { Transform } from 'extract-base-iterator';
 import { safeRm } from 'fs-remove-compat';
 import type { TransformCallback, TransformOptions, Transform as TransformT } from 'stream';
-import { Transform } from '../../compat/stream.ts';
 
 export default class DestinationRemove extends Transform {
   private dest: string;
