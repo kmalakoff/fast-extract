@@ -1,3 +1,4 @@
+import { waitForAccess } from 'extract-base-iterator';
 import fs from 'fs';
 import { safeRm } from 'fs-remove-compat';
 import mkdirp from 'mkdirp-classic';
@@ -32,13 +33,14 @@ export default function createFilePipeline(dest: string, _options: object): Writ
         });
       });
       if (wroteSomething) {
-        queue.defer((cb) => safeRm(dest, cb));
+        queue.defer(safeRm.bind(null, dest));
         queue.defer((cb) => {
           fs.rename(tempDest, dest, (err) => {
             if (!err) exitCleanup.remove(tempDest);
             cb(err);
           });
         });
+        queue.defer(waitForAccess.bind(null, dest));
       } else {
         queue.defer((cb) => {
           exitCleanup.remove(tempDest);
