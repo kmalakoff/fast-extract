@@ -3,20 +3,9 @@
 // Pure JavaScript, works on Node.js 0.8+
 
 import { decodeLzma2 } from '7z-iterator';
-import Module from 'module';
-import Stream from 'stream';
+import { Transform } from 'extract-base-iterator';
+import type { Transform as TransformType } from 'stream';
 import { bufferEquals } from './buffer.ts';
-
-const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
-
-// Use native Transform for Node 1+, readable-stream for Node 0.x
-const major = +process.versions.node.split('.')[0];
-let Transform: typeof Stream.Transform;
-if (major > 0) {
-  Transform = Stream.Transform;
-} else {
-  Transform = _require('readable-stream').Transform;
-}
 
 type TransformCallback = (error?: Error | null, data?: Buffer) => void;
 
@@ -173,7 +162,7 @@ function decompressXZSimple(input: Buffer): Buffer {
  * Create an XZ decompression Transform stream
  * Uses buffering pattern: collects all input chunks, decompresses in flush
  */
-export default function xzStream(): Stream.Transform {
+export default function xzStream(): TransformType {
   const chunks: Buffer[] = [];
 
   return new Transform({

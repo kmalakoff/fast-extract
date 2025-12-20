@@ -1,6 +1,6 @@
+import { Transform } from 'extract-base-iterator';
 import fs from 'fs';
 import type { TransformCallback, TransformOptions, Transform as TransformT } from 'stream';
-import { Transform } from '../../compat/stream.ts';
 
 export default class DestinationExists extends Transform {
   private dest: string;
