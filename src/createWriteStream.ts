@@ -1,7 +1,6 @@
 import callOnce from 'call-once-fn';
 import oo from 'on-one';
 import writer from './compat/flush-write-stream.ts';
-import rimrafAll from './compat/rimrafAll.ts';
 import createPipeline from './createPipeline.ts';
 import exitCleanup from './exitCleanup.ts';
 
@@ -39,10 +38,9 @@ export default function createWriteStream(dest: string, options_: Options): Node
       errorEmittedOnWrite = true;
       write.destroy(err);
     }
-    // Clean up dest on error
-    rimrafAll([dest], () => {
-      exitCleanup.remove(dest);
-    });
+    // Note: Don't clean up dest on error - if user retries with force, safeRm will handle it.
+    // Background cleanup here causes race conditions where new files get deleted.
+    exitCleanup.remove(dest);
   }
 
   // Listen for errors on all streams (errors may not propagate through all pipe types)
