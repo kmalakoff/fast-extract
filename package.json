@@ -71,7 +71,6 @@
     "on-one": "^1.0.0",
     "progress-stream": "^2.0.0",
     "queue-cb": "^1.0.0",
-    "readable-stream": "^2.0.2",
     "signal-exit": "^3.0.7",
     "tar-iterator": "^3.3.0",
     "temp-suffix": "^1.0.10",
