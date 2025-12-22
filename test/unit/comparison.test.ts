@@ -21,7 +21,7 @@ import url from 'url';
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
 // Use separate directories from other tests to avoid cleanup conflicts
 // (extract.test.ts removes .tmp before each test)
-const TMP_DIR = path.join(__dirname, '..', '..', '.tmp-comparison');
+const TMP_DIR = path.join(__dirname, '..', '..', '.tmp', 'comparison');
 const CACHE_DIR = path.join(__dirname, '..', '..', '.cache');
 
 // Base URL for Node.js downloads
