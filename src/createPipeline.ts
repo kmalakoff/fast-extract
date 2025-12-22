@@ -2,10 +2,10 @@ import SevenZipIterator from '7z-iterator';
 import type { Transform } from 'stream';
 import TarIterator from 'tar-iterator';
 import unbzip2Stream from 'unbzip2-stream';
+import { createXZDecoder } from 'xz-compat';
 import ZipIterator from 'zip-iterator';
 import zlib from 'zlib';
 
-import xz from './compat/xz-stream.ts';
 import extname from './extname.ts';
 import statsBasename from './sourceStats/basename.ts';
 import createFilePipeline from './streams/pipelines/file.ts';
@@ -21,7 +21,7 @@ const TRANSFORMS = {
   bz2: unbzip2Stream,
   tgz: zlib.createUnzip.bind(zlib),
   gz: zlib.createUnzip.bind(zlib),
-  xz: xz,
+  xz: createXZDecoder,
 };
 
 // Create transform classes for each iterator type
