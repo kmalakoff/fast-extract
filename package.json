@@ -61,7 +61,7 @@
     "version": "tsds version"
   },
   "dependencies": {
-    "7z-iterator": "^1.1.0",
+    "7z-iterator": "^2.0.0",
     "call-once-fn": "^1.0.1",
     "content-disposition": "^1.0.1",
     "extract-base-iterator": "^3.0.2",
@@ -75,6 +75,7 @@
     "tar-iterator": "^3.3.0",
     "temp-suffix": "^1.0.10",
     "unbzip2-stream": "1.0.8",
+    "xz-compat": "^0.2.0",
     "zip-iterator": "^3.2.0"
   },
   "devDependencies": {
