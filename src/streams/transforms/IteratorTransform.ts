@@ -15,10 +15,13 @@ export default function createIteratorTransform(IteratorClass: IteratorConstruct
     private _iterator: Iterator;
     private _callback: (error?: Error) => void;
     private _stream: NodeJS.ReadWriteStream;
+    private _concurrency: number;
 
     constructor(options?: OptionsInternal | TransformOptions<TransformT>) {
+      const concurrency = (options as OptionsInternal)?.concurrency ?? Infinity;
       options = options ? { ...options, objectMode: true } : { objectMode: true };
       super(options);
+      this._concurrency = concurrency;
     }
 
     _transform(chunk: unknown, encoding: BufferEncoding, callback: TransformCallback): void {
@@ -40,7 +43,7 @@ export default function createIteratorTransform(IteratorClass: IteratorConstruct
         this._callback ? this._callback(err) : this.end(err);
         this._callback = null;
       };
-      this._iterator.forEach(onEntry, { concurrency: 1 }, onDone);
+      this._iterator.forEach(onEntry, { concurrency: this._concurrency }, onDone);
       this._stream.write(chunk as string, encoding, callback);
     }
 
