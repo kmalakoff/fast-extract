@@ -66,6 +66,7 @@
     "content-disposition": "^1.0.1",
     "extract-base-iterator": "^3.0.2",
     "fs-remove-compat": "^1.0.0",
+    "graceful-fs": "^4.2.11",
     "lodash.throttle": "^4.1.1",
     "mkdirp-classic": "^0.5.2",
     "on-one": "^1.0.0",
@@ -75,7 +76,7 @@
     "tar-iterator": "^3.3.0",
     "temp-suffix": "^1.0.10",
     "unbzip2-stream": "1.0.8",
-    "xz-compat": "^0.2.0",
+    "xz-compat": "^1.0.0",
     "zip-iterator": "^3.2.0"
   },
   "devDependencies": {

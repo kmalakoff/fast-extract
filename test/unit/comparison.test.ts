@@ -262,12 +262,9 @@ function createArchiveTestSuite(archiveType: ArchiveType): void {
 
       function proceedWithSetup(): void {
         // Ensure directories exist
-        if (!fs.existsSync(CACHE_DIR)) {
-          mkdirp.sync(CACHE_DIR);
-        }
-        if (!fs.existsSync(TMP_DIR)) {
-          mkdirp.sync(TMP_DIR);
-        }
+        // Other suites wipe .tmp between runs; recreate cache/temp roots every time.
+        mkdirp.sync(CACHE_DIR);
+        mkdirp.sync(TMP_DIR);
 
         // Download file if needed
         ensureCached(config.url, cachePath, (err) => {

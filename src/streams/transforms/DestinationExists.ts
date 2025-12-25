@@ -1,5 +1,5 @@
 import { Transform } from 'extract-base-iterator';
-import fs from 'fs';
+import fs from 'graceful-fs';
 import type { TransformCallback, TransformOptions, Transform as TransformT } from 'stream';
 
 export default class DestinationExists extends Transform {

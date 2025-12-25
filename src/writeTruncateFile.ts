@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'graceful-fs';
 
 export type Callback = (error?: Error) => void;
 

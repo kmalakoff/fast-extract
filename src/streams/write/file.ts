@@ -1,6 +1,6 @@
 import { waitForAccess } from 'extract-base-iterator';
-import fs from 'fs';
 import { safeRm } from 'fs-remove-compat';
+import fs from 'graceful-fs';
 import mkdirp from 'mkdirp-classic';
 import path from 'path';
 import Queue from 'queue-cb';
