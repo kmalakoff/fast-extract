@@ -31,6 +31,7 @@ export type Options = {
   force?: boolean;
   strip?: number;
   progress?: (update: Progress) => void;
+  concurrency?: number;
 };
 
 export interface OptionsInternal extends Options {
