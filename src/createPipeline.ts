@@ -29,9 +29,9 @@ const ZipTransform = createIteratorTransform(ZipIterator);
 const TarTransform = createIteratorTransform(TarIterator);
 const SevenZTransform = createIteratorTransform(SevenZipIterator);
 
-function createArchivePipeline(dest: string, streams: Pipeline, options: OptionsInternal, TransformClass: new () => Transform): Pipeline {
+function createArchivePipeline(dest: string, streams: Pipeline, options: OptionsInternal, TransformClass: new (options?: OptionsInternal) => Transform): Pipeline {
   streams = streams.slice();
-  streams.push(new TransformClass());
+  streams.push(new TransformClass(options));
   if (options.progress) streams.push(new EntryProgressTransform(options));
   streams.push(createWriteEntriesStream(dest, options));
   return streams;
