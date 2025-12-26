@@ -5,10 +5,8 @@ import getSize from './size.ts';
 export type Callback = (error?: Error, stats?: SourceStats) => void;
 
 export default function sourceStats(source: Source, options: Options, endpoint: string | Callback, callback?: Callback): void {
-  if (typeof endpoint === 'function') {
-    callback = endpoint as Callback;
-    endpoint = null;
-  }
+  callback = typeof endpoint === 'function' ? endpoint : callback;
+  endpoint = typeof endpoint === 'function' ? null : endpoint;
 
   getSize(source, options, (err, size) => {
     if (err) return callback(err);
