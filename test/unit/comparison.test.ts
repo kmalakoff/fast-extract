@@ -36,7 +36,6 @@ const TEST_CONFIGS = {
     nativeCmd: (cachePath: string, tmpDir: string) => `cd "${tmpDir}" && tar -xzf "${cachePath}"`,
     checkCmd: 'which tar',
     strip: 1,
-    skipModeCheck: false,
   },
   'tar.xz': {
     url: `${NODE_DIST_BASE}/node-v24.12.0-linux-x64.tar.xz`,
@@ -45,7 +44,6 @@ const TEST_CONFIGS = {
     nativeCmd: (cachePath: string, tmpDir: string) => `cd "${tmpDir}" && tar -xJf "${cachePath}"`,
     checkCmd: 'which tar && which xz',
     strip: 1,
-    skipModeCheck: false,
   },
   zip: {
     url: `${NODE_DIST_BASE}/node-v24.12.0-win-arm64.zip`,
@@ -54,7 +52,6 @@ const TEST_CONFIGS = {
     nativeCmd: (cachePath: string, tmpDir: string) => `cd "${tmpDir}" && unzip -q "${cachePath}"`,
     checkCmd: 'which unzip',
     strip: 1,
-    skipModeCheck: false,
   },
   '7z': {
     url: `${NODE_DIST_BASE}/node-v24.12.0-win-arm64.7z`,
@@ -63,8 +60,6 @@ const TEST_CONFIGS = {
     nativeCmd: (cachePath: string, tmpDir: string, sevenZipCmd?: string) => `cd "${tmpDir}" && ${sevenZipCmd || '7z'} x -y "${cachePath}"`,
     checkCmd: 'which 7zz || which 7z',
     strip: 1,
-    // 7z archives from Windows don't preserve Unix permissions - different extractors use different defaults
-    skipModeCheck: true,
   },
 };
 
@@ -163,7 +158,7 @@ function ensureCached(fileUrl: string, cachePath: string, callback: (err?: Error
 /**
  * Compare two directory trees and report differences
  */
-function compareExtractions(nativeDir: string, fastExtractDir: string, skipModeCheck: boolean, callback: (err: Error | null, differences?: string[]) => void): void {
+function compareExtractions(nativeDir: string, fastExtractDir: string, callback: (err: Error | null, differences?: string[]) => void): void {
   console.log('    Collecting stats from native extraction...');
   collectStats(nativeDir, (err, statsNative) => {
     if (err) return callback(err);
@@ -202,13 +197,8 @@ function compareExtractions(nativeDir: string, fastExtractDir: string, skipModeC
             differences.push(`Size mismatch for ${filePath}: native=${statNative.size}, fast-extract=${statFastExtract.size}`);
           }
 
-          // Check mode (permissions), but allow for minor differences due to umask
-          // Skip mode check for formats that don't preserve Unix permissions well (e.g., 7z from Windows)
-          if (!skipModeCheck) {
-            const modeDiff = Math.abs(Number(statNative.mode) - Number(statFastExtract.mode));
-            if (modeDiff > 0o22) {
-              differences.push(`Mode mismatch for ${filePath}: native=${statNative.mode.toString(8)}, fast-extract=${statFastExtract.mode.toString(8)}`);
-            }
+          if (Number(statNative.mode) !== Number(statFastExtract.mode)) {
+            differences.push(`Mode mismatch for ${filePath}: native=${Number(statNative.mode).toString(8)}, fast-extract=${Number(statFastExtract.mode).toString(8)}`);
           }
         }
       }
@@ -325,7 +315,7 @@ function createArchiveTestSuite(archiveType: ArchiveType): void {
         return;
       }
 
-      compareExtractions(nativeExtractDir, fastExtractDir, config.skipModeCheck, (err, differences) => {
+      compareExtractions(nativeExtractDir, fastExtractDir, (err, differences) => {
         if (err) {
           done(err);
           return;
