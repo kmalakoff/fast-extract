@@ -61,10 +61,10 @@
     "version": "tsds version"
   },
   "dependencies": {
-    "7z-iterator": "^2.0.0",
+    "7z-iterator": "^2.2.6",
     "call-once-fn": "^1.0.1",
-    "content-disposition": "^1.0.1",
-    "extract-base-iterator": "^3.0.2",
+    "content-disposition": "^2.0.0",
+    "extract-base-iterator": "^3.4.4",
     "fs-remove-compat": "^1.0.0",
     "graceful-fs": "^4.2.11",
     "lodash.throttle": "^4.1.1",
@@ -73,17 +73,17 @@
     "progress-stream": "^2.0.0",
     "queue-cb": "^1.0.0",
     "signal-exit": "^3.0.7",
-    "tar-iterator": "^3.3.0",
+    "tar-iterator": "^3.3.7",
     "temp-suffix": "^1.0.10",
     "unbzip2-stream": "1.0.8",
-    "xz-compat": "^1.0.0",
-    "zip-iterator": "^3.2.0"
+    "xz-compat": "^1.2.5",
+    "zip-iterator": "^3.2.11"
   },
   "devDependencies": {
     "@types/mocha": "*",
     "@types/node": "*",
     "cr": "^0.1.0",
-    "fs-iterator": "^7.0.0",
+    "fs-iterator": "^7.1.1",
     "fs-stats-spys": "^1.0.0",
     "get-file-compat": "^2.0.1",
     "node-version-use": "*",
