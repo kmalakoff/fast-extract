@@ -1,4 +1,4 @@
 {
   "upgrade": true,
-  "reject": ["signal-exit", "unbzip2-stream"]
+  "reject": ["signal-exit", "unbzip2-stream", "content-disposition"]
 }
