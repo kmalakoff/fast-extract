@@ -4,7 +4,7 @@ import type { TransformCallback, TransformOptions, Transform as TransformT } fro
 
 export default class DestinationRemove extends Transform {
   private dest: string;
-  private removed: boolean;
+  private removed = false;
 
   constructor(dest: string, options: TransformOptions<TransformT> = {}) {
     options = options ? { ...options, objectMode: true } : { objectMode: true };

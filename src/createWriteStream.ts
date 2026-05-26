@@ -1,3 +1,4 @@
+import type { CallFn } from 'call-once-fn';
 import callOnce from 'call-once-fn';
 import oo from 'on-one';
 import writer from './compat/flush-write-stream.ts';
@@ -16,7 +17,7 @@ export default function createWriteStream(dest: string, options_: Options): Node
   const first = streams[0];
   const last = streams[streams.length - 1];
 
-  let error = null;
+  let error: Error | null = null;
   let ended = false;
   let lastFinished = false;
   let finishCallback: (() => void) | null = null;
@@ -29,7 +30,7 @@ export default function createWriteStream(dest: string, options_: Options): Node
 
   // Handle errors from all streams - use on-one to ensure each stream only triggers once
   let errorHandling = false;
-  function handleError(err) {
+  function handleError(err: Error): void {
     if (!err || errorHandling) return; // only handle actual errors, once
     errorHandling = true;
     error = err;
@@ -45,7 +46,7 @@ export default function createWriteStream(dest: string, options_: Options): Node
 
   // Listen for errors on all streams (errors may not propagate through all pipe types)
   for (let i = 0; i < streams.length; i++) {
-    oo(streams[i], ['error'], handleError);
+    oo(streams[i], ['error'], handleError as unknown as CallFn);
   }
 
   // Track when last stream finishes (use on-one for cross-version compatibility)
@@ -58,7 +59,7 @@ export default function createWriteStream(dest: string, options_: Options): Node
     }
   });
 
-  function onEnd(callback) {
+  function onEnd(callback: (err?: Error) => void): void {
     if (error || ended) return callback();
     ended = true;
     exitCleanup.remove(dest);
@@ -73,23 +74,22 @@ export default function createWriteStream(dest: string, options_: Options): Node
         if (err) {
           error = err;
           errorEmittedOnWrite = true; // error will be emitted by Writable base class via callback
-          callback(err);
-        } else {
-          callback();
+          return callback(err);
         }
+        callback();
       });
     },
-    function flush(callback) {
+    function flush(callback: (error?: Error | null) => void): void {
       if (error) {
         errorEmittedOnWrite = true; // error will be emitted by Writable base class via callback
         return callback(error);
       }
 
       // Ensure callback is only called once (race conditions on older Node)
-      const cb = callOnce(callback);
+      const cb = callOnce(callback as unknown as CallFn) as unknown as (err?: Error) => void;
 
-      const onComplete = () => {
-        if (error) return cb(error);
+      const onComplete = (): void => {
+        if (error) return cb(error ?? undefined);
         onEnd(cb);
       };
 

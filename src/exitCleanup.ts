@@ -1,12 +1,12 @@
 import { safeRmSync } from 'fs-remove-compat';
 import onExit from 'signal-exit';
 
-const fullPaths = [];
+const fullPaths: string[] = [];
 
 onExit(() => {
   while (fullPaths.length) {
     try {
-      safeRmSync(fullPaths.pop());
+      safeRmSync(fullPaths.pop() as string);
     } catch (_err) {}
   }
 });

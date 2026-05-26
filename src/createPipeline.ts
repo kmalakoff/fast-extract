@@ -15,7 +15,7 @@ import EntryProgressTransform from './streams/transforms/EntryProgress.ts';
 import createIteratorTransform from './streams/transforms/IteratorTransform.ts';
 import createWriteEntriesStream from './streams/write/entries.ts';
 
-import type { OptionsInternal, Pipeline } from './types.ts';
+import type { OptionsInternal, Pipeline, Source } from './types.ts';
 
 const TRANSFORMS = {
   bz2: unbzip2Stream,
@@ -45,17 +45,19 @@ const WRITERS = {
 };
 
 export default function createPipeline(dest: string, options: OptionsInternal): Pipeline {
-  const type = options.type === undefined ? extname(statsBasename(options.source, options) || '') : options.type;
+  const type = options.type === undefined ? extname(statsBasename(options.source as Source, options) || '') : options.type;
 
   const parts = type.split('.');
-  const streams = [options.force ? new DestinationRemove(dest) : new DestinationExists(dest)];
+  const streams: Pipeline = [options.force ? new DestinationRemove(dest) : new DestinationExists(dest)];
+  const transforms = TRANSFORMS as Record<string, () => Transform>;
+  const writers = WRITERS as Record<string, (dest: string, streams: Pipeline, options: OptionsInternal) => Pipeline>;
   for (let index = parts.length - 1; index >= 0; index--) {
     // append transform
-    const transform = TRANSFORMS[parts[index]];
+    const transform = transforms[parts[index]];
     if (transform) streams.push(transform());
 
     // finish with a write stream
-    const writer = WRITERS[parts[index]];
+    const writer = writers[parts[index]];
     if (writer) return writer(dest, streams, options);
   }
 
