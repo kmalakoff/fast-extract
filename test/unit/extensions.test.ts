@@ -26,8 +26,9 @@ function verifyExtraction(type: string, callback: (err?: Error) => void) {
     const { expected } = getFixture(fixtureName);
     getStats(
       TARGET,
-      (err, stats) => {
+      (err, statsOpt) => {
         if (err) return callback(err);
+        const stats = statsOpt as import('../lib/getStats.ts').Stats;
         assert.equal(stats.dirs, expected.dirs, `expected ${expected.dirs} dirs, got ${stats.dirs}`);
         assert.equal(stats.files, expected.files, `expected ${expected.files} files, got ${stats.files}`);
         assert.equal(stats.links, expected.links, `expected ${expected.links} links, got ${stats.links}`);
@@ -53,8 +54,9 @@ function verifyArchiveNoStrip(type: string, callback: (err?: Error) => void) {
   const dataPath = path.join(TARGET, 'data');
   getStats(
     dataPath,
-    (err, stats) => {
+    (err, statsOpt) => {
       if (err) return callback(err);
+      const stats = statsOpt as import('../lib/getStats.ts').Stats;
       assert.equal(stats.dirs, expected.dirs, `expected ${expected.dirs} dirs, got ${stats.dirs}`);
       assert.equal(stats.files, expected.files, `expected ${expected.files} files, got ${stats.files}`);
       assert.equal(stats.links, expected.links, `expected ${expected.links} links, got ${stats.links}`);
@@ -66,44 +68,32 @@ function verifyArchiveNoStrip(type: string, callback: (err?: Error) => void) {
   );
 }
 
-function addTests(type) {
+function addTests(type: string) {
   describe(type, () => {
     it('extract file', (done) => {
       extract(path.join(DATA_DIR, `fixture.${type}`), TARGET, { strip: 1 }, (err) => {
-        if (err) {
-          done(err);
-          return;
-        }
+        if (err) return done(err);
         verifyExtraction(type, done);
       });
     });
 
     it('extract file without type - dot', (done) => {
       extract(path.join(DATA_DIR, `fixture-${type}`), TARGET, { strip: 1, type: `.${type}` }, (err) => {
-        if (err) {
-          done(err);
-          return;
-        }
+        if (err) return done(err);
         verifyExtraction(type, done);
       });
     });
 
     it('extract file without type - no dot', (done) => {
       extract(path.join(DATA_DIR, `fixture-${type}`), TARGET, { strip: 1, type: type }, (err) => {
-        if (err) {
-          done(err);
-          return;
-        }
+        if (err) return done(err);
         verifyExtraction(type, done);
       });
     });
 
     it('extract file without type - options as type, no strip', (done) => {
       extract(path.join(DATA_DIR, `fixture-${type}`), TARGET, type, (err) => {
-        if (err) {
-          done(err);
-          return;
-        }
+        if (err) return done(err);
         if (isArchiveType(type)) {
           verifyArchiveNoStrip(type, done);
         } else {
@@ -121,10 +111,7 @@ function addTests(type) {
       const stream = fs.createReadStream(path.join(DATA_DIR, `fixture-${type}`));
       (stream as SpecifiedStream).filename = `fixture.${type}`;
       extract(stream, TARGET, { strip: 1 }, (err) => {
-        if (err) {
-          done(err);
-          return;
-        }
+        if (err) return done(err);
         verifyExtraction(type, done);
       });
     });
@@ -133,10 +120,7 @@ function addTests(type) {
       const stream = fs.createReadStream(path.join(DATA_DIR, `fixture-${type}`));
       (stream as SpecifiedStream).basename = `fixture.${type}`;
       extract(stream, TARGET, { strip: 1 }, (err) => {
-        if (err) {
-          done(err);
-          return;
-        }
+        if (err) return done(err);
         verifyExtraction(type, done);
       });
     });

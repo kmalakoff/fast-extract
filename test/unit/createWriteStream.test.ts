@@ -29,8 +29,9 @@ function verifyArchiveExtraction(fixtureName: string, callback: (err?: Error) =>
   const { expected } = getFixture(fixtureName);
   getStats(
     TARGET,
-    (err, stats) => {
+    (err, statsOpt) => {
       if (err) return callback(err);
+      const stats = statsOpt as import('../lib/getStats.ts').Stats;
       assert.equal(stats.dirs, expected.dirs, `expected ${expected.dirs} dirs, got ${stats.dirs}`);
       assert.equal(stats.files, expected.files, `expected ${expected.files} files, got ${stats.files}`);
       assert.equal(stats.links, expected.links, `expected ${expected.links} links, got ${stats.links}`);
@@ -59,17 +60,12 @@ describe('createWriteStream', () => {
       const options = { basename: 'fixture.js', progress };
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
-        if (err) {
-          done(err);
-          return;
-        }
+        if (err) return done(err);
       });
       res.on('finish', () => {
         verifyFileExtraction((err) => {
-          if (err) {
-            done(err);
-            return;
-          }
+          if (err) return done(err);
+
           assert.ok(progressUpdates.length > 0);
           done();
         });
@@ -80,17 +76,11 @@ describe('createWriteStream', () => {
       const options = { basename: 'fixture.js' };
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
-        if (err) {
-          done(err);
-          return;
-        }
+        if (err) return done(err);
       });
       res.on('finish', () => {
         verifyFileExtraction((err) => {
-          if (err) {
-            done(err);
-            return;
-          }
+          if (err) return done(err);
 
           const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, options));
           res.on('error', (err) => {
@@ -98,10 +88,7 @@ describe('createWriteStream', () => {
 
             const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, { force: true, ...options }));
             res.on('error', (err) => {
-              if (err) {
-                done(err);
-                return;
-              }
+              if (err) return done(err);
             });
             res.on('finish', () => {
               verifyFileExtraction(done);
@@ -121,17 +108,12 @@ describe('createWriteStream', () => {
       const options = { progress };
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.js')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
-        if (err) {
-          done(err);
-          return;
-        }
+        if (err) return done(err);
       });
       res.on('finish', () => {
         verifyNoBasenameExtraction((err) => {
-          if (err) {
-            done(err);
-            return;
-          }
+          if (err) return done(err);
+
           assert.ok(progressUpdates.length > 0);
           done();
         });
@@ -147,17 +129,12 @@ describe('createWriteStream', () => {
       const options = { type: 'tar', strip: 1, progress };
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
-        if (err) {
-          done(err);
-          return;
-        }
+        if (err) return done(err);
       });
       res.on('finish', () => {
         verifyArchiveExtraction('fixture.tar', (err) => {
-          if (err) {
-            done(err);
-            return;
-          }
+          if (err) return done(err);
+
           assert.equal(progressUpdates.length, 16);
           done();
         });
@@ -168,17 +145,11 @@ describe('createWriteStream', () => {
       const options = { type: 'tar', strip: 1 };
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
-        if (err) {
-          done(err);
-          return;
-        }
+        if (err) return done(err);
       });
       res.on('finish', () => {
         verifyArchiveExtraction('fixture.tar', (err) => {
-          if (err) {
-            done(err);
-            return;
-          }
+          if (err) return done(err);
 
           const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, options));
           res.on('error', (err) => {
@@ -186,10 +157,7 @@ describe('createWriteStream', () => {
 
             const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.tar')).pipe(createWriteStream(TARGET, { force: true, ...options }));
             res.on('error', (err) => {
-              if (err) {
-                done(err);
-                return;
-              }
+              if (err) return done(err);
             });
             res.on('finish', () => {
               verifyArchiveExtraction('fixture.tar', done);
@@ -211,17 +179,12 @@ describe('createWriteStream', () => {
       const options = { type: 'zip', strip: 1, progress };
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
-        if (err) {
-          done(err);
-          return;
-        }
+        if (err) return done(err);
       });
       res.on('finish', () => {
         verifyArchiveExtraction('fixture.zip', (err) => {
-          if (err) {
-            done(err);
-            return;
-          }
+          if (err) return done(err);
+
           assert.equal(progressUpdates.length, 16);
           done();
         });
@@ -232,17 +195,11 @@ describe('createWriteStream', () => {
       const options = { type: 'zip', strip: 1 };
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
-        if (err) {
-          done(err);
-          return;
-        }
+        if (err) return done(err);
       });
       res.on('finish', () => {
         verifyArchiveExtraction('fixture.zip', (err) => {
-          if (err) {
-            done(err);
-            return;
-          }
+          if (err) return done(err);
 
           const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, options));
           res.on('error', (err) => {
@@ -250,10 +207,7 @@ describe('createWriteStream', () => {
 
             const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.zip')).pipe(createWriteStream(TARGET, { force: true, ...options }));
             res.on('error', (err) => {
-              if (err) {
-                done(err);
-                return;
-              }
+              if (err) return done(err);
             });
             res.on('finish', () => {
               verifyArchiveExtraction('fixture.zip', done);
@@ -275,17 +229,12 @@ describe('createWriteStream', () => {
       const options = { type: '7z', strip: 1, progress };
       const res = fs.createReadStream(path.join(DATA_DIR, 'fixture.7z')).pipe(createWriteStream(TARGET, options));
       res.on('error', (err) => {
-        if (err) {
-          done(err);
-          return;
-        }
+        if (err) return done(err);
       });
       res.on('finish', () => {
         verifyArchiveExtraction('fixture.7z', (err) => {
-          if (err) {
-            done(err);
-            return;
-          }
+          if (err) return done(err);
+
           assert.equal(progressUpdates.length, 16);
           done();
         });

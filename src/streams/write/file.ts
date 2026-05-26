@@ -16,38 +16,37 @@ export default function createFilePipeline(dest: string, _options: object): Writ
 
   let wroteSomething = false;
   return writer(
-    function write(chunk, _encoding, callback) {
+    function write(this: { pathMade?: boolean }, chunk: Buffer | string, _encoding: BufferEncoding, callback: (err?: Error | null) => void): void {
       wroteSomething = true;
-      const appendFile = fs.appendFile.bind(fs, tempDest, chunk, callback);
+      const appendFile = (): void => {
+        fs.appendFile(tempDest, chunk as Buffer, callback);
+      };
       if (this.pathMade) return appendFile();
       mkdirp(path.dirname(tempDest), () => {
         this.pathMade = true;
         appendFile();
       });
     },
-    function flush(callback) {
+    function flush(callback: (err?: Error | null) => void): void {
       const queue = new Queue(1);
-      queue.defer((callback) => {
-        mkdirp(path.dirname(dest), (err) => {
-          err && err.code !== 'EEXIST' ? callback(err) : callback();
+      queue.defer((cb: (err?: Error) => void) => {
+        mkdirp(path.dirname(dest), (err: Error | null) => {
+          err && (err as NodeJS.ErrnoException).code !== 'EEXIST' ? cb(err) : cb();
         });
       });
       if (wroteSomething) {
-        queue.defer(safeRm.bind(null, dest));
-        queue.defer((cb) => {
+        queue.defer((cb: (err?: Error) => void) => safeRm(dest, (err) => cb(err ?? undefined)));
+        queue.defer((cb: (err?: Error) => void) => {
           fs.rename(tempDest, dest, (err) => {
             if (!err) exitCleanup.remove(tempDest);
-            cb(err);
+            cb(err ?? undefined);
           });
         });
         queue.defer(waitForAccess.bind(null, dest));
       } else {
-        queue.defer((cb) => {
+        queue.defer((cb: (err?: Error) => void) => {
           exitCleanup.remove(tempDest);
-          writeTruncateFile(dest, (err) => {
-            cb(err);
-            return undefined;
-          });
+          writeTruncateFile(dest, cb);
         });
       }
       queue.await(callback);
