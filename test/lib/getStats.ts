@@ -1,5 +1,5 @@
 import fs from 'fs';
-import Iterator from 'fs-iterator';
+import Iterator, { type Entry } from 'fs-iterator';
 import statsSpys from 'fs-stats-spys';
 
 export interface Stats {
@@ -14,9 +14,9 @@ export default function getStats(dir: string, callback?: (err: Error | null, sta
   if (typeof callback === 'function') {
     const spys = statsSpys();
     new Iterator(dir, { lstat: true }).forEach(
-      (entry): void => {
-        spys(entry.stats);
-        if (onFile && entry.stats.isFile()) {
+      (entry: Entry): void => {
+        spys(entry.stats as import('fs').Stats);
+        if (onFile && (entry.stats as import('fs').Stats).isFile()) {
           onFile(entry.fullPath, fs.readFileSync(entry.fullPath));
         }
       },

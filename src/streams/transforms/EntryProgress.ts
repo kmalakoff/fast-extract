@@ -4,8 +4,10 @@ import type { TransformCallback, TransformOptions, Transform as TransformT } fro
 
 import type { OptionsInternal, Progress } from '../../types.ts';
 
+type ProgressFn = (entry: Progress | null) => boolean | undefined;
+
 export default class EntryProgressTransform extends Transform {
-  private progress: (entry: Progress) => boolean;
+  private progress: ProgressFn | null = null;
 
   constructor(options: OptionsInternal | TransformOptions<TransformT>) {
     options = options ? { ...options, objectMode: true } : { objectMode: true };
@@ -13,16 +15,17 @@ export default class EntryProgressTransform extends Transform {
     const internalOptions = options as OptionsInternal;
 
     let done = false;
-    this.progress = function progress(entry: Progress) {
+    const progressFn: ProgressFn = function progressFn(entry: Progress | null): boolean | undefined {
       if (done) return; // throttle can call after done
       if (!entry) {
         done = true;
         return done;
       }
-      internalOptions.progress({ progress: 'extract', ...entry });
+      if (internalOptions.progress) internalOptions.progress({ ...entry, progress: 'extract' });
+      return undefined;
     };
     const time = internalOptions.time;
-    if (time !== undefined) this.progress = throttle(this.progress, time, { leading: true });
+    this.progress = time !== undefined ? (throttle(progressFn as unknown as (...args: unknown[]) => unknown, time, { leading: true }) as unknown as ProgressFn) : progressFn;
   }
 
   _transform(entry: Progress, encoding: BufferEncoding, callback: TransformCallback): void {
@@ -33,9 +36,11 @@ export default class EntryProgressTransform extends Transform {
 
   _flush(callback: TransformCallback): void {
     if (this.progress) {
-      this.progress(null);
-      if ((this.progress as typeof throttle).cancel) (this.progress as typeof throttle).cancel();
+      const p = this.progress;
       this.progress = null;
+      p(null);
+      const throttled = p as unknown as { cancel?: () => void };
+      if (throttled.cancel) throttled.cancel();
     }
     callback();
   }
