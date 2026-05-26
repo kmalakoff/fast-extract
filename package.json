@@ -62,7 +62,7 @@
   },
   "dependencies": {
     "7z-iterator": "^2.2.6",
-    "call-once-fn": "1.1.10",
+    "call-once-fn": "1.1.11",
     "content-disposition": "1.0.0",
     "extract-base-iterator": "^3.4.4",
     "fs-remove-compat": "^1.0.0",
