@@ -7,14 +7,16 @@ import tempSuffix from 'temp-suffix';
 import writer from '../../compat/flush-write-stream.ts';
 import type { OptionsInternal } from '../../types.ts';
 
+type Entry = { type: string; create: (dest: string, options: OptionsInternal, cb: (err?: Error) => void) => void };
+
 export default function createWriteEntriesStream(dest: string, options: OptionsInternal = {}): Writable {
   options = { now: new Date(), ...options };
 
   const tempDest = tempSuffix(dest);
-  const links = [];
+  const links: Entry[] = [];
   return writer(
     { objectMode: true },
-    function write(entry, _encoding, callback) {
+    function write(entry: Entry, _encoding: BufferEncoding, callback: (err?: Error | null) => void): void {
       if (entry.type === 'link') {
         links.unshift(entry);
         return callback();
@@ -23,16 +25,16 @@ export default function createWriteEntriesStream(dest: string, options: OptionsI
         links.push(entry);
         return callback();
       }
-      entry.create(tempDest, options, callback);
+      entry.create(tempDest, options, (err?: Error) => callback(err));
     },
-    function flush(callback) {
+    function flush(callback: (err?: Error | null) => void): void {
       const queue = new Queue(1);
-      queue.defer(safeRm.bind(null, dest));
-      queue.defer(fs.rename.bind(null, tempDest, dest));
+      queue.defer((cb: (err?: Error) => void) => safeRm(dest, (err) => cb(err ?? undefined)));
+      queue.defer((cb: (err?: Error) => void) => fs.rename(tempDest, dest, (err) => cb(err ?? undefined)));
       queue.defer(waitForAccess.bind(null, dest));
       for (let index = 0; index < links.length; index++) {
         const entry = links[index];
-        queue.defer((cb) => {
+        queue.defer((cb: (err?: Error) => void) => {
           entry.create(dest, options, cb);
         });
       }

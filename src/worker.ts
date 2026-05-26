@@ -1,3 +1,4 @@
+import type { CallFn } from 'call-once-fn';
 import fs from 'graceful-fs';
 import oo from 'on-one';
 import createWriteStream from './createWriteStream.ts';
@@ -9,5 +10,5 @@ export default function extract(source: Source, dest: string, options_: Options,
 
   const inputStream = typeof source === 'string' ? fs.createReadStream(source) : source;
   const stream = inputStream.pipe(res);
-  oo(stream, ['error', 'end', 'close', 'finish'], callback);
+  oo(stream, ['error', 'end', 'close', 'finish'], callback as unknown as CallFn);
 }

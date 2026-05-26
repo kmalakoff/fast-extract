@@ -8,10 +8,10 @@
  * Tests are skipped if the required native tool is not available.
  */
 
-import { exec as execCallback } from 'child_process';
+import { exec as execCallback, execFile } from 'child_process';
 import extract from 'fast-extract';
 import fs from 'fs';
-import Iterator from 'fs-iterator';
+import Iterator, { type Entry } from 'fs-iterator';
 import { rmSync } from 'fs-remove-compat';
 import getFile from 'get-file-compat';
 import mkdirp from 'mkdirp-classic';
@@ -23,12 +23,43 @@ const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : 
 // (extract.test.ts removes .tmp before each test)
 const TMP_DIR = path.join(__dirname, '..', '..', '.tmp', 'comparison');
 const CACHE_DIR = path.join(__dirname, '..', '..', '.cache');
+const FIXTURES_DIR = path.join(__dirname, '..', 'fixtures');
+
+const isWindows = process.platform === 'win32';
 
 // Base URL for Node.js downloads
 const NODE_DIST_BASE = 'https://nodejs.org/dist/v24.12.0';
 
+type ArchiveType = 'tar.gz' | 'tar.xz' | 'zip' | '7z';
+
+type TestConfig = {
+  url?: string;
+  filename?: string;
+  archivePath?: string;
+  downloadUrl?: string | null;
+  extractedName: string;
+  nativeCmd?: (cachePath: string, tmpDir: string, sevenZipCmd?: string) => string;
+  nativeExtract?: (cachePath: string, tmpDir: string, callback: (err?: Error) => void) => void;
+  checkCmd: string;
+  strip: number;
+};
+
+// On Windows: tar does not support xz; use 7z with a symlink-free local fixture.
+const nativeExtractTarXzWindows = (cachePath: string, tmpDir: string, callback: (err?: Error) => void): void => {
+  const tarPath = path.join(tmpDir, path.basename(cachePath, '.xz'));
+  execFile('7z', ['x', '-y', `-o${tmpDir}`, cachePath], (err) => {
+    if (err) return callback(err);
+    execFile('7z', ['x', '-y', `-o${tmpDir}`, tarPath], (err) => {
+      try {
+        fs.unlinkSync(tarPath);
+      } catch (_) {}
+      callback(err || undefined);
+    });
+  });
+};
+
 // Test configurations for each archive type
-const TEST_CONFIGS = {
+const TEST_CONFIGS: Record<ArchiveType, TestConfig> = {
   'tar.gz': {
     url: `${NODE_DIST_BASE}/node-v24.12.0-linux-x64.tar.gz`,
     filename: 'node-v24.12.0-linux-x64.tar.gz',
@@ -37,14 +68,25 @@ const TEST_CONFIGS = {
     checkCmd: 'which tar',
     strip: 1,
   },
-  'tar.xz': {
-    url: `${NODE_DIST_BASE}/node-v24.12.0-linux-x64.tar.xz`,
-    filename: 'node-v24.12.0-linux-x64.tar.xz',
-    extractedName: 'node-v24.12.0-linux-x64',
-    nativeCmd: (cachePath: string, tmpDir: string) => `cd "${tmpDir}" && tar -xJf "${cachePath}"`,
-    checkCmd: 'which tar && which xz',
-    strip: 1,
-  },
+  // On Linux/macOS: use native tar. On Windows: tar does not support xz; use 7z with a
+  // symlink-free fixture (the Linux Node.js tarball has POSIX symlinks 7z cannot create).
+  'tar.xz': isWindows
+    ? {
+        archivePath: path.join(FIXTURES_DIR, 'test-cross-platform.tar.xz'),
+        downloadUrl: null,
+        extractedName: 'data',
+        nativeExtract: nativeExtractTarXzWindows,
+        checkCmd: 'where 7z',
+        strip: 1,
+      }
+    : {
+        url: `${NODE_DIST_BASE}/node-v24.12.0-linux-x64.tar.xz`,
+        filename: 'node-v24.12.0-linux-x64.tar.xz',
+        extractedName: 'node-v24.12.0-linux-x64',
+        nativeCmd: (cachePath: string, tmpDir: string) => `cd "${tmpDir}" && tar -xJf "${cachePath}"`,
+        checkCmd: 'which tar && which xz',
+        strip: 1,
+      },
   zip: {
     url: `${NODE_DIST_BASE}/node-v24.12.0-win-arm64.zip`,
     filename: 'node-v24.12.0-win-arm64.zip',
@@ -63,7 +105,19 @@ const TEST_CONFIGS = {
   },
 };
 
-type ArchiveType = keyof typeof TEST_CONFIGS;
+// Windows archives carry no Unix permissions; each native tool picks its own default.
+// On macOS both 7zz and 7z use 0o700; on Linux p7zip uses 0o755.
+const NATIVE_DIR_MODE = process.platform === 'linux' ? 493 : 448;
+
+const NATIVE_7Z_TOOLS = [
+  { command: '7zz', defaultDirMode: NATIVE_DIR_MODE },
+  { command: '7z', defaultDirMode: NATIVE_DIR_MODE },
+];
+
+type NativeTool = (typeof NATIVE_7Z_TOOLS)[0];
+
+// Directory type bit (0o40000 = 16384)
+const S_IFDIR = 16384;
 
 /**
  * Interface for file stats collected from directory tree
@@ -85,18 +139,19 @@ function checkToolAvailable(checkCmd: string, callback: (available: boolean) => 
 }
 
 /**
- * Find the available 7z command (7zz or 7z)
+ * Find the first available native 7z tool, returning its command and known default dir mode.
  */
-function find7zCommand(callback: (cmd: string | null) => void): void {
-  execCallback('which 7zz', (err) => {
-    if (!err) {
-      callback('7zz');
-    } else {
-      execCallback('which 7z', (err) => {
-        callback(err ? null : '7z');
-      });
+function findNative7z(callback: (tool: NativeTool | null) => void): void {
+  let i = 0;
+  function tryNext(): void {
+    if (i >= NATIVE_7Z_TOOLS.length) {
+      callback(null);
+      return;
     }
-  });
+    const tool = NATIVE_7Z_TOOLS[i++];
+    execCallback(`which ${tool.command}`, (err) => (err ? tryNext() : callback(tool)));
+  }
+  tryNext();
 }
 
 /**
@@ -109,22 +164,17 @@ function collectStats(dirPath: string, callback: (err: Error | null, stats?: Rec
   const iterator = new Iterator(dirPath, { alwaysStat: true, lstat: true });
 
   iterator.forEach(
-    (entry): void => {
+    (entry: Entry): void => {
+      const s = entry.stats as import('fs').Stats;
       stats[entry.path] = {
-        size: entry.stats.size,
-        mode: entry.stats.mode,
-        mtime: entry.stats.mtime instanceof Date ? entry.stats.mtime.getTime() : 0,
-        type: entry.stats.isDirectory() ? 'directory' : entry.stats.isFile() ? 'file' : entry.stats.isSymbolicLink() ? 'symlink' : 'other',
+        size: s.size,
+        mode: s.mode,
+        mtime: s.mtime instanceof Date ? s.mtime.getTime() : 0,
+        type: s.isDirectory() ? 'directory' : s.isFile() ? 'file' : s.isSymbolicLink() ? 'symlink' : 'other',
       };
     },
     { concurrency: 1024 },
-    (err) => {
-      if (err) {
-        callback(err);
-      } else {
-        callback(null, stats);
-      }
-    }
+    (err) => (err ? callback(err) : callback(null, stats))
   );
 }
 
@@ -156,16 +206,20 @@ function ensureCached(fileUrl: string, cachePath: string, callback: (err?: Error
 }
 
 /**
- * Compare two directory trees and report differences
+ * Compare two directory trees and report differences.
+ * nativeDirMode: when set, accept the known difference between this native tool's
+ * Windows-archive directory default and fast-extract's 0o755 default.
  */
-function compareExtractions(nativeDir: string, fastExtractDir: string, callback: (err: Error | null, differences?: string[]) => void): void {
+function compareExtractions(nativeDir: string, fastExtractDir: string, nativeDirMode: number | undefined, callback: (err: Error | null, differences?: string[]) => void): void {
   console.log('    Collecting stats from native extraction...');
-  collectStats(nativeDir, (err, statsNative) => {
+  collectStats(nativeDir, (err, statsNativeOpt) => {
     if (err) return callback(err);
+    const statsNative = statsNativeOpt as Record<string, FileStats>;
 
     console.log('    Collecting stats from fast-extract...');
-    collectStats(fastExtractDir, (err, statsFastExtract) => {
+    collectStats(fastExtractDir, (err, statsFastExtractOpt) => {
       if (err) return callback(err);
+      const statsFastExtract = statsFastExtractOpt as Record<string, FileStats>;
 
       const differences: string[] = [];
 
@@ -198,6 +252,15 @@ function compareExtractions(nativeDir: string, fastExtractDir: string, callback:
           }
 
           if (Number(statNative.mode) !== Number(statFastExtract.mode)) {
+            // For 7z Windows archives: native tools apply a platform-specific default dir mode;
+            // fast-extract (via 7z-iterator) uses 0o755. Accept this known difference.
+            if (nativeDirMode !== undefined) {
+              const nativeDirDefault = S_IFDIR | nativeDirMode;
+              const iteratorDirDefault = S_IFDIR | 493; // 7z-iterator DEFAULT_DIR = 0o755
+              if (Number(statNative.mode) === nativeDirDefault && Number(statFastExtract.mode) === iteratorDirDefault) {
+                continue;
+              }
+            }
             differences.push(`Mode mismatch for ${filePath}: native=${Number(statNative.mode).toString(8)}, fast-extract=${Number(statFastExtract.mode).toString(8)}`);
           }
         }
@@ -214,7 +277,7 @@ function compareExtractions(nativeDir: string, fastExtractDir: string, callback:
  */
 function createArchiveTestSuite(archiveType: ArchiveType): void {
   const config = TEST_CONFIGS[archiveType];
-  const cachePath = path.join(CACHE_DIR, config.filename);
+  const archivePath = config.archivePath !== undefined ? config.archivePath : path.join(CACHE_DIR, config.filename ?? '');
   const nativeExtractDir = path.join(TMP_DIR, `native-${archiveType}`);
   const fastExtractDir = path.join(TMP_DIR, `fast-extract-${archiveType}`);
 
@@ -222,14 +285,14 @@ function createArchiveTestSuite(archiveType: ArchiveType): void {
     this.timeout(300000); // Allow time for download and extraction
 
     let toolAvailable = false;
-    let sevenZipCmd: string | null = null;
+    let nativeTool: NativeTool | null = null;
 
     before((done) => {
-      // For 7z, find the specific command available (7zz or 7z)
+      // For 7z, find the specific command available (7zz or 7z) and its default dir mode
       if (archiveType === '7z') {
-        find7zCommand((cmd) => {
-          sevenZipCmd = cmd;
-          toolAvailable = cmd !== null;
+        findNative7z((tool) => {
+          nativeTool = tool;
+          toolAvailable = tool !== null;
           if (!toolAvailable) {
             console.log(`    Skipping ${archiveType} tests - native 7zz/7z not available`);
             done();
@@ -256,26 +319,29 @@ function createArchiveTestSuite(archiveType: ArchiveType): void {
         mkdirp.sync(CACHE_DIR);
         mkdirp.sync(TMP_DIR);
 
-        // Download file if needed
-        ensureCached(config.url, cachePath, (err) => {
-          if (err) {
-            done(err);
-            return;
-          }
+        const effectiveUrl = config.downloadUrl !== undefined ? config.downloadUrl : config.url;
 
+        const afterDownload = () => {
           // Clean up previous extractions
           removeDir(nativeExtractDir);
           removeDir(fastExtractDir);
 
           // Extract with native tool
+          const sevenZipCmd = nativeTool?.command;
           const toolName = archiveType === '7z' ? sevenZipCmd : archiveType;
           console.log(`    Extracting with native ${toolName} tool...`);
-          const nativeCmd = config.nativeCmd(cachePath, TMP_DIR, sevenZipCmd || undefined);
-          execCallback(nativeCmd, (err) => {
-            if (err) {
-              done(err);
-              return;
+
+          const doNativeExtract = (callback: (err?: Error) => void) => {
+            if (config.nativeExtract) {
+              config.nativeExtract(archivePath, TMP_DIR, callback);
+            } else if (config.nativeCmd) {
+              const cmd = config.nativeCmd(archivePath, TMP_DIR, sevenZipCmd);
+              execCallback(cmd, (err) => callback(err || undefined));
             }
+          };
+
+          doNativeExtract((err) => {
+            if (err) return done(err);
 
             // Find and rename the extracted directory
             const extractedDir = path.join(TMP_DIR, config.extractedName);
@@ -296,16 +362,22 @@ function createArchiveTestSuite(archiveType: ArchiveType): void {
               }
             };
 
-            extract(cachePath, fastExtractDir, { strip: config.strip, progress: progressFn }, (err) => {
-              if (err) {
-                done(err);
-                return;
-              }
+            extract(archivePath, fastExtractDir, { strip: config.strip, progress: progressFn }, (err) => {
+              if (err) return done(err);
               console.log(`    Both extractions complete (${entryCount} entries)`);
               done();
             });
           });
-        });
+        };
+
+        if (effectiveUrl) {
+          ensureCached(effectiveUrl, archivePath, (err) => {
+            if (err) return done(err);
+            afterDownload();
+          });
+        } else {
+          afterDownload();
+        }
       }
     });
 
@@ -315,11 +387,13 @@ function createArchiveTestSuite(archiveType: ArchiveType): void {
         return;
       }
 
-      compareExtractions(nativeExtractDir, fastExtractDir, (err, differences) => {
-        if (err) {
-          done(err);
-          return;
-        }
+      // Pass the native tool's default dir mode for 7z so the comparison can accept
+      // the known difference between that tool's Windows-archive default and fast-extract's 0o755.
+      const nativeDirMode = nativeTool?.defaultDirMode;
+
+      compareExtractions(nativeExtractDir, fastExtractDir, nativeDirMode, (err, diffsOpt) => {
+        if (err) return done(err);
+        const differences = diffsOpt as string[];
 
         if (differences.length > 0) {
           console.error(`\n=== DIFFERENCES FOUND (${archiveType}) ===`);

@@ -80,8 +80,14 @@
     "zip-iterator": "^3.2.11"
   },
   "devDependencies": {
+    "@types/content-disposition": "^0.5.9",
+    "@types/graceful-fs": "^4.1.9",
+    "@types/lodash.throttle": "^4.1.9",
     "@types/mocha": "*",
     "@types/node": "*",
+    "@types/progress-stream": "^2.0.5",
+    "@types/signal-exit": "^4.0.0",
+    "@types/unbzip2-stream": "^1.4.3",
     "cr": "^0.1.0",
     "fs-iterator": "^7.1.1",
     "fs-stats-spys": "^1.0.0",

@@ -5,15 +5,15 @@ import getSize from './size.ts';
 export type Callback = (error?: Error, stats?: SourceStats) => void;
 
 export default function sourceStats(source: Source, options: Options, endpoint: string | Callback, callback?: Callback): void {
-  callback = typeof endpoint === 'function' ? endpoint : callback;
-  endpoint = typeof endpoint === 'function' ? null : endpoint;
+  const cb: Callback = typeof endpoint === 'function' ? endpoint : (callback as Callback);
+  const ep: string | undefined = typeof endpoint === 'function' ? undefined : endpoint;
 
   getSize(source, options, (err, size) => {
-    if (err) return callback(err);
+    if (err) return cb(err);
     const stats = {} as SourceStats;
-    const basename = getBasename(source, options, endpoint as string);
+    const basename = getBasename(source, options, ep);
     if (basename !== undefined) stats.basename = basename;
     if (size !== undefined) stats.size = size;
-    callback(null, stats);
+    cb(undefined, stats);
   });
 }

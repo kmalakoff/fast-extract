@@ -4,7 +4,7 @@ import type { TransformCallback, TransformOptions, Transform as TransformT } fro
 
 export default class DestinationExists extends Transform {
   private dest: string;
-  private ready: boolean;
+  private ready = false;
 
   constructor(dest: string, options: TransformOptions<TransformT> = {}) {
     options = options ? { ...options, objectMode: true } : { objectMode: true };

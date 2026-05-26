@@ -22,8 +22,9 @@ function verifyArchiveExtraction(fixtureName: string, callback: (err?: Error) =>
   const { expected } = getFixture(fixtureName);
   getStats(
     TARGET,
-    (err, stats) => {
+    (err, statsOpt) => {
       if (err) return callback(err);
+      const stats = statsOpt as import('../lib/getStats.ts').Stats;
       assert.equal(stats.dirs, expected.dirs, `expected ${expected.dirs} dirs, got ${stats.dirs}`);
       assert.equal(stats.files, expected.files, `expected ${expected.files} files, got ${stats.files}`);
       assert.equal(stats.links, expected.links, `expected ${expected.links} links, got ${stats.links}`);
@@ -62,15 +63,10 @@ describe('extract', () => {
       };
 
       extract(path.join(DATA_DIR, 'fixture.js'), TARGET, { progress }, (err) => {
-        if (err) {
-          done(err);
-          return;
-        }
+        if (err) return done(err);
         verifyFileExtraction((err) => {
-          if (err) {
-            done(err);
-            return;
-          }
+          if (err) return done(err);
+
           assert.ok(progressUpdates.length > 0);
           done();
         });
@@ -79,22 +75,14 @@ describe('extract', () => {
 
     it('extract file multiple times', (done) => {
       extract(path.join(DATA_DIR, 'fixture.js'), TARGET, {}, (err) => {
-        if (err) {
-          done(err);
-          return;
-        }
+        if (err) return done(err);
         verifyFileExtraction((err) => {
-          if (err) {
-            done(err);
-            return;
-          }
+          if (err) return done(err);
+
           extract(path.join(DATA_DIR, 'fixture.js'), TARGET, {}, (err) => {
             assert.ok(err);
             extract(path.join(DATA_DIR, 'fixture.js'), TARGET, { force: true }, (err) => {
-              if (err) {
-                done(err);
-                return;
-              }
+              if (err) return done(err);
               verifyFileExtraction(done);
             });
           });
@@ -123,15 +111,10 @@ describe('extract', () => {
       };
 
       extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, { strip: 1, progress }, (err) => {
-        if (err) {
-          done(err);
-          return;
-        }
+        if (err) return done(err);
         verifyArchiveExtraction('fixture.tar', (err) => {
-          if (err) {
-            done(err);
-            return;
-          }
+          if (err) return done(err);
+
           assert.equal(progressUpdates.length, 16);
           done();
         });
@@ -140,22 +123,14 @@ describe('extract', () => {
 
     it('extract tar multiple times', (done) => {
       extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, { strip: 1 }, (err) => {
-        if (err) {
-          done(err);
-          return;
-        }
+        if (err) return done(err);
         verifyArchiveExtraction('fixture.tar', (err) => {
-          if (err) {
-            done(err);
-            return;
-          }
+          if (err) return done(err);
+
           extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, { strip: 1 }, (err) => {
             assert.ok(err);
             extract(path.join(DATA_DIR, 'fixture.tar'), TARGET, { force: true, strip: 1 }, (err) => {
-              if (err) {
-                done(err);
-                return;
-              }
+              if (err) return done(err);
               verifyArchiveExtraction('fixture.tar', done);
             });
           });
@@ -170,15 +145,10 @@ describe('extract', () => {
       };
 
       extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, { strip: 1, progress }, (err) => {
-        if (err) {
-          done(err);
-          return;
-        }
+        if (err) return done(err);
         verifyArchiveExtraction('fixture.zip', (err) => {
-          if (err) {
-            done(err);
-            return;
-          }
+          if (err) return done(err);
+
           assert.equal(progressUpdates.length, 16);
           done();
         });
@@ -187,22 +157,14 @@ describe('extract', () => {
 
     it('extract zip multiple times', (done) => {
       extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, { strip: 1 }, (err) => {
-        if (err) {
-          done(err);
-          return;
-        }
+        if (err) return done(err);
         verifyArchiveExtraction('fixture.zip', (err) => {
-          if (err) {
-            done(err);
-            return;
-          }
+          if (err) return done(err);
+
           extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, { strip: 1 }, (err) => {
             assert.ok(err);
             extract(path.join(DATA_DIR, 'fixture.zip'), TARGET, { force: true, strip: 1 }, (err) => {
-              if (err) {
-                done(err);
-                return;
-              }
+              if (err) return done(err);
               verifyArchiveExtraction('fixture.zip', done);
             });
           });
@@ -217,15 +179,10 @@ describe('extract', () => {
       };
 
       extract(path.join(DATA_DIR, 'fixture.7z'), TARGET, { strip: 1, progress }, (err) => {
-        if (err) {
-          done(err);
-          return;
-        }
+        if (err) return done(err);
         verifyArchiveExtraction('fixture.7z', (err) => {
-          if (err) {
-            done(err);
-            return;
-          }
+          if (err) return done(err);
+
           assert.equal(progressUpdates.length, 16);
           done();
         });

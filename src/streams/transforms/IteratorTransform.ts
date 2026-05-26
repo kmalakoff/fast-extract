@@ -12,10 +12,10 @@ type IteratorConstructor = new (stream: NodeJS.ReadWriteStream) => Iterator;
 
 export default function createIteratorTransform(IteratorClass: IteratorConstructor) {
   class IteratorTransform extends Transform {
-    private _iterator: Iterator;
-    private _callback: (error?: Error) => void;
-    private _stream: NodeJS.ReadWriteStream;
-    private _concurrency: number;
+    _iterator: Iterator | null = null;
+    _callback: ((error?: Error) => void) | null = null;
+    _stream: NodeJS.ReadWriteStream | null = null;
+    _concurrency: number;
 
     constructor(options?: OptionsInternal | TransformOptions<TransformT>) {
       const concurrency = (options as OptionsInternal)?.concurrency ?? Infinity;
@@ -34,7 +34,7 @@ export default function createIteratorTransform(IteratorClass: IteratorConstruct
       const onEntry = (entry: unknown): void => {
         this.push(entry);
       };
-      const onDone = (err?: Error) => {
+      const onDone = (err?: Error): void => {
         if (!this._iterator) return;
         err || this.push(null);
         this._stream = null;
