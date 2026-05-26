@@ -9,7 +9,7 @@ import { CONTENTS, TARGET, TMP_DIR } from '../lib/constants.ts';
 import { DATA_DIR, getFixture } from '../lib/fixtures.ts';
 import getStats from '../lib/getStats.ts';
 
-function verifyFileExtraction(callback: (err?: Error) => void) {
+function verifyFileExtraction(callback: (err?: Error | null) => void) {
   const files = fs.readdirSync(TARGET);
   assert.equal(files.length, 1);
   assert.ok(files[0] === 'fixture.js' || files[0] === 'fixture-js');
@@ -17,7 +17,7 @@ function verifyFileExtraction(callback: (err?: Error) => void) {
   callback();
 }
 
-function verifyNoBasenameExtraction(callback: (err?: Error) => void) {
+function verifyNoBasenameExtraction(callback: (err?: Error | null) => void) {
   const files = fs.readdirSync(TMP_DIR);
   assert.equal(files.length, 1);
   assert.deepEqual(files.sort(), ['target']);
@@ -25,7 +25,7 @@ function verifyNoBasenameExtraction(callback: (err?: Error) => void) {
   callback();
 }
 
-function verifyArchiveExtraction(fixtureName: string, callback: (err?: Error) => void) {
+function verifyArchiveExtraction(fixtureName: string, callback: (err?: Error | null) => void) {
   const { expected } = getFixture(fixtureName);
   getStats(
     TARGET,
