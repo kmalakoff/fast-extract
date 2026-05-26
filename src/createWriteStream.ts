@@ -59,7 +59,7 @@ export default function createWriteStream(dest: string, options_: Options): Node
     }
   });
 
-  function onEnd(callback: (err?: Error) => void): void {
+  function onEnd(callback: (err?: Error | null) => void): void {
     if (error || ended) return callback();
     ended = true;
     exitCleanup.remove(dest);
@@ -86,10 +86,10 @@ export default function createWriteStream(dest: string, options_: Options): Node
       }
 
       // Ensure callback is only called once (race conditions on older Node)
-      const cb = callOnce(callback as unknown as CallFn) as unknown as (err?: Error) => void;
+      const cb = callOnce(callback as unknown as CallFn) as unknown as (err?: Error | null) => void;
 
       const onComplete = (): void => {
-        if (error) return cb(error ?? undefined);
+        if (error) return cb(error);
         onEnd(cb);
       };
 
