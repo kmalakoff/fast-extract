@@ -57,7 +57,7 @@ class FlushWriteStream extends Writable {
     return super.end(cb);
   }
 
-  destroy(err?: Error): this {
+  destroy(err?: Error | null): this {
     if (this.destroyed) return this;
     this.destroyed = true;
     if (err) this.emit('error', err);

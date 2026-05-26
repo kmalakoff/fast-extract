@@ -4,8 +4,8 @@ import type { TransformCallback, TransformOptions, Transform as TransformT } fro
 import type { OptionsInternal } from '../../types.ts';
 
 interface Iterator {
-  forEach(fn: (entry: unknown) => void, options: { concurrency: number }, callback: (err?: Error) => void): void;
-  destroy(error?: Error): void;
+  forEach(fn: (entry: unknown) => void, options: { concurrency: number }, callback: (err?: Error | null) => void): void;
+  destroy(error?: Error | null): void;
 }
 
 type IteratorConstructor = new (stream: NodeJS.ReadWriteStream) => Iterator;
@@ -13,7 +13,7 @@ type IteratorConstructor = new (stream: NodeJS.ReadWriteStream) => Iterator;
 export default function createIteratorTransform(IteratorClass: IteratorConstructor) {
   class IteratorTransform extends Transform {
     _iterator: Iterator | null = null;
-    _callback: ((error?: Error) => void) | null = null;
+    _callback: ((error?: Error | null) => void) | null = null;
     _stream: NodeJS.ReadWriteStream | null = null;
     _concurrency: number;
 
@@ -34,7 +34,7 @@ export default function createIteratorTransform(IteratorClass: IteratorConstruct
       const onEntry = (entry: unknown): void => {
         this.push(entry);
       };
-      const onDone = (err?: Error): void => {
+      const onDone = (err?: Error | null): void => {
         if (!this._iterator) return;
         err || this.push(null);
         this._stream = null;
@@ -54,7 +54,7 @@ export default function createIteratorTransform(IteratorClass: IteratorConstruct
       this._stream = null;
     }
 
-    destroy(error?: Error): this {
+    destroy(error?: Error | null): this {
       if (this._stream) {
         this._stream.end();
         this._stream = null;

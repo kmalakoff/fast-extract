@@ -49,4 +49,4 @@ export interface OptionsInternal extends Options {
   time?: number;
 }
 
-export type Callback = (error?: Error) => void;
+export type Callback = (error?: Error | null) => void;

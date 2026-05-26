@@ -2,7 +2,7 @@ import fs from 'fs';
 
 import type { Options, Source } from '../types.ts';
 
-export type Callback = (error?: Error, size?: number) => void;
+export type Callback = (error?: Error | null, size?: number) => void;
 
 export default function getSize(source: Source, options: Options, callback: Callback): void {
   // options

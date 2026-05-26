@@ -29,22 +29,22 @@ export default function createFilePipeline(dest: string, _options: object): Writ
     },
     function flush(callback: (err?: Error | null) => void): void {
       const queue = new Queue(1);
-      queue.defer((cb: (err?: Error) => void) => {
+      queue.defer((cb: (err?: Error | null) => void) => {
         mkdirp(path.dirname(dest), (err: Error | null) => {
           err && (err as NodeJS.ErrnoException).code !== 'EEXIST' ? cb(err) : cb();
         });
       });
       if (wroteSomething) {
-        queue.defer((cb: (err?: Error) => void) => safeRm(dest, (err) => cb(err ?? undefined)));
-        queue.defer((cb: (err?: Error) => void) => {
+        queue.defer((cb: (err?: Error | null) => void) => safeRm(dest, (err) => cb(err)));
+        queue.defer((cb: (err?: Error | null) => void) => {
           fs.rename(tempDest, dest, (err) => {
             if (!err) exitCleanup.remove(tempDest);
-            cb(err ?? undefined);
+            cb(err);
           });
         });
         queue.defer(waitForAccess.bind(null, dest));
       } else {
-        queue.defer((cb: (err?: Error) => void) => {
+        queue.defer((cb: (err?: Error | null) => void) => {
           exitCleanup.remove(tempDest);
           writeTruncateFile(dest, cb);
         });

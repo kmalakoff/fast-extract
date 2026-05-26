@@ -20,5 +20,5 @@ export default function fastExtract(src: Source, dest: string | Options | Callba
   options = typeof dest === 'string' ? options : { ...options, type: dest as string };
 
   if (typeof callback === 'function') return worker(src, dest as string, options, callback);
-  return new Promise((resolve, reject) => worker(src, dest as string, options, (err?: Error) => (err ? reject(err) : resolve())));
+  return new Promise((resolve, reject) => worker(src, dest as string, options, (err?: Error | null) => (err ? reject(err) : resolve())));
 }
