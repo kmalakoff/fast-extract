@@ -7,7 +7,7 @@ const WINDOWS = /^(con|prn|aux|nul|com[0-9]|lpt[0-9])$/i;
 
 import type { Options, Source } from '../types.ts';
 
-export default function getBasename(source: Source, options: Options, endpoint?: string): string {
+export default function getBasename(source: Source, options: Options, endpoint?: string): string | undefined {
   // options
   let basename = options.basename || options.filename;
   if (basename !== undefined) return basename;
@@ -31,4 +31,5 @@ export default function getBasename(source: Source, options: Options, endpoint?:
     basename = basename.replace(WINDOWS, '!');
     return basename;
   }
+  return undefined;
 }

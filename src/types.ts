@@ -1,9 +1,9 @@
-import type { Progress as ProgressBase } from 'progress-stream';
+// Progress type for progress events
 import type { Transform, Writable } from 'stream';
 
 export interface StreamSource extends NodeJS.ReadableStream {
   statusCode?: number;
-  headers?: object;
+  headers?: Record<string, string>;
   size?: number;
   basename?: string;
   filename?: string;
@@ -18,7 +18,15 @@ export type Pipeline = Array<Transform | Writable>;
 
 export type Source = StreamSource | string;
 
-export interface Progress extends ProgressBase {
+export interface Progress {
+  percentage: number;
+  transferred: number;
+  length: number;
+  remaining: number;
+  eta: number;
+  runtime: number;
+  delta: number;
+  speed: number;
   progress: string;
   basename?: string;
 }
