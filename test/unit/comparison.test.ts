@@ -23,7 +23,6 @@ const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : 
 // (extract.test.ts removes .tmp before each test)
 const TMP_DIR = path.join(__dirname, '..', '..', '.tmp', 'comparison');
 const CACHE_DIR = path.join(__dirname, '..', '..', '.cache');
-const FIXTURES_DIR = path.join(__dirname, '..', 'fixtures');
 
 const isWindows = process.platform === 'win32';
 
@@ -33,19 +32,18 @@ const NODE_DIST_BASE = 'https://nodejs.org/dist/v24.12.0';
 type ArchiveType = 'tar.gz' | 'tar.xz' | 'zip' | '7z';
 
 type TestConfig = {
-  url?: string;
-  filename?: string;
-  archivePath?: string;
-  downloadUrl?: string | null;
+  url: string;
+  filename: string;
   extractedName: string;
   nativeCmd?: (cachePath: string, tmpDir: string, sevenZipCmd?: string) => string;
-  nativeExtract?: (cachePath: string, tmpDir: string, callback: (err?: Error) => void) => void;
+  nativeExtract?: (cachePath: string, tmpDir: string, callback: (err?: Error | null) => void) => void;
   checkCmd: string;
   strip: number;
 };
 
-// On Windows: tar does not support xz; use 7z with a symlink-free local fixture.
-const nativeExtractTarXzWindows = (cachePath: string, tmpDir: string, callback: (err?: Error) => void): void => {
+// Windows tar.exe lacks lzma/xz support, so on Windows we extract tar.xz with 7z in two steps:
+// xz -> tar, then tar -> files. 7z is preinstalled on GitHub Actions Windows runners.
+const nativeExtractTarXzWindows = (cachePath: string, tmpDir: string, callback: (err?: Error | null) => void): void => {
   const tarPath = path.join(tmpDir, path.basename(cachePath, '.xz'));
   execFile('7z', ['x', '-y', `-o${tmpDir}`, cachePath], (err) => {
     if (err) return callback(err);
@@ -68,25 +66,17 @@ const TEST_CONFIGS: Record<ArchiveType, TestConfig> = {
     checkCmd: 'which tar',
     strip: 1,
   },
-  // On Linux/macOS: use native tar. On Windows: tar does not support xz; use 7z with a
-  // symlink-free fixture (the Linux Node.js tarball has POSIX symlinks 7z cannot create).
-  'tar.xz': isWindows
-    ? {
-        archivePath: path.join(FIXTURES_DIR, 'test-cross-platform.tar.xz'),
-        downloadUrl: null,
-        extractedName: 'data',
-        nativeExtract: nativeExtractTarXzWindows,
-        checkCmd: 'where 7z',
-        strip: 1,
-      }
-    : {
-        url: `${NODE_DIST_BASE}/node-v24.12.0-linux-x64.tar.xz`,
-        filename: 'node-v24.12.0-linux-x64.tar.xz',
-        extractedName: 'node-v24.12.0-linux-x64',
-        nativeCmd: (cachePath: string, tmpDir: string) => `cd "${tmpDir}" && tar -xJf "${cachePath}"`,
-        checkCmd: 'which tar && which xz',
-        strip: 1,
-      },
+  // Use the Node.js headers tar.xz (~585KB, no POSIX symlinks) so the same real-world
+  // archive works on every platform — Linux/macOS use tar -xJf, Windows uses 7z.
+  'tar.xz': {
+    url: `${NODE_DIST_BASE}/node-v24.12.0-headers.tar.xz`,
+    filename: 'node-v24.12.0-headers.tar.xz',
+    extractedName: 'node-v24.12.0',
+    nativeCmd: isWindows ? undefined : (cachePath: string, tmpDir: string) => `cd "${tmpDir}" && tar -xJf "${cachePath}"`,
+    nativeExtract: isWindows ? nativeExtractTarXzWindows : undefined,
+    checkCmd: isWindows ? 'where 7z' : 'which tar && which xz',
+    strip: 1,
+  },
   zip: {
     url: `${NODE_DIST_BASE}/node-v24.12.0-win-arm64.zip`,
     filename: 'node-v24.12.0-win-arm64.zip',
@@ -190,7 +180,7 @@ function removeDir(dirPath: string): void {
 /**
  * Download file to cache if not present
  */
-function ensureCached(fileUrl: string, cachePath: string, callback: (err?: Error) => void): void {
+function ensureCached(fileUrl: string, cachePath: string, callback: (err?: Error | null) => void): void {
   if (fs.existsSync(cachePath)) {
     console.log(`    Using cached: ${path.basename(cachePath)}`);
     callback();
@@ -275,9 +265,29 @@ function compareExtractions(nativeDir: string, fastExtractDir: string, nativeDir
 /**
  * Create a test suite for a specific archive type
  */
+function listDir(dir: string): string {
+  try {
+    const names = fs.readdirSync(dir);
+    return names.length ? names.join(', ') : '(empty)';
+  } catch (err) {
+    return `(readdir failed: ${(err as Error).message})`;
+  }
+}
+
+function describePath(p: string): string {
+  try {
+    const s = fs.lstatSync(p);
+    const kind = s.isDirectory() ? 'directory' : s.isFile() ? 'file' : s.isSymbolicLink() ? 'symlink' : 'other';
+    return `${kind} (size=${s.size}, mode=${s.mode.toString(8)})`;
+  } catch (err) {
+    const code = (err as NodeJS.ErrnoException).code;
+    return code === 'ENOENT' ? 'does not exist' : `lstat failed: ${(err as Error).message}`;
+  }
+}
+
 function createArchiveTestSuite(archiveType: ArchiveType): void {
   const config = TEST_CONFIGS[archiveType];
-  const archivePath = config.archivePath !== undefined ? config.archivePath : path.join(CACHE_DIR, config.filename ?? '');
+  const archivePath = path.join(CACHE_DIR, config.filename);
   const nativeExtractDir = path.join(TMP_DIR, `native-${archiveType}`);
   const fastExtractDir = path.join(TMP_DIR, `fast-extract-${archiveType}`);
 
@@ -319,9 +329,9 @@ function createArchiveTestSuite(archiveType: ArchiveType): void {
         mkdirp.sync(CACHE_DIR);
         mkdirp.sync(TMP_DIR);
 
-        const effectiveUrl = config.downloadUrl !== undefined ? config.downloadUrl : config.url;
+        ensureCached(config.url, archivePath, (err) => {
+          if (err) return done(err);
 
-        const afterDownload = () => {
           // Clean up previous extractions
           removeDir(nativeExtractDir);
           removeDir(fastExtractDir);
@@ -331,7 +341,7 @@ function createArchiveTestSuite(archiveType: ArchiveType): void {
           const toolName = archiveType === '7z' ? sevenZipCmd : archiveType;
           console.log(`    Extracting with native ${toolName} tool...`);
 
-          const doNativeExtract = (callback: (err?: Error) => void) => {
+          const doNativeExtract = (callback: (err?: Error | null) => void) => {
             if (config.nativeExtract) {
               config.nativeExtract(archivePath, TMP_DIR, callback);
             } else if (config.nativeCmd) {
@@ -352,6 +362,18 @@ function createArchiveTestSuite(archiveType: ArchiveType): void {
               return;
             }
 
+            // Diagnostic: log workspace state just before fast-extract runs.
+            // Any unexpected entries here may explain temp-suffix collisions / EEXIST mkdir failures.
+            console.log(`    [DEBUG ${archiveType}] platform=${process.platform} pid=${process.pid}`);
+            console.log(`    [DEBUG ${archiveType}] TMP_DIR=${TMP_DIR}`);
+            console.log(`    [DEBUG ${archiveType}] TMP_DIR entries: ${listDir(TMP_DIR)}`);
+            console.log(`    [DEBUG ${archiveType}] fastExtractDir=${fastExtractDir} -> ${describePath(fastExtractDir)}`);
+            // List any pre-existing temp-suffix siblings (`fast-extract-<type>-<hash>`).
+            try {
+              const siblings = fs.readdirSync(TMP_DIR).filter((n) => n.startsWith(`fast-extract-${archiveType}-`));
+              if (siblings.length) console.log(`    [DEBUG ${archiveType}] pre-existing temp siblings: ${siblings.join(', ')}`);
+            } catch (_) {}
+
             // Extract with fast-extract
             console.log('    Extracting with fast-extract...');
             let entryCount = 0;
@@ -363,21 +385,18 @@ function createArchiveTestSuite(archiveType: ArchiveType): void {
             };
 
             extract(archivePath, fastExtractDir, { strip: config.strip, progress: progressFn }, (err) => {
-              if (err) return done(err);
+              if (err) {
+                console.log(`    [DEBUG ${archiveType}] extract failed: ${err.message}`);
+                console.log(`    [DEBUG ${archiveType}] TMP_DIR after failure: ${listDir(TMP_DIR)}`);
+                const errPath = (err as NodeJS.ErrnoException).path;
+                if (errPath) console.log(`    [DEBUG ${archiveType}] error path: ${errPath} -> ${describePath(errPath)}`);
+                return done(err);
+              }
               console.log(`    Both extractions complete (${entryCount} entries)`);
               done();
             });
           });
-        };
-
-        if (effectiveUrl) {
-          ensureCached(effectiveUrl, archivePath, (err) => {
-            if (err) return done(err);
-            afterDownload();
-          });
-        } else {
-          afterDownload();
-        }
+        });
       }
     });
 

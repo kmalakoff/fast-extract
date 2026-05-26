@@ -20,7 +20,7 @@ function isArchiveType(type: string): boolean {
   return type.indexOf('js') !== 0;
 }
 
-function verifyExtraction(type: string, callback: (err?: Error) => void) {
+function verifyExtraction(type: string, callback: (err?: Error | null) => void) {
   if (isArchiveType(type)) {
     const fixtureName = type === 'tgz' ? 'fixture.tgz' : `fixture.${type}`;
     const { expected } = getFixture(fixtureName);
@@ -48,7 +48,7 @@ function verifyExtraction(type: string, callback: (err?: Error) => void) {
   }
 }
 
-function verifyArchiveNoStrip(type: string, callback: (err?: Error) => void) {
+function verifyArchiveNoStrip(type: string, callback: (err?: Error | null) => void) {
   const fixtureName = type === 'tgz' ? 'fixture.tgz' : `fixture.${type}`;
   const { expected } = getFixture(fixtureName);
   const dataPath = path.join(TARGET, 'data');
