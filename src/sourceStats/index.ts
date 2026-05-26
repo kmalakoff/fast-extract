@@ -2,7 +2,7 @@ import type { Options, Source, SourceStats } from '../types.ts';
 import getBasename from './basename.ts';
 import getSize from './size.ts';
 
-export type Callback = (error?: Error, stats?: SourceStats) => void;
+export type Callback = (error?: Error | null, stats?: SourceStats) => void;
 
 export default function sourceStats(source: Source, options: Options, endpoint: string | Callback, callback?: Callback): void {
   const cb: Callback = typeof endpoint === 'function' ? endpoint : (callback as Callback);
