@@ -265,26 +265,6 @@ function compareExtractions(nativeDir: string, fastExtractDir: string, nativeDir
 /**
  * Create a test suite for a specific archive type
  */
-function listDir(dir: string): string {
-  try {
-    const names = fs.readdirSync(dir);
-    return names.length ? names.join(', ') : '(empty)';
-  } catch (err) {
-    return `(readdir failed: ${(err as Error).message})`;
-  }
-}
-
-function describePath(p: string): string {
-  try {
-    const s = fs.lstatSync(p);
-    const kind = s.isDirectory() ? 'directory' : s.isFile() ? 'file' : s.isSymbolicLink() ? 'symlink' : 'other';
-    return `${kind} (size=${s.size}, mode=${s.mode.toString(8)})`;
-  } catch (err) {
-    const code = (err as NodeJS.ErrnoException).code;
-    return code === 'ENOENT' ? 'does not exist' : `lstat failed: ${(err as Error).message}`;
-  }
-}
-
 function createArchiveTestSuite(archiveType: ArchiveType): void {
   const config = TEST_CONFIGS[archiveType];
   const archivePath = path.join(CACHE_DIR, config.filename);
@@ -362,18 +342,6 @@ function createArchiveTestSuite(archiveType: ArchiveType): void {
               return;
             }
 
-            // Diagnostic: log workspace state just before fast-extract runs.
-            // Any unexpected entries here may explain temp-suffix collisions / EEXIST mkdir failures.
-            console.log(`    [DEBUG ${archiveType}] platform=${process.platform} pid=${process.pid}`);
-            console.log(`    [DEBUG ${archiveType}] TMP_DIR=${TMP_DIR}`);
-            console.log(`    [DEBUG ${archiveType}] TMP_DIR entries: ${listDir(TMP_DIR)}`);
-            console.log(`    [DEBUG ${archiveType}] fastExtractDir=${fastExtractDir} -> ${describePath(fastExtractDir)}`);
-            // List any pre-existing temp-suffix siblings (`fast-extract-<type>-<hash>`).
-            try {
-              const siblings = fs.readdirSync(TMP_DIR).filter((n) => n.startsWith(`fast-extract-${archiveType}-`));
-              if (siblings.length) console.log(`    [DEBUG ${archiveType}] pre-existing temp siblings: ${siblings.join(', ')}`);
-            } catch (_) {}
-
             // Extract with fast-extract
             console.log('    Extracting with fast-extract...');
             let entryCount = 0;
@@ -385,13 +353,7 @@ function createArchiveTestSuite(archiveType: ArchiveType): void {
             };
 
             extract(archivePath, fastExtractDir, { strip: config.strip, progress: progressFn }, (err) => {
-              if (err) {
-                console.log(`    [DEBUG ${archiveType}] extract failed: ${err.message}`);
-                console.log(`    [DEBUG ${archiveType}] TMP_DIR after failure: ${listDir(TMP_DIR)}`);
-                const errPath = (err as NodeJS.ErrnoException).path;
-                if (errPath) console.log(`    [DEBUG ${archiveType}] error path: ${errPath} -> ${describePath(errPath)}`);
-                return done(err);
-              }
+              if (err) return done(err);
               console.log(`    Both extractions complete (${entryCount} entries)`);
               done();
             });
