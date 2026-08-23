@@ -10,7 +10,10 @@ interface Iterator {
 
 type IteratorConstructor = new (stream: NodeJS.ReadWriteStream) => Iterator;
 
-export default function createIteratorTransform(IteratorClass: IteratorConstructor) {
+// Explicit return type: inferring it would surface an unnameable node:stream internal (TS4058).
+export type IteratorTransformConstructor = new (options?: OptionsInternal | TransformOptions<TransformT>) => TransformT;
+
+export default function createIteratorTransform(IteratorClass: IteratorConstructor): IteratorTransformConstructor {
   class IteratorTransform extends Transform {
     _iterator: Iterator | null = null;
     _callback: ((error?: Error | null) => void) | null = null;
