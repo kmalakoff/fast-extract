@@ -12,7 +12,7 @@ import { exec as execCallback, execFile } from 'child_process';
 import extract from 'fast-extract';
 import fs from 'fs';
 import Iterator, { type Entry } from 'fs-iterator';
-import { rmSync } from 'fs-remove-compat';
+import { safeRmSync } from 'fs-remove-compat';
 import getFile from 'get-file-compat';
 import mkdirp from 'mkdirp-classic';
 import path from 'path';
@@ -173,7 +173,7 @@ function collectStats(dirPath: string, callback: (err: Error | null, stats?: Rec
  */
 function removeDir(dirPath: string): void {
   if (fs.existsSync(dirPath)) {
-    rmSync(dirPath, { recursive: true, force: true });
+    safeRmSync(dirPath, { recursive: true, force: true });
   }
 }
 
