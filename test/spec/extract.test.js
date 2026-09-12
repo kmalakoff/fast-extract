@@ -46,18 +46,6 @@ function addTests(extractType) {
       });
     });
 
-    it('extract file without extension - filename', function (done) {
-      extract(path.join(DATA_DIR, 'fixture-' + extractType), TMP_DIR, { strip: 1, filename: 'fixture.' + extractType }, function (err) {
-        assert.ok(!err);
-
-        fs.readdir(TMP_DIR, function (err, files) {
-          assert.ok(!err);
-          validateFiles(files, extractType);
-          done();
-        });
-      });
-    });
-
     it('extract file without extension - dot', function (done) {
       extract(path.join(DATA_DIR, 'fixture-' + extractType), TMP_DIR, { strip: 1, extension: '.' + extractType }, function (err) {
         assert.ok(!err);
@@ -82,8 +70,10 @@ function addTests(extractType) {
       });
     });
 
-    it('extract file by stream - filename', function (done) {
-      extract(fs.createReadStream(path.join(DATA_DIR, 'fixture-' + extractType)), TMP_DIR, { strip: 1, filename: 'fixture.' + extractType }, function (err) {
+    it('extract file by stream - extension', function (done) {
+      var stream = fs.createReadStream(path.join(DATA_DIR, 'fixture-' + extractType));
+      stream.filename = 'fixture.' + extractType;
+      extract(stream, TMP_DIR, { strip: 1, extension: extractType }, function (err) {
         assert.ok(!err);
 
         fs.readdir(TMP_DIR, function (err, files) {
