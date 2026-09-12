@@ -3,9 +3,9 @@ import fs from 'fs';
 import { safeRm } from 'fs-remove-compat';
 import mkdirp from 'mkdirp-classic';
 import path from 'path';
-import { bufferFrom } from '../../src/compat/buffer.ts';
-import DestinationRemove from '../../src/streams/transforms/DestinationRemove.ts';
-import { TMP_DIR } from '../lib/constants.ts';
+import { bufferFrom } from '../../../../src/compat/buffer.ts';
+import DestinationRemove from '../../../../src/streams/transforms/DestinationRemove.ts';
+import { TMP_DIR } from '../../../lib/constants.ts';
 
 describe('DestinationRemove', () => {
   beforeEach((done) => {
