@@ -41,23 +41,22 @@
   "main": "index.js",
   "scripts": {
     "compat": "nvs --engines -- mocha-compat test/spec/**/*.test.js --no-timeouts",
-    "format": "prettier --write '**/*.js'",
+    "format": "eslint . --fix",
     "lint": "eslint .",
     "test": "mocha-compat test/spec/**/*.test.js --no-timeouts"
   },
   "dependencies": {
-    "call-once-next-tick": "^1.0.4",
-    "decompress-zip": "^0.2.2",
     "fs-write-stream-atomic": "^1.0.10",
     "gunzip-maybe": "^1.4.2",
     "imurmurhash": "^0.1.4",
-    "lzma-native": "^6.0.1",
     "mkdirp-classic": "^0.5.3",
     "next-tick": "^1.1.0",
     "once": "^1.4.0",
     "osenv": "^0.1.5",
+    "progress-stream": "^2.0.0",
     "queue-cb": "^1.1.2",
     "readable-stream": "^2.3.7",
+    "require_optional": "^1.0.1",
     "signal-exit": "^3.0.3",
     "tar-stream": "^1.6.2",
     "unbzip2-stream": "^1.4.2",
@@ -79,5 +78,8 @@
   },
   "engines": {
     "node": ">0.8"
+  },
+  "peerOptionalDependencies": {
+    "lzma-native": "^6.0.1"
   }
 }
