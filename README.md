@@ -2,17 +2,33 @@
 
 Extract contents from various archive types (tar, tar.bz2, tar.gz, tar.xz, tgz, zip).
 
+## Install
+
+```sh
+npm install fast-extract
+```
+
 ```javascript
 var extract = require('fast-extract')
+var source = '/path/file.tar.gz'
+var fullPath = '/path/output'
 
 // provide the type
-extract('/path/file', fullPath, { strip: 1, type: 'tar.gz' }, function(err) {})
+extract(source, fullPath, { strip: 1, type: 'tar.gz' }, function(err) {
+  if (err) throw err
+  console.log('Extraction complete')
+})
 
-// use the type
-await extract('/path/file.tar.gz', fullPath, { strip: 1 })
+```
 
-// overwrite existing destination
-await extract('/path/file.tar.gz', fullPath, { force: true })
+The callback and promise forms are alternatives. To infer the archive type and overwrite an existing destination with the promise API:
+
+```javascript
+extract(source, fullPath, { force: true }).then(function() {
+  console.log('Extraction complete')
+}).catch(function(err) {
+  console.error(err)
+})
 ```
 
 ### Safe Extraction
@@ -38,7 +54,7 @@ Unlike `tar` (which silently overwrites existing files by default), fast-extract
 To overwrite an existing destination, use the `force` option:
 
 ```javascript
-await extract('/path/file.tar.gz', existingPath, { force: true })
+extract(source, fullPath, { force: true })
 ```
 
 This conservative default prevents accidental data loss while still allowing overwrites when explicitly requested.

@@ -1,1 +1,1 @@
-ignores: ["node-version-use", "ts-dev-stack", "fast-extract", "signal-exit", "unbzip2-stream"]
+ignores: ["fast-extract", "node-version-use", "ts-dev-stack", "signal-exit", "unbzip2-stream"]
