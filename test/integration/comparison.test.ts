@@ -9,10 +9,11 @@
  */
 
 import { exec as execCallback, execFile } from 'child_process';
+import crypto from 'crypto';
 import extract from 'fast-extract';
 import fs from 'fs';
 import Iterator, { type Entry } from 'fs-iterator';
-import { rmSync } from 'fs-remove-compat';
+import { safeRmSync } from 'fs-remove-compat';
 import getFile from 'get-file-compat';
 import mkdirp from 'mkdirp-classic';
 import path from 'path';
@@ -22,7 +23,7 @@ const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : 
 // Use separate directories from other tests to avoid cleanup conflicts
 // (extract.test.ts removes .tmp before each test)
 const TMP_DIR = path.join(__dirname, '..', '..', '.tmp', 'comparison');
-const CACHE_DIR = path.join(__dirname, '..', '..', '.cache');
+const CACHE_DIR = path.join(__dirname, '..', '..', '.tmp', 'cache');
 
 const isWindows = process.platform === 'win32';
 
@@ -34,6 +35,7 @@ type ArchiveType = 'tar.gz' | 'tar.xz' | 'zip' | '7z';
 type TestConfig = {
   url: string;
   filename: string;
+  sha256: string;
   extractedName: string;
   nativeCmd?: (cachePath: string, tmpDir: string, sevenZipCmd?: string) => string;
   nativeExtract?: (cachePath: string, tmpDir: string, callback: (err?: Error | null) => void) => void;
@@ -61,6 +63,7 @@ const TEST_CONFIGS: Record<ArchiveType, TestConfig> = {
   'tar.gz': {
     url: `${NODE_DIST_BASE}/node-v24.12.0-linux-x64.tar.gz`,
     filename: 'node-v24.12.0-linux-x64.tar.gz',
+    sha256: '6159227e0af7d7c3c6bb2fa900452b04a6cb8841a702a79acc613209d70b04d0',
     extractedName: 'node-v24.12.0-linux-x64',
     nativeCmd: (cachePath: string, tmpDir: string) => `cd "${tmpDir}" && tar -xzf "${cachePath}"`,
     checkCmd: 'which tar',
@@ -71,6 +74,7 @@ const TEST_CONFIGS: Record<ArchiveType, TestConfig> = {
   'tar.xz': {
     url: `${NODE_DIST_BASE}/node-v24.12.0-headers.tar.xz`,
     filename: 'node-v24.12.0-headers.tar.xz',
+    sha256: 'a432e8935507a98ec0fc4c93b48199e83b4bec5b8db7e0caedf058be0c5631bf',
     extractedName: 'node-v24.12.0',
     nativeCmd: isWindows ? undefined : (cachePath: string, tmpDir: string) => `cd "${tmpDir}" && tar -xJf "${cachePath}"`,
     nativeExtract: isWindows ? nativeExtractTarXzWindows : undefined,
@@ -80,6 +84,7 @@ const TEST_CONFIGS: Record<ArchiveType, TestConfig> = {
   zip: {
     url: `${NODE_DIST_BASE}/node-v24.12.0-win-arm64.zip`,
     filename: 'node-v24.12.0-win-arm64.zip',
+    sha256: 'b05e7e066f813d35ad3cd9c24eedaee074c012ac7e00071297608fdd2e948ae3',
     extractedName: 'node-v24.12.0-win-arm64',
     nativeCmd: (cachePath: string, tmpDir: string) => `cd "${tmpDir}" && unzip -q "${cachePath}"`,
     checkCmd: 'which unzip',
@@ -88,6 +93,7 @@ const TEST_CONFIGS: Record<ArchiveType, TestConfig> = {
   '7z': {
     url: `${NODE_DIST_BASE}/node-v24.12.0-win-arm64.7z`,
     filename: 'node-v24.12.0-win-arm64.7z',
+    sha256: '52f6d601c145f886434ed42533626571b388d3ad8d98dad16c310bc09a7ed86e',
     extractedName: 'node-v24.12.0-win-arm64',
     nativeCmd: (cachePath: string, tmpDir: string, sevenZipCmd?: string) => `cd "${tmpDir}" && ${sevenZipCmd || '7z'} x -y "${cachePath}"`,
     checkCmd: 'which 7zz || which 7z',
@@ -173,26 +179,110 @@ function collectStats(dirPath: string, callback: (err: Error | null, stats?: Rec
  */
 function removeDir(dirPath: string): void {
   if (fs.existsSync(dirPath)) {
-    rmSync(dirPath, { recursive: true, force: true });
+    safeRmSync(dirPath, { recursive: true, force: true });
   }
 }
 
-/**
- * Download file to cache if not present
- */
-function ensureCached(fileUrl: string, cachePath: string, callback: (err?: Error | null) => void): void {
-  if (fs.existsSync(cachePath)) {
-    console.log(`    Using cached: ${path.basename(cachePath)}`);
-    callback();
-    return;
-  }
+// These Node.js v24.12.0 archives and hashes come from the official
+// https://nodejs.org/dist/v24.12.0/SHASUMS256.txt file. Node.js and this test
+// repository are MIT licensed.
 
-  console.log(`    Downloading: ${fileUrl}...`);
-  getFile(fileUrl, cachePath, (err) => {
-    if (err) return callback(err);
-    console.log('    Download complete');
-    callback();
-  });
+function sha256File(filePath: string, callback: (err: Error | null, hash?: string) => void): void {
+  const hash = crypto.createHash('sha256');
+  const input = fs.createReadStream(filePath);
+  let completed = false;
+  const complete = (err: Error | null, digest?: string): void => {
+    if (completed) return;
+    completed = true;
+    callback(err, digest);
+  };
+  input.on('error', (err) => complete(err));
+  input.on('data', (chunk) => hash.update(chunk));
+  input.on('end', () => complete(null, hash.digest('hex')));
+}
+
+function removePartial(filePath: string): void {
+  safeRmSync(filePath, { force: true });
+}
+
+/** Download to a unique partial file, validate, then publish atomically. */
+function ensureCached(config: TestConfig, cachePath: string, callback: (err?: Error | null) => void): void {
+  let download: () => void;
+  const verify = (sourcePath: string, cached: boolean): void => {
+    sha256File(sourcePath, (err, actualHash) => {
+      if (err) {
+        if (!cached) {
+          try {
+            removePartial(sourcePath);
+          } catch (cleanupErr) {
+            console.error(`    Could not remove partial file ${sourcePath}:`, cleanupErr);
+          }
+        }
+        callback(err);
+        return;
+      }
+      if (actualHash !== config.sha256) {
+        if (cached) {
+          console.log(`    Invalid cached checksum for ${config.filename}; rebuilding`);
+          try {
+            removePartial(sourcePath);
+          } catch (unlinkErr) {
+            callback(unlinkErr as Error);
+            return;
+          }
+          download();
+          return;
+        }
+        try {
+          removePartial(sourcePath);
+        } catch (cleanupErr) {
+          console.error(`    Could not remove partial file ${sourcePath}:`, cleanupErr);
+        }
+        callback(new Error(`Checksum mismatch for ${config.filename}: expected ${config.sha256}, got ${actualHash}`));
+        return;
+      }
+      if (!cached) {
+        try {
+          fs.renameSync(sourcePath, cachePath);
+        } catch (renameErr) {
+          try {
+            removePartial(sourcePath);
+          } catch (cleanupErr) {
+            console.error(`    Could not remove partial file ${sourcePath}:`, cleanupErr);
+          }
+          callback(renameErr as Error);
+          return;
+        }
+        console.log('    Download complete and checksum verified');
+      } else {
+        console.log(`    Using verified cached: ${path.basename(cachePath)}`);
+      }
+      callback();
+    });
+  };
+
+  download = (): void => {
+    const partialPath = `${cachePath}.${process.pid}.${Date.now()}.${Math.floor(Math.random() * 1000000)}.partial`;
+    console.log(`    Downloading: ${config.url}...`);
+    getFile(config.url, partialPath, (err) => {
+      if (err) {
+        try {
+          removePartial(partialPath);
+        } catch (cleanupErr) {
+          console.error(`    Could not remove partial file ${partialPath}:`, cleanupErr);
+        }
+        callback(err);
+        return;
+      }
+      verify(partialPath, false);
+    });
+  };
+
+  if (fs.existsSync(cachePath)) {
+    verify(cachePath, true);
+  } else {
+    download();
+  }
 }
 
 /**
@@ -309,7 +399,7 @@ function createArchiveTestSuite(archiveType: ArchiveType): void {
         mkdirp.sync(CACHE_DIR);
         mkdirp.sync(TMP_DIR);
 
-        ensureCached(config.url, archivePath, (err) => {
+        ensureCached(config, archivePath, (err) => {
           if (err) return done(err);
 
           // Clean up previous extractions
