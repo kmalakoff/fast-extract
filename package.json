@@ -52,6 +52,7 @@
     "fifo": "^2.3.0",
     "flush-write-stream": "^2.0.0",
     "fs-access-compat": "^1.0.1",
+    "graceful-fs": "^4.2.4",
     "inherits": "^2.0.4",
     "lodash.compact": "^3.0.1",
     "lodash.throttle": "^4.1.1",
