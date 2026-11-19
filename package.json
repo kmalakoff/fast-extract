@@ -94,6 +94,7 @@
     "get-file-compat": "^2.0.1",
     "node-version-use": "*",
     "pinkie-promise": "*",
+    "staged-cache": "^0.1.0",
     "ts-dev-stack": "*",
     "tsds-config": "*"
   },
